@@ -128,7 +128,6 @@ export default function AdminPanelPage() {
       });
       const json = await res.json();
       if (json.success) {
-        setStatusMsg({ type: "success", text: `Simulation finished. Winner: ${json.data.winner}` });
         fetchRoomsList();
       } else {
         setStatusMsg({ type: "error", text: json.error.message });
