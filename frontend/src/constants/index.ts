@@ -1,5 +1,5 @@
 export const CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as `0x${string}`
-export const DRAFT_DURATION_MS  = 60_000
+export const DRAFT_DURATION_MS  = 25_000
 export const BETTING_DURATION_MS = 60_000
 export const ROOM_CAPACITIES = [4, 8, 16] as const
 

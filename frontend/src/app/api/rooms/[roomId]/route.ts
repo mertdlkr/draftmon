@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createSupabaseAdminClient } from '@/lib/supabase/admin'
 import { FOOTBALL_PLAYERS } from '@/lib/constants/players'
 import { POS_GROUP } from '@/lib/constants/squad'
+import { DRAFT_DURATION_MS } from '@/constants'
 import type { ApiResponse, RoomDetail, FootballPlayer } from '@/lib/contracts/types'
 
 function generateRandomSquad(): FootballPlayer[] {
@@ -44,7 +45,6 @@ export async function GET(
 
     if (roomData.status === 'drafting' && roomData.draft_started_at) {
       const elapsed = Date.now() - new Date(roomData.draft_started_at).getTime()
-      const DRAFT_DURATION_MS = 60_000
       if (elapsed > DRAFT_DURATION_MS) {
         // Find players who haven't completed drafting
         const pendingPlayers = playersData.filter(p => !p.draft_done)
