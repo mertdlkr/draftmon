@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, use } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { useRouter, useParams } from "next/navigation";
 import { useAccount } from "wagmi";
 import { useRoom } from "@/hooks/useRoom";
 import { useDraftStore, getSlotLimits } from "@/hooks/useDraft";
@@ -13,12 +13,9 @@ import { FOOTBALL_PLAYERS } from "@/lib/constants/players";
 import { DRAFT_DURATION_MS } from "@/constants";
 import type { FootballPlayer } from "@/lib/contracts/types";
 
-interface Props {
-  params: Promise<{ roomId: string }>;
-}
-
-export default function DraftPage({ params }: Props) {
-  const { roomId } = use(params);
+export default function DraftPage() {
+  const params = useParams();
+  const roomId = params?.roomId as string;
   const router = useRouter();
   const { address } = useAccount();
 

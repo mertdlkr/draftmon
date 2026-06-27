@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState, use } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter, useParams } from "next/navigation";
 import { useAccount } from "wagmi";
 import { QRCodeSVG } from "qrcode.react";
 import { formatEther } from "viem";
@@ -11,20 +12,32 @@ import { BetForm } from "@/components/watch/BetForm";
 import { BettingCountdown } from "@/components/watch/BettingCountdown";
 import { PayoutSummary } from "@/components/watch/PayoutSummary";
 import { RoomStatusBadge } from "@/components/room/RoomStatusBadge";
-import { MatchReplay } from "@/components/tournaments/MatchReplay";
+import { MatchReplay, type ReplayStatus } from "@/components/tournaments/MatchReplay";
 import { MatchBracket } from "@/components/watch/MatchBracket";
 import { BETTING_DURATION_MS } from "@/constants";
 
-interface Props {
-  params: Promise<{ roomId: string }>;
-}
-
-export default function WatchRoomPage({ params }: Props) {
-  const { roomId } = use(params);
+export default function WatchRoomPage() {
+  const params = useParams();
+  const roomId = params?.roomId as string;
   const { address } = useAccount();
   const { roomDetail, isLoading, mutate } = useRoom(roomId);
   const [activeReplayIdx, setActiveReplayIdx] = useState<number>(0);
   const [betSuccess, setBetSuccess] = useState(false);
+
+  // States for sequential live simulation
+  const [currentSimMatchIdx, setCurrentSimMatchIdx] = useState<number>(0);
+  const [liveMatchScores, setLiveMatchScores] = useState<Record<number, { goalsA: number; goalsB: number; status: ReplayStatus }>>({});
+  const [isSimPlayEnded, setIsSimPlayEnded] = useState<boolean>(false);
+
+  const [distributing, setDistributing] = useState(false);
+  const [distributeError, setDistributeError] = useState<string | null>(null);
+  const [distributeSuccess, setDistributeSuccess] = useState(false);
+
+  useEffect(() => {
+    if (roomDetail?.room?.status === "finished") {
+      setIsSimPlayEnded(true);
+    }
+  }, [roomDetail?.room?.status]);
 
   if (isLoading) {
     return (
@@ -51,10 +64,40 @@ export default function WatchRoomPage({ params }: Props) {
   const { room, players, matches, bets } = roomDetail;
   const myBet = bets.find((b) => b.bettor_wallet.toLowerCase() === address?.toLowerCase());
 
+  const handleDistributeRewards = async () => {
+    const savedSecret = localStorage.getItem("draftmon_admin_secret");
+    const secret = savedSecret || prompt("Enter Admin Password:");
+    if (!secret) return;
+    
+    setDistributing(true);
+    setDistributeError(null);
+    try {
+      const res = await fetch("/api/payout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ roomId: room.id, adminSecret: secret }),
+      });
+      const json = await res.json();
+      if (json.success) {
+        setDistributeSuccess(true);
+        if (savedSecret !== secret) {
+          localStorage.setItem("draftmon_admin_secret", secret);
+        }
+        mutate();
+      } else {
+        setDistributeError(json.error.message || "Failed to distribute rewards");
+      }
+    } catch (err) {
+      setDistributeError("Network error occurred during payout");
+    } finally {
+      setDistributing(false);
+    }
+  };
+
   // Adapter for old MatchReplay props using the new squad structures
-  const renderActiveReplay = () => {
+  const renderActiveReplay = (targetIdx: number, autoPlay: boolean) => {
     if (!matches || matches.length === 0) return null;
-    const activeMatch = matches[activeReplayIdx] || matches[0];
+    const activeMatch = matches[targetIdx] || matches[0];
 
     const homePlayer = players.find((p) => p.wallet.toLowerCase() === activeMatch.home_wallet.toLowerCase());
     const awayPlayer = players.find((p) => p.wallet.toLowerCase() === activeMatch.away_wallet.toLowerCase());
@@ -100,33 +143,30 @@ export default function WatchRoomPage({ params }: Props) {
     return (
       <div className="bg-slate-900 border-4 border-slate-900 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-4">
         <div className="flex justify-between items-center text-white border-b-2 border-slate-800 pb-2 mb-4 font-pixel text-[10px]">
-          <span>ROUND: {activeMatch.round} (Match {activeReplayIdx + 1} of {matches.length})</span>
-          <div className="flex gap-2">
-            {activeReplayIdx > 0 && (
-              <button
-                onClick={() => setActiveReplayIdx((prev) => prev - 1)}
-                className="bg-slate-800 hover:bg-slate-700 px-2 py-1 border border-slate-700"
-              >
-                ◀ PREV
-              </button>
-            )}
-            {activeReplayIdx < matches.length - 1 && (
-              <button
-                onClick={() => setActiveReplayIdx((prev) => prev + 1)}
-                className="bg-slate-800 hover:bg-slate-700 px-2 py-1 border border-slate-700"
-              >
-                NEXT ▶
-              </button>
-            )}
-          </div>
+          <span>ROUND: {activeMatch.round} (Match {targetIdx + 1} of {matches.length})</span>
         </div>
 
-        {/* Existing MatchReplay component */}
         <MatchReplay
           powerScoreA={100}
           powerScoreB={100}
           teamA={teamAAdapter}
           teamB={teamBAdapter}
+          autoPlay={autoPlay}
+          onTickChange={(goalsA, goalsB, status) => {
+            setLiveMatchScores((prev) => {
+              if (
+                prev[targetIdx]?.goalsA === goalsA &&
+                prev[targetIdx]?.goalsB === goalsB &&
+                prev[targetIdx]?.status === status
+              ) {
+                return prev;
+              }
+              return {
+                ...prev,
+                [targetIdx]: { goalsA, goalsB, status },
+              };
+            });
+          }}
         />
       </div>
     );
@@ -240,17 +280,156 @@ export default function WatchRoomPage({ params }: Props) {
         </div>
       )}
 
-      {room.status === "simulating" && (
-        <div className="space-y-6">
-          <MatchBracket
-            matches={matches}
-            players={players}
-            activeIdx={activeReplayIdx}
-            onSelect={setActiveReplayIdx}
-          />
-          {renderActiveReplay()}
-        </div>
-      )}
+      {room.status === "simulating" && (() => {
+        const liveMatches = matches.map((m, idx) => {
+          if (idx < currentSimMatchIdx) {
+            return m;
+          }
+          if (idx === currentSimMatchIdx) {
+            const live = liveMatchScores[idx];
+            return {
+              ...m,
+              home_score: live ? live.goalsA : 0,
+              away_score: live ? live.goalsB : 0,
+              winner_wallet: live?.status === "ended" ? (live.goalsA >= live.goalsB ? m.home_wallet : m.away_wallet) : ("0x" as `0x${string}`),
+            };
+          }
+          return {
+            ...m,
+            home_score: 0,
+            away_score: 0,
+            winner_wallet: "0x" as `0x${string}`,
+          };
+        });
+
+        const activeLiveScore = liveMatchScores[currentSimMatchIdx];
+        const isCurrentMatchEnded = activeLiveScore?.status === "ended";
+        const isLastMatch = currentSimMatchIdx === matches.length - 1;
+
+        return (
+          <div className="space-y-8 animate-fadeIn">
+            {/* Header / Notice */}
+            <div className="bg-amber-400 border-4 border-slate-900 p-4 font-pixel text-[10px] text-slate-900 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] flex justify-between items-center flex-wrap gap-4">
+              <div>
+                <span className="font-bold">LIVE TOURNAMENT SIMULATION IN PROGRESS:</span> 
+                {" "}Match {currentSimMatchIdx + 1} of {matches.length} is currently playing.
+              </div>
+              {isCurrentMatchEnded && (
+                <div className="flex gap-2">
+                  {!isLastMatch ? (
+                    <button
+                      onClick={() => {
+                        setCurrentSimMatchIdx((prev) => prev + 1);
+                      }}
+                      className="font-pixel text-[10px] px-4 py-2 bg-emerald-400 hover:bg-emerald-300 text-slate-900 border-2 border-slate-900 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer font-bold"
+                    >
+                      PLAY NEXT MATCH ⚽
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => {
+                        setIsSimPlayEnded(true);
+                      }}
+                      className="font-pixel text-[10px] px-4 py-2 bg-rose-500 hover:bg-rose-400 text-white border-2 border-slate-900 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer font-bold"
+                    >
+                      REVEAL CHAMPION 🏆
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {/* Bracket */}
+            <MatchBracket
+              matches={liveMatches}
+              players={players}
+              activeIdx={currentSimMatchIdx}
+              onSelect={() => {}} // Disable selecting other matches in live mode to keep focus
+            />
+
+            {/* Simulation Match Player / Results */}
+            {!isSimPlayEnded ? (
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div className="lg:col-span-2">
+                  {renderActiveReplay(currentSimMatchIdx, true)}
+                </div>
+                <div className="bg-white border-4 border-slate-900 p-6 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] flex flex-col justify-center items-center text-center">
+                  <span className="text-[32px] animate-pulse">📡</span>
+                  <h4 className="font-pixel text-[12px] text-slate-900 mt-4">LIVE FEED ACTIVE</h4>
+                  <p className="font-pixel text-[8px] text-slate-400 mt-2 uppercase">
+                    Tournament matches are simulated sequentially. Keep this window active.
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <div className="space-y-8 animate-fadeIn">
+                {/* Winner Banner */}
+                <div className="bg-amber-400 border-4 border-slate-900 p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] text-center relative overflow-hidden">
+                  <span className="text-[40px] block animate-bounce">🏆</span>
+                  <h2 className="font-pixel text-[18px] text-slate-900 tracking-widest mt-2">
+                    TOURNAMENT CONCLUDED
+                  </h2>
+                  <div className="font-pixel text-[10px] text-slate-800 mt-2 bg-white/40 max-w-md mx-auto py-2 border-2 border-slate-900/10 truncate px-4">
+                    Champion: <span className="font-bold">{room.winner_wallet}</span>
+                  </div>
+
+                  {/* DISTRIBUTE REWARDS BUTTON */}
+                  <div className="mt-6 flex flex-col items-center gap-2">
+                    <button
+                      onClick={handleDistributeRewards}
+                      disabled={distributing}
+                      className="font-pixel text-[10px] px-6 py-3 bg-slate-900 text-white hover:bg-slate-800 border-4 border-slate-900 shadow-[4px_4px_0px_0px_rgba(16,185,129,1)] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none transition-all cursor-pointer font-bold disabled:opacity-50"
+                    >
+                      {distributing ? "DISTRIBUTING..." : "DISTRIBUTE REWARDS 🪙"}
+                    </button>
+                    {distributeError && (
+                      <p className="text-rose-600 font-pixel text-[8px] mt-2">{distributeError}</p>
+                    )}
+                    {distributeSuccess && (
+                      <p className="text-emerald-700 font-pixel text-[8px] mt-2">Rewards distributed successfully!</p>
+                    )}
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                  <div className="lg:col-span-2">
+                    {/* Allow user to replay matches manually now */}
+                    <div className="flex justify-between items-center bg-slate-900 text-white p-3 border-t-4 border-x-4 border-slate-900 font-pixel text-[10px]">
+                      <span>SELECT MATCH TO REPLAY</span>
+                      <div className="flex gap-2">
+                        {activeReplayIdx > 0 && (
+                          <button
+                            onClick={() => setActiveReplayIdx((prev) => prev - 1)}
+                            className="bg-slate-800 hover:bg-slate-700 px-2 py-1 border border-slate-700"
+                          >
+                            ◀ PREV
+                          </button>
+                        )}
+                        {activeReplayIdx < matches.length - 1 && (
+                          <button
+                            onClick={() => setActiveReplayIdx((prev) => prev + 1)}
+                            className="bg-slate-800 hover:bg-slate-700 px-2 py-1 border border-slate-700"
+                          >
+                            NEXT ▶
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                    {renderActiveReplay(activeReplayIdx, false)}
+                  </div>
+                  <div>
+                    <PayoutSummary
+                      bets={bets}
+                      winnerWallet={room.winner_wallet}
+                      entryPoolWei={(BigInt(room.entry_fee_wei) * BigInt(players.length)).toString()}
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        );
+      })()}
 
       {room.status === "finished" && (
         <div className="space-y-8">
@@ -274,7 +453,7 @@ export default function WatchRoomPage({ params }: Props) {
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2">
-              {renderActiveReplay()}
+              {renderActiveReplay(activeReplayIdx, false)}
             </div>
             <div>
               <PayoutSummary

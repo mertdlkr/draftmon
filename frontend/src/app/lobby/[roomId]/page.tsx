@@ -1,17 +1,14 @@
 "use client";
 
-import { useEffect, use } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { useRouter, useParams } from "next/navigation";
 import { useRoom } from "@/hooks/useRoom";
 import { PlayerList } from "@/components/room/PlayerList";
 import { RoomStatusBadge } from "@/components/room/RoomStatusBadge";
 
-interface Props {
-  params: Promise<{ roomId: string }>;
-}
-
-export default function LobbyRoomPage({ params }: Props) {
-  const { roomId } = use(params);
+export default function LobbyRoomPage() {
+  const params = useParams();
+  const roomId = params?.roomId as string;
   const router = useRouter();
   const { roomDetail, isLoading, isError } = useRoom(roomId);
 

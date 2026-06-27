@@ -23,6 +23,7 @@ function squadPower(squad: FootballPlayer[]): number {
 type RoundSpec = { round: MatchRound; count: number }
 
 function getRoundSpecs(capacity: number): RoundSpec[] {
+  if (capacity === 2)  return [{ round: 'Final', count: 1 }]
   if (capacity === 4)  return [{ round: 'SF', count: 2 }, { round: 'Final', count: 1 }]
   if (capacity === 8)  return [{ round: 'QF', count: 4 }, { round: 'SF', count: 2 }, { round: 'Final', count: 1 }]
   return [{ round: 'R16', count: 8 }, { round: 'QF', count: 4 }, { round: 'SF', count: 2 }, { round: 'Final', count: 1 }]

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 interface Props {
   startedAt: string | null;
@@ -10,12 +10,19 @@ interface Props {
 
 export function DraftTimer({ startedAt, durationMs, onExpire }: Props) {
   const [timeLeft, setTimeLeft] = useState<number>(Math.round(durationMs / 1000));
+  const onExpireRef = useRef(onExpire);
+
+  useEffect(() => {
+    onExpireRef.current = onExpire;
+  }, [onExpire]);
 
   useEffect(() => {
     if (!startedAt) return;
 
     const start = new Date(startedAt).getTime();
     
+    let intervalId: any = null;
+
     const updateTimer = () => {
       const now = Date.now();
       const elapsed = now - start;
@@ -24,16 +31,22 @@ export function DraftTimer({ startedAt, durationMs, onExpire }: Props) {
       setTimeLeft(remaining);
 
       if (remaining <= 0) {
-        clearInterval(interval);
-        onExpire();
+        if (intervalId) clearInterval(intervalId);
+        onExpireRef.current();
       }
     };
 
     updateTimer(); // initial call
-    const interval = setInterval(updateTimer, 1000);
+    const now = Date.now();
+    const elapsed = now - start;
+    if (durationMs - elapsed > 0) {
+      intervalId = setInterval(updateTimer, 1000);
+    }
 
-    return () => clearInterval(interval);
-  }, [startedAt, durationMs, onExpire]);
+    return () => {
+      if (intervalId) clearInterval(intervalId);
+    };
+  }, [startedAt, durationMs]);
 
   const isLowTime = timeLeft <= 10;
   const isMediumTime = timeLeft <= 30 && timeLeft > 10;

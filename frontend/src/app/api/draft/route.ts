@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createSupabaseAdminClient } from '@/lib/supabase/admin'
-import { getSlotConstraints } from '@/lib/draft-pool'
 import { POS_GROUP } from '@/lib/constants/squad'
 import type { ApiResponse, FootballPlayer, PositionGroup } from '@/lib/contracts/types'
 
@@ -14,12 +13,20 @@ function validateSquad(squad: FootballPlayer[]): string | null {
     counts[group]++
   }
 
-  const constraints = getSlotConstraints({ ATT: 0, MID: 0, DEF: 0, GK: 0 })
-  for (const group of Object.keys(counts) as PositionGroup[]) {
-    const { min, max } = constraints[group]
-    if (counts[group] < min || counts[group] > max) {
-      return `${group}: got ${counts[group]}, expected ${min}-${max}`
-    }
+  if (counts.GK !== 1) {
+    return `GK: got ${counts.GK}, expected 1`
+  }
+  if (counts.ATT < 1 || counts.ATT > 4) {
+    return `ATT: got ${counts.ATT}, expected 1-4`
+  }
+  if (counts.MID < 2 || counts.MID > 4) {
+    return `MID: got ${counts.MID}, expected 2-4`
+  }
+  if (counts.DEF < 3 || counts.DEF > 6) {
+    return `DEF: got ${counts.DEF}, expected 3-6`
+  }
+  if (counts.ATT + counts.MID + counts.DEF !== 10) {
+    return `Total outfield players must be 10, got ${counts.ATT + counts.MID + counts.DEF}`
   }
 
   return null

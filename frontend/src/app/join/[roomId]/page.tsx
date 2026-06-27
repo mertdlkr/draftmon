@@ -1,19 +1,16 @@
 "use client";
 
-import { useEffect, useState, use } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useRouter, useParams } from "next/navigation";
 import { useAccount } from "wagmi";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { formatEther } from "viem";
 import type { Room, ApiResponse } from "@/lib/contracts/types";
 import { useEnterRoom } from "@/hooks/useEnterRoom";
 
-interface Props {
-  params: Promise<{ roomId: string }>;
-}
-
-export default function JoinRoomPage({ params }: Props) {
-  const { roomId } = use(params);
+export default function JoinRoomPage() {
+  const params = useParams();
+  const roomId = params?.roomId as string;
   const router = useRouter();
   const { address, isConnected } = useAccount();
 

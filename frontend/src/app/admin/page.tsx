@@ -238,6 +238,7 @@ export default function AdminPanelPage() {
                 onChange={(e) => setCapacity(Number(e.target.value))}
                 className="w-full font-pixel text-[12px] p-2 border-2 border-slate-900 bg-slate-50 focus:outline-none"
               >
+                <option value={2}>2 Managers (Test)</option>
                 <option value={4}>4 Managers</option>
                 <option value={8}>8 Managers</option>
                 <option value={16}>16 Managers</option>

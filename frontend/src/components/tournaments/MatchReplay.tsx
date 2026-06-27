@@ -24,16 +24,18 @@ export interface TournamentAgent {
 }
 
 type Speed = 1 | 2 | 4 | 8;
-type ReplayStatus = "idle" | "loading" | "playing" | "paused" | "ended";
+export type ReplayStatus = "idle" | "loading" | "playing" | "paused" | "ended";
 
 interface Props {
     powerScoreA: number;
     powerScoreB: number;
     teamA: TournamentAgent;
     teamB: TournamentAgent;
+    onTickChange?: (goalsA: number, goalsB: number, status: ReplayStatus) => void;
+    autoPlay?: boolean;
 }
 
-export function MatchReplay({ powerScoreA, powerScoreB, teamA, teamB }: Props) {
+export function MatchReplay({ powerScoreA, powerScoreB, teamA, teamB, onTickChange, autoPlay }: Props) {
     const [status, setStatus] = useState<ReplayStatus>("loading");
     const [tick, setTick] = useState(0);
     const [speed, setSpeed] = useState<Speed>(2);
@@ -69,8 +71,17 @@ export function MatchReplay({ powerScoreA, powerScoreB, teamA, teamB }: Props) {
         });
         setSimulation(sim);
         setTick(0);
-        setStatus("idle");
-    }, [powerScoreA, powerScoreB, teamA, teamB]);
+        setStatus(autoPlay ? "playing" : "idle");
+    }, [powerScoreA, powerScoreB, teamA, teamB, autoPlay]);
+
+    // Notify parent of tick / goals / status changes
+    useEffect(() => {
+        if (!simulation) return;
+        const currentTick = simulation.ticks[tick] ?? simulation.ticks[0];
+        const liveA = simulation.events.filter(e => e.type === "GOAL" && e.team === "A" && e.minute <= currentTick.minute).length;
+        const liveB = simulation.events.filter(e => e.type === "GOAL" && e.team === "B" && e.minute <= currentTick.minute).length;
+        onTickChange?.(liveA, liveB, status);
+    }, [tick, status, simulation, onTickChange]);
 
     // Goal flash detection — use a persistent ref for the timer so tick-changes don't cancel it
     useEffect(() => {
@@ -154,6 +165,8 @@ export function MatchReplay({ powerScoreA, powerScoreB, teamA, teamB }: Props) {
     }
 
     const currentTick = simulation.ticks[tick] ?? simulation.ticks[0];
+    const liveGoalsA = simulation.events.filter(e => e.type === "GOAL" && e.team === "A" && e.minute <= currentTick.minute).length;
+    const liveGoalsB = simulation.events.filter(e => e.type === "GOAL" && e.team === "B" && e.minute <= currentTick.minute).length;
     const aWon = simulation.goalsA > simulation.goalsB;
 
     return (
@@ -175,8 +188,8 @@ export function MatchReplay({ powerScoreA, powerScoreB, teamA, teamB }: Props) {
                         teamBPlayers={teamB.entry.team}
                         teamAName={teamA.profile.name}
                         teamBName={teamB.profile.name}
-                        goalsA={simulation.goalsA}
-                        goalsB={simulation.goalsB}
+                        goalsA={liveGoalsA}
+                        goalsB={liveGoalsB}
                         powerScoreA={powerScoreA}
                         powerScoreB={powerScoreB}
                         strategyA={teamA.entry.strategyName ?? undefined}
