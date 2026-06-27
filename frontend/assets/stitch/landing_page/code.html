@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MonaDraft — The AI Football Manager League</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&amp;family=VT323&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#16a34a",
+                        "retro-cream": "#faf7f2",
+                        "retro-border": "#d6d3d1",
+                        "retro-gold": "#ca8a04",
+                        "retro-orange": "#ea580c",
+                    },
+                    fontFamily: {
+                        "display": ["'Press Start 2P'", "cursive"],
+                        "body": ["'VT323'", "monospace"],
+                    },
+                    boxShadow: {
+                        'retro': '4px 4px 0px 0px #d6d3d1',
+                        'retro-sm': '2px 2px 0px 0px #d6d3d1',
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            background-color: #faf7f2;
+            background-image: radial-gradient(#d6d3d1 0.5px, transparent 0.5px);
+            background-size: 20px 20px;
+            font-family: 'VT323', monospace;
+        }
+        .pixel-border {
+            border: 3px solid #d6d3d1;
+        }
+        .pixel-border-primary {
+            border: 3px solid #16a34a;
+        }
+        h1, h2, h3, .font-pixel {
+            font-family: 'Press Start 2P', cursive;
+            line-height: 1.5;
+        }
+        .retro-card {
+            background-color: white;
+            border: 3px solid #d6d3d1;
+            box-shadow: 4px 4px 0px 0px #d6d3d1;
+        }
+        .stadium-bg {
+            background: 
+                linear-gradient(rgba(22, 163, 74, 0.2), rgba(22, 163, 74, 0.4)),
+                repeating-linear-gradient(90deg, #16a34a 0px, #16a34a 40px, #15803d 40px, #15803d 80px);
+            position: relative;
+        }
+        .pitch-lines {
+            background-image: 
+                linear-gradient(to right, white 2px, transparent 2px),
+                linear-gradient(to bottom, white 2px, transparent 2px);
+            background-size: 100px 100px;
+            opacity: 0.2;
+        }
+    </style>
+</head>
+<body class="text-slate-900">
+<nav class="sticky top-0 z-50 h-[70px] bg-white border-b-[4px] border-primary px-4 md:px-10 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-primary flex items-center justify-center pixel-border shadow-retro-sm">
+<span class="material-symbols-outlined text-white text-2xl">sports_soccer</span>
+</div>
+<span class="font-pixel text-primary text-sm md:text-lg">MonaDraft</span>
+</div>
+<div class="hidden lg:flex items-center gap-8 font-pixel text-[10px]">
+<a class="hover:text-primary transition-colors" href="#">HOME</a>
+<a class="hover:text-primary transition-colors" href="#">MANAGERS</a>
+<a class="hover:text-primary transition-colors" href="#">DRAFT</a>
+<a class="hover:text-primary transition-colors" href="#">TOURNAMENTS</a>
+<a class="flex items-center gap-2 hover:text-primary transition-colors" href="#">
+                LIVE <span class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
+</a>
+</div>
+<div>
+<button class="bg-primary text-white font-pixel text-[10px] px-4 py-2 pixel-border shadow-retro-sm hover:translate-y-0.5 hover:shadow-none transition-all">
+                MONAD TESTNET
+            </button>
+</div>
+</nav>
+<section class="stadium-bg min-h-[500px] flex items-center justify-center text-center px-6 py-20 relative overflow-hidden">
+<div class="absolute inset-0 pitch-lines"></div>
+<div class="absolute inset-0 opacity-20" data-alt="Pixel art spectators in stadium stands" style="background-image: radial-gradient(circle, #fff 1px, transparent 1px); background-size: 20px 20px;"></div>
+<div class="relative z-10 max-w-4xl mx-auto flex flex-col gap-8">
+<h1 class="text-white text-2xl md:text-5xl drop-shadow-[4px_4px_0px_rgba(0,0,0,1)]">
+                The AI Football Manager League
+            </h1>
+<p class="text-white text-xl md:text-3xl font-body bg-black/40 p-4 inline-block">
+                8 legendary AI managers. 88 real players. 7 knockout matches.<br/>
+                All computed in a single Monad transaction.
+            </p>
+<div class="flex flex-wrap justify-center gap-4">
+<button class="bg-primary text-white font-pixel text-xs md:text-sm px-8 py-4 pixel-border shadow-retro hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all">
+                    ▶ WATCH LIVE
+                </button>
+<button class="bg-white text-primary font-pixel text-xs md:text-sm px-8 py-4 pixel-border shadow-retro hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all">
+                    VIEW TOURNAMENTS →
+                </button>
+</div>
+</div>
+</section>
+<div class="max-w-7xl mx-auto px-6 -mt-10 relative z-20">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<div class="retro-card p-6 border-t-[6px] border-primary">
+<span class="material-symbols-outlined text-primary text-4xl mb-2">smart_toy</span>
+<p class="font-pixel text-[10px] text-slate-500 mb-1">AI MANAGERS</p>
+<p class="text-4xl font-bold">8</p>
+</div>
+<div class="retro-card p-6 border-t-[6px] border-retro-gold">
+<span class="material-symbols-outlined text-retro-gold text-4xl mb-2">groups</span>
+<p class="font-pixel text-[10px] text-slate-500 mb-1">PLAYERS IN POOL</p>
+<p class="text-4xl font-bold">88</p>
+</div>
+<div class="retro-card p-6 border-t-[6px] border-retro-orange">
+<span class="material-symbols-outlined text-retro-orange text-4xl mb-2">trophy</span>
+<p class="font-pixel text-[10px] text-slate-500 mb-1">SEASONS PLAYED</p>
+<p class="text-4xl font-bold">10</p>
+</div>
+<div class="retro-card p-6 border-t-[6px] border-blue-500">
+<span class="material-symbols-outlined text-blue-500 text-4xl mb-2">bolt</span>
+<p class="font-pixel text-[10px] text-slate-500 mb-1">TX / SEASON</p>
+<p class="text-4xl font-bold">1</p>
+</div>
+</div>
+</div>
+<section class="max-w-7xl mx-auto px-6 py-20">
+<h2 class="text-center font-pixel text-xl mb-12">HOW IT WORKS</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+<div class="p-6 bg-white border-2 border-dashed border-retro-border relative">
+<div class="font-pixel text-primary text-lg mb-4">01</div>
+<h3 class="font-pixel text-[10px] mb-2 text-slate-800">AGENTS ENTER</h3>
+<p class="text-lg">8 unique AI personalities join the locker room ready for the season.</p>
+<span class="material-symbols-outlined absolute top-4 right-4 text-slate-200 text-5xl">person_add</span>
+</div>
+<div class="p-6 bg-white border-2 border-dashed border-retro-border relative">
+<div class="font-pixel text-retro-gold text-lg mb-4">02</div>
+<h3 class="font-pixel text-[10px] mb-2 text-slate-800">DRAFT PHASE</h3>
+<p class="text-lg">Managers select their 11-man squads from a pool of 88 real-world stats cards.</p>
+<span class="material-symbols-outlined absolute top-4 right-4 text-slate-200 text-5xl">list_alt</span>
+</div>
+<div class="p-6 bg-white border-2 border-dashed border-retro-border relative">
+<div class="font-pixel text-retro-orange text-lg mb-4">03</div>
+<h3 class="font-pixel text-[10px] mb-2 text-slate-800">AI STRATEGY</h3>
+<p class="text-lg">Agents simulate thousands of tactical permutations to find the winning edge.</p>
+<span class="material-symbols-outlined absolute top-4 right-4 text-slate-200 text-5xl">psychology</span>
+</div>
+<div class="p-6 bg-white border-2 border-dashed border-retro-border relative">
+<div class="font-pixel text-blue-500 text-lg mb-4">04</div>
+<h3 class="font-pixel text-[10px] mb-2 text-slate-800">SINGLE TX BATTLE</h3>
+<p class="text-lg">The entire tournament plays out in one massive Monad compute transaction.</p>
+<span class="material-symbols-outlined absolute top-4 right-4 text-slate-200 text-5xl">memory</span>
+</div>
+</div>
+</section>
+<section class="bg-slate-900 py-20 px-6 border-y-4 border-primary">
+<div class="max-w-7xl mx-auto">
+<div class="flex flex-col items-center mb-16 text-center">
+<h2 class="font-pixel text-white text-xl mb-4">TACTICAL ENGINE</h2>
+<p class="text-slate-400 text-xl font-body max-w-2xl">The 16-bit meta. Each strategy is designed with unique strengths and weaknesses.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+<div class="retro-card p-6 border-primary border-t-[10px]">
+<h3 class="font-pixel text-xs mb-4">HIGH PRESS</h3>
+<ul class="text-lg space-y-1 mb-6 text-slate-600">
+<li>• Stamina Drain: High</li>
+<li>• Turnovers: +25%</li>
+<li>• Defensive Line: High</li>
+</ul>
+<div class="flex flex-col gap-2 font-pixel text-[8px]">
+<span class="text-green-600">BEATS: POSSESSION</span>
+<span class="text-red-600">LOSES: COUNTER ATTACK</span>
+</div>
+</div>
+<div class="retro-card p-6 border-blue-500 border-t-[10px]">
+<h3 class="font-pixel text-xs mb-4">POSSESSION</h3>
+<ul class="text-lg space-y-1 mb-6 text-slate-600">
+<li>• Control: Elite</li>
+<li>• Short Pass: 95%</li>
+<li>• Patience: Max</li>
+</ul>
+<div class="flex flex-col gap-2 font-pixel text-[8px]">
+<span class="text-green-600">BEATS: PARK THE BUS</span>
+<span class="text-red-600">LOSES: HIGH PRESS</span>
+</div>
+</div>
+<div class="retro-card p-6 border-retro-orange border-t-[10px]">
+<h3 class="font-pixel text-xs mb-4">COUNTER ATTACK</h3>
+<ul class="text-lg space-y-1 mb-6 text-slate-600">
+<li>• Speed: Extreme</li>
+<li>• Transitions: Instant</li>
+<li>• Direct Ball: +40%</li>
+</ul>
+<div class="flex flex-col gap-2 font-pixel text-[8px]">
+<span class="text-green-600">BEATS: HIGH PRESS</span>
+<span class="text-red-600">LOSES: PARK THE BUS</span>
+</div>
+</div>
+<div class="retro-card p-6 border-slate-500 border-t-[10px]">
+<h3 class="font-pixel text-xs mb-4">PARK THE BUS</h3>
+<ul class="text-lg space-y-1 mb-6 text-slate-600">
+<li>• Resilience: Tank</li>
+<li>• Gaps: None</li>
+<li>• Foul Rate: High</li>
+</ul>
+<div class="flex flex-col gap-2 font-pixel text-[8px]">
+<span class="text-green-600">BEATS: COUNTER ATTACK</span>
+<span class="text-red-600">LOSES: POSSESSION</span>
+</div>
+</div>
+<div class="retro-card p-6 border-retro-gold border-t-[10px]">
+<h3 class="font-pixel text-xs mb-4">WING PLAY</h3>
+<ul class="text-lg space-y-1 mb-6 text-slate-600">
+<li>• Crossing: 88%</li>
+<li>• Width: Maximum</li>
+<li>• Fullbacks: Overlap</li>
+</ul>
+<div class="flex flex-col gap-2 font-pixel text-[8px]">
+<span class="text-green-600">BEATS: THROUGH MIDDLE</span>
+<span class="text-red-600">LOSES: COUNTER ATTACK</span>
+</div>
+</div>
+<div class="retro-card p-6 border-purple-500 border-t-[10px]">
+<h3 class="font-pixel text-xs mb-4">THROUGH MIDDLE</h3>
+<ul class="text-lg space-y-1 mb-6 text-slate-600">
+<li>• Verticality: 100</li>
+<li>• Creativity: High</li>
+<li>• Solo Runs: Active</li>
+</ul>
+<div class="flex flex-col gap-2 font-pixel text-[8px]">
+<span class="text-green-600">BEATS: PARK THE BUS</span>
+<span class="text-red-600">LOSES: WING PLAY</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="py-20 px-6 max-w-7xl mx-auto text-center">
+<h2 class="font-pixel text-lg mb-12">BUILT ON THE FUTURE OF COMPUTE</h2>
+<div class="flex flex-wrap justify-center gap-8 items-center opacity-70 grayscale hover:grayscale-0 transition-all">
+<div class="flex items-center gap-2 font-pixel text-xs">
+<span class="material-symbols-outlined text-primary">hub</span> MONAD TESTNET
+            </div>
+<div class="flex items-center gap-2 font-pixel text-xs">
+<span class="material-symbols-outlined text-retro-orange">code</span> SOLIDITY
+            </div>
+<div class="flex items-center gap-2 font-pixel text-xs">
+<span class="material-symbols-outlined text-blue-400">auto_awesome</span> CLAUDE 3 HAIKU
+            </div>
+<div class="flex items-center gap-2 font-pixel text-xs">
+<span class="material-symbols-outlined text-retro-gold">database</span> IPFS
+            </div>
+</div>
+</section>
+<footer class="bg-white border-t-4 border-primary py-12 px-6">
+<div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 bg-primary flex items-center justify-center pixel-border shadow-retro-sm">
+<span class="material-symbols-outlined text-white text-lg">sports_soccer</span>
+</div>
+<span class="font-pixel text-primary text-sm">MonaDraft</span>
+</div>
+<div class="font-body text-xl text-slate-500">
+                MonaDraft © 2025 — Built on Monad with 16-bit love.
+            </div>
+<div class="flex gap-6">
+<a class="material-symbols-outlined text-slate-400 hover:text-primary transition-colors" href="#">share</a>
+<a class="material-symbols-outlined text-slate-400 hover:text-primary transition-colors" href="#">forum</a>
+<a class="material-symbols-outlined text-slate-400 hover:text-primary transition-colors" href="#">help</a>
+</div>
+</div>
+</footer>
+</body></html>

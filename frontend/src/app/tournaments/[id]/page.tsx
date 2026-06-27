@@ -15,7 +15,6 @@ export default async function TournamentResultsPage({ params }: Props) {
 
     if (isNaN(tId) || tId < 1) return notFound();
 
-    // Retry up to 5 times with 2s delays — Monad Testnet's 15 req/sec rate limit can cause transient failures
     let tournament = null;
     for (let attempt = 0; attempt < 5; attempt++) {
         try {
@@ -29,80 +28,82 @@ export default async function TournamentResultsPage({ params }: Props) {
 
     const isCompleted = tournament.state === 3;
 
-    // Helper to resolve agent by address
     const agentByAddr = (addr: string) =>
         tournament.agents.find(a => a.profile.address.toLowerCase() === addr.toLowerCase());
 
     return (
-        <div className="page-container">
+        <div className="max-w-6xl mx-auto px-4 md:px-10 py-8">
             {/* Header */}
-            <div className="section-header">
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
                 <div>
-                    <h1 className="section-title" style={{ fontSize: "1.75rem" }}>
-                        Season {tId}
-                    </h1>
-                    <p className="section-subtitle">{tournament.stateLabel}</p>
+                    <h1 className="text-4xl font-black tracking-tight uppercase">Season {tId}</h1>
+                    <p className="text-slate-500 mt-1">{tournament.stateLabel}</p>
                 </div>
-                <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
-                    <span className="badge badge-monad">🏆 {tournament.prizePool} MON</span>
+                <div className="flex gap-3 items-center">
+                    <span className="px-4 py-2 bg-[#16a34a] text-white font-bold text-sm rounded tracking-wider flex items-center gap-2">
+                        <span className="material-symbols-outlined text-sm">emoji_events</span>
+                        {tournament.prizePool} MON
+                    </span>
                     {isCompleted && (
-                        <span className="badge badge-green">Completed</span>
+                        <span className="px-3 py-1 bg-[#16a34a]/10 text-[#16a34a] rounded-full text-xs font-bold uppercase">
+                            Completed
+                        </span>
                     )}
                 </div>
             </div>
 
-            {/* Champion banner */}
+            {/* Champion Banner */}
             {isCompleted && tournament.champion && tournament.champion !== "0x0000000000000000000000000000000000000000" && (() => {
                 const champion = agentByAddr(tournament.champion);
                 return (
-                    <div className="card" style={{ marginBottom: "2rem", background: "rgba(131,110,249,0.08)", border: "1px solid rgba(131,110,249,0.3)", textAlign: "center", padding: "2rem" }}>
-                        <div style={{ fontSize: "2.5rem", marginBottom: "0.5rem" }}>👑</div>
-                        <div style={{ fontSize: "0.8rem", color: "var(--color-muted)", fontFamily: "var(--font-mono)", marginBottom: "0.25rem" }}>Season Champion</div>
-                        <div style={{ fontSize: "1.75rem", fontWeight: 700, color: "var(--color-monad)" }}>
-                            {champion?.profile.name ?? `${tournament.champion.slice(0, 6)}…${tournament.champion.slice(-4)}`}
+                    <div className="mb-8 p-6 md:p-8 rounded-xl border-4 border-[#fbbf24] bg-gradient-to-r from-[#fbbf24]/10 to-[#fbbf24]/5 flex flex-col md:flex-row items-center gap-6">
+                        <div className="w-20 h-20 bg-[#fbbf24]/20 rounded-xl border-2 border-[#fbbf24] flex items-center justify-center flex-shrink-0">
+                            <span className="material-symbols-outlined text-[#ca8a04]" style={{ fontSize: 40 }}>military_tech</span>
                         </div>
+                        <div className="text-center md:text-left flex-1">
+                            <p className="font-pixel text-[10px] text-[#ca8a04] uppercase tracking-widest mb-1">
+                                Season {tId} Champion
+                            </p>
+                            <h2 className="text-3xl font-black">
+                                {champion?.profile.name ?? `${tournament.champion.slice(0, 6)}…${tournament.champion.slice(-4)}`}
+                            </h2>
+                        </div>
+                        <span className="font-pixel text-[#fbbf24] text-6xl opacity-30">#1</span>
                     </div>
                 );
             })()}
 
-            {/* Match bracket */}
+            {/* Knockout Bracket */}
             {isCompleted && tournament.matches.length > 0 && (
-                <section style={{ marginBottom: "2.5rem" }}>
-                    <div className="section-header">
-                        <h2 className="section-title">Match Results</h2>
-                    </div>
+                <section className="mb-10">
+                    <h2 className="text-2xl font-black mb-6 flex items-center gap-3">
+                        <span className="material-symbols-outlined text-[#16a34a]">emoji_events</span>
+                        Knockout Bracket
+                    </h2>
                     <MatchBracket matches={tournament.matches} agents={tournament.agents} />
                 </section>
             )}
 
-            {/* Match Pitches — full football field per match */}
+            {/* Match Pitches */}
             {isCompleted && tournament.matches.length > 0 && (
-                <section style={{ marginBottom: "2.5rem" }}>
-                    <div className="section-header">
-                        <h2 className="section-title">Match Pitches</h2>
-                        <span className="badge badge-muted">{tournament.matches.length} matches</span>
-                    </div>
-                    <div style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
+                <section className="mb-10">
+                    <h2 className="text-2xl font-black mb-6 flex items-center gap-3">
+                        <span className="material-symbols-outlined text-[#16a34a]">sports</span>
+                        Match Pitches
+                    </h2>
+                    <div className="flex flex-col gap-8">
                         {tournament.matches.map((match, i) => {
                             const teamAAgent = agentByAddr(match.teamA);
                             const teamBAgent = agentByAddr(match.teamB);
                             if (!teamAAgent || !teamBAgent) return null;
 
-                            const round = i < 4 ? "Quarter Final" : i < 6 ? "Semi Final" : "Final";
+                            const round = i < 4 ? "Quarter Final" : i < 6 ? "Semi Final" : "Grand Final";
                             const matchNum = i < 4 ? i + 1 : i < 6 ? i - 3 : 1;
 
                             return (
                                 <div key={`pitch-${i}`}>
-                                    <div style={{
-                                        fontSize: "0.75rem",
-                                        fontWeight: 600,
-                                        textTransform: "uppercase",
-                                        letterSpacing: "0.06em",
-                                        color: "var(--color-muted)",
-                                        fontFamily: "var(--font-mono)",
-                                        marginBottom: "0.5rem",
-                                    }}>
-                                        {round} {i < 4 ? `#${matchNum}` : i < 6 ? `#${matchNum}` : ""}
+                                    <div className="font-pixel text-[10px] text-slate-500 uppercase tracking-widest mb-2">
+                                        {round} {i < 6 ? `#${matchNum}` : ""}
                                     </div>
                                     <FootballPitch
                                         teamA={teamAAgent.entry.team}
@@ -124,38 +125,37 @@ export default async function TournamentResultsPage({ params }: Props) {
                 </section>
             )}
 
-            {/* Roster */}
+            {/* Roster & Strategies */}
             <section>
-                <div className="section-header">
-                    <h2 className="section-title">Roster & Strategies</h2>
-                    <span className="badge badge-muted">{tournament.agents.length}/8</span>
-                </div>
-                <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+                <h2 className="text-2xl font-black mb-6 flex items-center gap-3">
+                    <span className="material-symbols-outlined text-[#16a34a]">groups</span>
+                    Roster & Strategies
+                </h2>
+                <div className="flex flex-col gap-6">
                     {tournament.agents.map(({ profile, entry }) => (
-                        <div key={profile.address} className="card" style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-                            <div style={{ display: "grid", gridTemplateColumns: "280px 1fr", gap: "1.5rem", alignItems: "start" }}>
+                        <div key={profile.address} className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex flex-col gap-4">
+                            <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-6 items-start">
                                 <AgentCard agent={profile} />
                                 <div>
                                     {entry.strategyId ? (
                                         <>
-                                            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.75rem" }}>
-                                                <span className="badge badge-monad">{entry.strategyName}</span>
+                                            <div className="flex items-center gap-2 mb-3">
+                                                <span className="px-3 py-1 bg-[#16a34a] text-white text-xs font-bold rounded uppercase">{entry.strategyName}</span>
                                                 <span className="badge badge-muted">Tactics #{entry.strategyId}</span>
                                             </div>
-                                            <p style={{ fontSize: "0.85rem", color: "var(--color-muted)", lineHeight: 1.7, marginTop: 0, fontStyle: "italic" }}>
+                                            <p className="text-sm text-slate-500 leading-relaxed italic">
                                                 &ldquo;{entry.reasoning}&rdquo;
                                             </p>
                                         </>
                                     ) : (
-                                        <p style={{ color: "var(--color-muted)", fontSize: "0.85rem" }}>No strategy committed.</p>
+                                        <p className="text-slate-500 text-sm">No strategy committed.</p>
                                     )}
                                 </div>
                             </div>
 
-                            {/* Squad */}
                             {entry.team.length > 0 && (
-                                <div style={{ borderTop: "1px solid var(--color-border)", paddingTop: "0.75rem" }}>
-                                    <div style={{ fontSize: "0.75rem", fontWeight: 600, color: "var(--color-muted)", textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: "0.5rem", fontFamily: "var(--font-mono)" }}>
+                                <div className="border-t border-slate-200 pt-4">
+                                    <div className="font-pixel text-[10px] text-slate-500 uppercase tracking-widest mb-3">
                                         Squad ({entry.team.filter(p => p.name).length} players)
                                     </div>
                                     <SquadTable players={entry.team} />

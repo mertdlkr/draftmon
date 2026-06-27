@@ -1,7 +1,7 @@
 import { ethers } from "ethers";
 import { BedrockRuntimeClient, InvokeModelCommand } from "@aws-sdk/client-bedrock-runtime";
 import * as dotenv from "dotenv";
-import { draftTeams } from "./players.js"; // players.ts dosyamız
+import { draftTeams } from "./players.js";
 
 dotenv.config({ path: "../.env" });
 
@@ -29,7 +29,6 @@ async function getStrategyFromLLM(agentName: string, identity: any, teamAvg: any
         return { strategyId: Math.floor(Math.random() * 6) + 1, reasoning: `With ${playersWithPositions[0]} and ${playersWithPositions[1]} on the pitch, we cannot lose!` };
     }
 
-    // Calculate the agent's strongest attribute to enforce personality
     const attrs = [
         { name: "Attack", val: Number(identity.attack) },
         { name: "Defense", val: Number(identity.defense) },
@@ -71,9 +70,9 @@ async function getStrategyFromLLM(agentName: string, identity: any, teamAvg: any
 
         const response = await bedrockClient.send(command);
         let aiText = JSON.parse(new TextDecoder().decode(response.body)).content[0].text.replace(/```json/g, '').replace(/```/g, '').trim();
-        aiText = aiText.replace(/[\n\r]/g, ' '); // Strip literal newlines to prevent JSON.parse errors
+        aiText = aiText.replace(/[\n\r]/g, ' ');
         const result = JSON.parse(aiText);
-        return { strategyId: result.strategyId || 1, reasoning: result.reasoning?.substring(0, 1024) || "Taktiklerim sahada konuşur." };
+        return { strategyId: result.strategyId || 1, reasoning: result.reasoning?.substring(0, 1024) || "My tactics speak on the pitch." };
     } catch (error) {
         console.error(`LLM Error (${agentName})`, error);
         const fallbacks = [
@@ -86,35 +85,47 @@ async function getStrategyFromLLM(agentName: string, identity: any, teamAvg: any
 }
 
 async function runTournament() {
-    console.log("🚀 MonaDraft: Yeni Sezon Orkestratörü Başlatılıyor...\n");
+    console.log("\n╔══════════════════════════════════════════════════════════════╗");
+    console.log("║         MONADRAFT — ON-CHAIN SEASON ORCHESTRATOR           ║");
+    console.log("║         Powered by Monad Testnet · Single TX Compute       ║");
+    console.log("╚══════════════════════════════════════════════════════════════╝\n");
+
     const provider = new ethers.JsonRpcProvider(RPC_URL);
     const adminWallet = new ethers.Wallet(process.env.ADMIN_KEY!, provider);
     const adminContract = new ethers.Contract(CONTRACT_ADDRESS, ABI, adminWallet);
 
-    // 1. Turnuva Durumunu Kontrol Et ve Gerekirse Yeni Sezon Başlat
+    console.log(`  ⛓  RPC Endpoint      : ${RPC_URL}`);
+    console.log(`  📄 Contract           : ${CONTRACT_ADDRESS}`);
+    console.log(`  🔑 Admin Wallet       : ${adminWallet.address}\n`);
+
+    // 1. Check tournament state & start new season if needed
     let tId = await adminContract.currentTournamentId();
     let tournament = await adminContract.tournaments(tId);
 
-    if (tournament.state !== 0n) { // Eğer turnuva OPEN (0) değilse (yani bitmiş veya yarım kalmışsa)
-        console.log(`📅 Turnuva ${tId} açık değil (Durum: ${tournament.state}). Yeni sezon (KNOCKOUT_8) başlatılıyor...`);
-        const tx = await adminContract.startNewSeason(0); // 0 = KNOCKOUT_8 enum değeri
+    if (tournament.state !== 0n) {
+        console.log(`  ⚠  Season #${tId} is not OPEN (state: ${tournament.state}). Broadcasting startNewSeason(KNOCKOUT_8)...`);
+        const tx = await adminContract.startNewSeason(0);
         await tx.wait();
         tId = await adminContract.currentTournamentId();
-        console.log(`✅ Yeni Sezon ID: ${tId} oluşturuldu!\n`);
+        console.log(`  ✓  New season initialized on-chain → Season #${tId}\n`);
     } else {
-        console.log(`📅 Mevcut açık turnuva bulundu: Sezon ${tId}\n`);
+        console.log(`  ✓  Active season found on-chain → Season #${tId} (OPEN)\n`);
     }
 
     const agentWallets = Array.from({ length: 8 }, (_, i) => new ethers.Wallet(process.env[`AGENT_KEY_${i + 1}`]!, provider));
     const agentDataMap = new Map();
 
-    console.log("=== AŞAMA 1: AJANLAR TURNUVAYA GİRİŞ YAPIYOR ===");
+    // ── PHASE 1: AGENTS ENTER TOURNAMENT ──
+    console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+    console.log("  PHASE 1 · ENTRY — Agents submitting enterTournament() txs");
+    console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n");
+
     await Promise.all(agentWallets.map(async (wallet, i) => {
         const agentContract = new ethers.Contract(CONTRACT_ADDRESS, ABI, wallet);
         const profile = await adminContract.agents(wallet.address);
 
         if (!profile.isRegistered) {
-            console.error(`❌ HATA: Ajan ${i + 1} kayıtlı değil. Lütfen önce 'setup_agents.ts' scriptini çalıştırın!`);
+            console.error(`  ✗  Agent ${i + 1} (${wallet.address.slice(0, 10)}...) not registered on-chain. Run setup_agents.ts first.`);
             return;
         }
 
@@ -123,15 +134,18 @@ async function runTournament() {
         try {
             const txEnter = await agentContract.enterTournament(tId, { value: ENTRY_FEE });
             await txEnter.wait();
-            console.log(`🎟️ [${profile.name}] Sezon ${tId}'ye katıldı.`);
+            console.log(`  ⛓  [${profile.name}] → enterTournament(${tId}) confirmed | 0.1 MON staked`);
         } catch (e) {
-            console.log(`⏩ [${profile.name}] zaten bu turnuvada (veya kapasite dolu).`);
+            console.log(`  ⏩ [${profile.name}] already entered Season #${tId} (or pool is full)`);
         }
 
         agentDataMap.set(wallet.address, { name: profile.name, identity: id });
     }));
 
-    console.log("\n=== AŞAMA 2: DRAFT (KADROLAR ÇEKİLİYOR) ===");
+    // ── PHASE 2: DRAFT — SQUAD ALLOCATION ──
+    console.log("\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+    console.log("  PHASE 2 · DRAFT — Deterministic squad allocation from 88 players");
+    console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n");
     const draftResults = draftTeams();
 
     await Promise.all(agentWallets.map(async (wallet, i) => {
@@ -144,54 +158,77 @@ async function runTournament() {
         data.playersWithPositions = playersWithPositions;
         data.formation = formation;
         agentDataMap.set(wallet.address, data);
-
-        // Admin cannot submit transactions in parallel with the exact same nonce reliably without manual nonce management.
-        // For simplicity and safety on testnets, we'll keep the admin's setTeam calls sequential.
     }));
 
-    // Perform Admin TXs in parallel using manual nonce management to avoid 8-block wait
+    // Broadcast setTeam() in parallel with manual nonce management
     const currentNonce = await adminWallet.getNonce();
     const setTeamTxs = await Promise.all(agentWallets.map(async (wallet, i) => {
         const data = agentDataMap.get(wallet.address);
         const { team } = draftResults[i];
 
         const tx = await adminContract.setTeam(tId, wallet.address, team, { nonce: currentNonce + i });
-        console.log(`⚽ [${data.name}] Formation: ${data.formation} | Stars: ${data.playersWithPositions.slice(0, 3).join(', ')} (TX gönderildi)`);
+        console.log(`  📝 [${data.name}] setTeam() broadcast | Formation: ${data.formation} | Key: ${data.playersWithPositions.slice(0, 3).join(', ')}`);
         return tx;
     }));
 
-    console.log("⏳ Kadroların blokzincire yazılması bekleniyor (Tek blokta paralel)...");
+    console.log("\n  ⏳ Awaiting on-chain confirmations for 8 setTeam() txs (parallel nonce batch)...");
     await Promise.all(setTeamTxs.map(tx => tx.wait()));
-    console.log("✅ Tüm kadrolar başarıyla kaydedildi.");
+    console.log("  ✓  All 8 squads committed to Monad. State root updated.");
 
     const openTx = await adminContract.openStrategyPhase(tId);
     await openTx.wait();
+    console.log("  ✓  openStrategyPhase() confirmed. Agents can now commit tactics.\n");
 
-    console.log("\n=== AŞAMA 3: AI REASONING (AWS BEDROCK) ===");
+    // ── PHASE 3: AI REASONING (BEDROCK LLM) ──
+    console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+    console.log("  PHASE 3 · STRATEGY — AI agents reasoning via AWS Bedrock");
+    console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n");
+
     await Promise.all(agentWallets.map(async (wallet) => {
         const data = agentDataMap.get(wallet.address);
-        console.log(`🧠 [${data.name}] taktik düşünüyor...`);
+        console.log(`  🧠 [${data.name}] invoking LLM for tactical analysis...`);
 
         const aiDecision = await getStrategyFromLLM(data.name, data.identity, data.teamAvg, data.playersWithPositions, data.formation);
 
-        // Strategy commit is per agent wallet, so these can run safely in parallel
         const tx = await new ethers.Contract(CONTRACT_ADDRESS, ABI, wallet).commitStrategy(tId, aiDecision.strategyId, aiDecision.reasoning);
         await tx.wait();
 
-        console.log(`   -> Seçim: Taktik ${aiDecision.strategyId} | Açıklama: "${aiDecision.reasoning}"`);
+        console.log(`  ⛓  [${data.name}] commitStrategy(${aiDecision.strategyId}) confirmed`);
+        console.log(`     └─ "${aiDecision.reasoning.slice(0, 120)}${aiDecision.reasoning.length > 120 ? '...' : ''}"\n`);
     }));
 
-    console.log("\n=== AŞAMA 4: TURNUVA OYNANIYOR (MONAD ŞOVU) ===");
-    console.log(`⚙️ Tek bir işlemde (Single TX) Sezon ${tId} hesaplanıyor...`);
+    // ── PHASE 4: TOURNAMENT EXECUTION (SINGLE TX) ──
+    console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+    console.log("  PHASE 4 · MATCH DAY — 7 matches computed in a single Monad TX");
+    console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n");
+
+    console.log(`  ⚡ Broadcasting playEightFinalTournament(${tId})...`);
     const startTx = await adminContract.playEightFinalTournament(tId);
     await startTx.wait();
-    console.log(`🏆 Turnuva Bitti! İşlem Hash: ${startTx.hash}\n`);
+    console.log(`  ✓  Tournament executed on-chain!`);
+    console.log(`     TX Hash: ${startTx.hash}\n`);
+
+    // ── RESULTS ──
+    console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
+    console.log("  RESULTS — On-Chain Match History");
+    console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n");
 
     const history = await adminContract.getMatches(tId);
     history.forEach((match: any, i: number) => {
-        let round = i < 4 ? "Çeyrek Final" : i < 6 ? "Yarı Final" : "FİNAL";
-        console.log(`[${round}] ${agentDataMap.get(match.teamA)?.name} (${match.scoreA})  VS  ${agentDataMap.get(match.teamB)?.name} (${match.scoreB}) -> KAZANAN: 👑 ${agentDataMap.get(match.winner)?.name}`);
+        const round = i < 4 ? "Quarter Final" : i < 6 ? "Semi Final" : "FINAL";
+        const nameA = agentDataMap.get(match.teamA)?.name ?? match.teamA.slice(0, 10);
+        const nameB = agentDataMap.get(match.teamB)?.name ?? match.teamB.slice(0, 10);
+        const winnerName = agentDataMap.get(match.winner)?.name ?? match.winner.slice(0, 10);
+        const tag = round === "FINAL" ? "🏆" : "  ";
+        console.log(`  ${tag} [${round.padEnd(13)}] ${nameA} (${match.scoreA})  vs  ${nameB} (${match.scoreB})  →  👑 ${winnerName}`);
     });
+
+    const champion = agentDataMap.get(history[history.length - 1]?.winner);
+    if (champion) {
+        console.log(`\n  ══════════════════════════════════════════════════`);
+        console.log(`  🏆  SEASON #${tId} CHAMPION: ${champion.name.toUpperCase()}`);
+        console.log(`  ══════════════════════════════════════════════════\n`);
+    }
 }
 
 runTournament().catch(console.error);

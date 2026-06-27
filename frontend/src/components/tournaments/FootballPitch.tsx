@@ -93,7 +93,7 @@ export function FootballPitch({
     const countersB = new Map<string, number>();
 
     return (
-        <div style={{ width: "100%", borderRadius: "12px", overflow: "hidden", border: "2px solid var(--color-border)" }}>
+        <div style={{ width: "100%", borderRadius: "12px", overflow: "hidden", border: "2px solid #e2e8f0" }}>
             {/* Score Header */}
             <div
                 style={{
@@ -102,12 +102,12 @@ export function FootballPitch({
                     alignItems: "center",
                     gap: "1.5rem",
                     padding: "0.6rem 1rem",
-                    background: "var(--color-surface)",
-                    borderBottom: "1px solid var(--color-border)",
+                    background: "#f8fafc",
+                    borderBottom: "1px solid #e2e8f0",
                     fontFamily: "var(--font-display)",
                 }}
             >
-                <span style={{ fontWeight: winner === "A" ? 800 : 500, color: winner === "A" ? "var(--color-monad)" : "var(--color-text)", fontSize: "0.95rem" }}>
+                <span style={{ fontWeight: winner === "A" ? 800 : 500, color: winner === "A" ? "#16a34a" : "#0f172a", fontSize: "0.95rem" }}>
                     {winner === "A" && "👑 "}{teamAName}
                 </span>
                 {scoreA != null && scoreB != null && (
@@ -117,9 +117,9 @@ export function FootballPitch({
                                 fontFamily: "var(--font-mono)",
                                 fontSize: "1.1rem",
                                 fontWeight: 700,
-                                color: "var(--color-text)",
+                                color: "#0f172a",
                                 padding: "0.15rem 0.75rem",
-                                background: "var(--color-surface-2)",
+                                background: "#e2e8f0",
                                 borderRadius: "6px",
                             }}
                         >
@@ -129,7 +129,7 @@ export function FootballPitch({
                             <span style={{
                                 fontFamily: "var(--font-mono)",
                                 fontSize: "0.65rem",
-                                color: "var(--color-muted)",
+                                color: "#64748b",
                                 letterSpacing: "0.03em",
                             }}>
                                 ⚡ {powerScoreA} – {powerScoreB}
@@ -137,7 +137,7 @@ export function FootballPitch({
                         )}
                     </div>
                 )}
-                <span style={{ fontWeight: winner === "B" ? 800 : 500, color: winner === "B" ? "var(--color-monad)" : "var(--color-text)", fontSize: "0.95rem" }}>
+                <span style={{ fontWeight: winner === "B" ? 800 : 500, color: winner === "B" ? "#16a34a" : "#0f172a", fontSize: "0.95rem" }}>
                     {teamBName}{winner === "B" && " 👑"}
                 </span>
             </div>

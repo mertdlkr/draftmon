@@ -12,7 +12,6 @@ const ROUNDS = [
 ];
 
 export function MatchBracket({ matches, agents }: Props) {
-    // Map address → name for display
     const nameMap = Object.fromEntries(agents.map(a => [a.profile.address.toLowerCase(), a.profile.name]));
 
     const grouped = {
@@ -22,63 +21,53 @@ export function MatchBracket({ matches, agents }: Props) {
     };
 
     return (
-        <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+        <div className="flex flex-col gap-6">
             {ROUNDS.map(({ key, label }) => {
                 const roundMatches = grouped[key as keyof typeof grouped];
                 if (!roundMatches.length) return null;
 
                 return (
                     <div key={key}>
-                        <div style={{
-                            fontSize: "0.75rem", fontWeight: 700, color: "var(--color-muted)",
-                            textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: "0.6rem",
-                            fontFamily: "var(--font-mono)",
-                        }}>
+                        <div className="font-pixel text-[10px] text-slate-500 uppercase tracking-widest mb-3">
                             {label}
                         </div>
-                        <div style={{ display: "flex", flexWrap: "wrap", gap: "0.75rem" }}>
+                        <div className="flex flex-wrap gap-4">
                             {roundMatches.map((m, i) => {
                                 const nameA = nameMap[m.teamA.toLowerCase()] ?? m.teamA.slice(0, 8);
                                 const nameB = nameMap[m.teamB.toLowerCase()] ?? m.teamB.slice(0, 8);
                                 const aWon = m.winner.toLowerCase() === m.teamA.toLowerCase();
 
                                 return (
-                                    <div key={i} className="card" style={{ minWidth: 240, flex: "1 1 240px" }}>
+                                    <div key={i} className="bg-white rounded-xl border border-slate-200 shadow-sm p-4 min-w-[240px] flex-1">
                                         {/* Team A */}
-                                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "0.4rem 0" }}>
-                                            <span style={{ fontWeight: aWon ? 700 : 400, color: aWon ? "var(--color-text)" : "var(--color-muted)", fontSize: "0.875rem" }}>
-                                                {aWon && <span style={{ color: "var(--color-pitch)" }}>👑 </span>}{nameA}
+                                        <div className="flex justify-between items-center py-1">
+                                            <span className={`text-sm ${aWon ? "font-bold text-slate-900" : "text-slate-400"}`}>
+                                                {aWon && <span className="text-[#16a34a] mr-1">
+                                                    <span className="material-symbols-outlined text-base align-middle">military_tech</span>
+                                                </span>}{nameA}
                                             </span>
-                                            <span style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", color: aWon ? "var(--color-pitch)" : "var(--color-muted)", fontWeight: aWon ? 700 : 400 }}>
+                                            <span className={`font-mono text-base ${aWon ? "font-bold text-[#16a34a]" : "text-slate-400"}`}>
                                                 {m.goalsA}
                                             </span>
                                         </div>
 
-                                        <div className="divider" style={{ margin: "0.25rem 0" }} />
+                                        <div className="border-t border-slate-100 my-1" />
 
                                         {/* Team B */}
-                                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "0.4rem 0" }}>
-                                            <span style={{ fontWeight: !aWon ? 700 : 400, color: !aWon ? "var(--color-text)" : "var(--color-muted)", fontSize: "0.875rem" }}>
-                                                {!aWon && <span style={{ color: "var(--color-pitch)" }}>👑 </span>}{nameB}
+                                        <div className="flex justify-between items-center py-1">
+                                            <span className={`text-sm ${!aWon ? "font-bold text-slate-900" : "text-slate-400"}`}>
+                                                {!aWon && <span className="text-[#16a34a] mr-1">
+                                                    <span className="material-symbols-outlined text-base align-middle">military_tech</span>
+                                                </span>}{nameB}
                                             </span>
-                                            <span style={{ fontFamily: "var(--font-mono)", fontSize: "1rem", color: !aWon ? "var(--color-pitch)" : "var(--color-muted)", fontWeight: !aWon ? 700 : 400 }}>
+                                            <span className={`font-mono text-base ${!aWon ? "font-bold text-[#16a34a]" : "text-slate-400"}`}>
                                                 {m.goalsB}
                                             </span>
                                         </div>
 
                                         {/* Power Score */}
-                                        <div style={{
-                                            textAlign: "center",
-                                            marginTop: "0.35rem",
-                                            padding: "0.25rem 0.5rem",
-                                            background: "rgba(131,110,249,0.08)",
-                                            borderRadius: "4px",
-                                            fontSize: "0.7rem",
-                                            fontFamily: "var(--font-mono)",
-                                            color: "var(--color-muted)",
-                                            letterSpacing: "0.03em",
-                                        }}>
-                                            ⚡ Power: {m.scoreA} – {m.scoreB}
+                                        <div className="text-center mt-2 py-1 px-2 bg-slate-50 rounded text-xs font-mono text-slate-400 tracking-wide">
+                                            Power: {m.scoreA} - {m.scoreB}
                                         </div>
                                     </div>
                                 );

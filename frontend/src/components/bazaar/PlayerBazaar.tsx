@@ -122,22 +122,8 @@ function LiveLogTicker({ playerName, playerHash }: { playerName: string; playerH
     }, [playerHash, logs.length]);
 
     return (
-        <div style={{
-            marginTop: "0.35rem", padding: "0.3rem 0.5rem",
-            background: "rgba(131,110,249,0.04)", borderRadius: "4px",
-            fontSize: "0.62rem", fontFamily: "var(--font-mono)",
-            color: "var(--color-muted)",
-            minHeight: "1.4rem",
-            display: "flex", alignItems: "center", gap: "0.4rem",
-            overflow: "hidden",
-        }}>
-            <span style={{
-                width: 5, height: 5, borderRadius: "50%",
-                background: "#22c55e",
-                boxShadow: "0 0 4px #22c55e",
-                animation: "pulse 2s infinite",
-                flexShrink: 0,
-            }} />
+        <div className="bg-slate-50 p-2 rounded text-[10px] font-bold text-slate-500 flex items-center gap-2 mt-1 min-h-[1.4rem] overflow-hidden">
+            <span className="text-[#16a34a] animate-pulse">●</span>
             <span style={{
                 opacity: fade ? 1 : 0,
                 transition: "opacity 0.2s ease",
@@ -368,100 +354,87 @@ export function PlayerBazaar() {
     return (
         <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
             {/* Market Stats Bar */}
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: "0.75rem" }}>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                 {[
-                    { label: "Total Players", value: stats.total, icon: "👤" },
-                    { label: "Players Traded", value: stats.sold, icon: "🔄" },
-                    { label: "Market Cap", value: `${stats.totalValue} MON`, icon: "💰" },
-                    { label: "Avg Overall", value: stats.avgOverall, icon: "📊" },
+                    { label: "Total Players", value: stats.total },
+                    { label: "Players Traded", value: stats.sold },
+                    { label: "Market Cap", value: `${stats.totalValue} MON` },
+                    { label: "Avg Overall", value: stats.avgOverall },
                 ].map((s) => (
-                    <div key={s.label} className="card" style={{ textAlign: "center", padding: "0.75rem" }}>
-                        <div style={{ fontSize: "1.5rem", marginBottom: "0.25rem" }}>{s.icon}</div>
-                        <div style={{ fontSize: "1.1rem", fontWeight: 700, color: "var(--color-monad)", fontFamily: "var(--font-mono)" }}>{s.value}</div>
-                        <div style={{ fontSize: "0.7rem", color: "var(--color-muted)", marginTop: "0.15rem" }}>{s.label}</div>
+                    <div key={s.label} className="bg-white p-6 border-b-4 border-[#16a34a] rounded-xl shadow-sm">
+                        <p className="text-slate-500 text-xs font-bold uppercase tracking-widest mb-1">{s.label}</p>
+                        <p className="text-3xl font-black">{s.value}</p>
                     </div>
                 ))}
             </div>
 
             {/* Filters */}
-            <div className="card" style={{ display: "flex", gap: "1rem", flexWrap: "wrap", alignItems: "center", padding: "0.75rem 1rem" }}>
+            <div className="flex flex-col xl:flex-row gap-4 bg-white p-4 rounded-xl border border-slate-200 items-center">
                 {/* Search */}
-                <input
-                    type="text"
-                    placeholder="Search player or agent..."
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                    style={{
-                        background: "var(--color-surface-2)", border: "1px solid var(--color-border)",
-                        borderRadius: "6px", padding: "0.4rem 0.75rem", fontSize: "0.8rem",
-                        color: "var(--color-text)", outline: "none", width: 200,
-                        fontFamily: "var(--font-display)",
-                    }}
-                />
+                <div className="relative w-full xl:w-72">
+                    <input
+                        type="text"
+                        placeholder="Search 16-bit legends..."
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                        className="w-full bg-slate-100 border-none rounded py-2 pl-4 pr-4 text-sm focus:ring-2 focus:ring-[#16a34a] outline-none"
+                    />
+                </div>
 
                 {/* Position filter */}
-                <div style={{ display: "flex", gap: "0.25rem" }}>
-                    {(["ALL", "GK", "DEF", "MID", "ATK"] as PositionFilter[]).map((p) => (
-                        <button key={p} onClick={() => setPosFilter(p)} style={{
-                            padding: "0.3rem 0.6rem", borderRadius: "4px", fontSize: "0.7rem", fontWeight: 600,
-                            border: "none", cursor: "pointer", fontFamily: "var(--font-mono)",
-                            background: posFilter === p ? "var(--color-monad)" : "var(--color-surface-2)",
-                            color: posFilter === p ? "#fff" : "var(--color-muted)",
-                            transition: "all 0.15s",
-                        }}>
-                            {p}
-                        </button>
-                    ))}
+                <div className="flex items-center gap-2">
+                    <span className="text-[10px] font-black uppercase tracking-tighter text-slate-400">Position</span>
+                    <div className="flex bg-slate-100 p-1 rounded">
+                        {(["ALL", "GK", "DEF", "MID", "ATK"] as PositionFilter[]).map((p) => (
+                            <button key={p} onClick={() => setPosFilter(p)} className={`px-3 py-1 text-xs font-bold rounded cursor-pointer transition-all ${posFilter === p ? "bg-white shadow-sm" : "hover:bg-white"
+                                }`}>
+                                {p}
+                            </button>
+                        ))}
+                    </div>
                 </div>
 
                 {/* Tier filter */}
-                <div style={{ display: "flex", gap: "0.25rem" }}>
-                    <button onClick={() => setTierFilter("ALL")} style={{
-                        padding: "0.3rem 0.5rem", borderRadius: "4px", fontSize: "0.65rem", fontWeight: 600,
-                        border: "none", cursor: "pointer",
-                        background: tierFilter === "ALL" ? "var(--color-monad)" : "var(--color-surface-2)",
-                        color: tierFilter === "ALL" ? "#fff" : "var(--color-muted)",
-                    }}>
-                        ALL
-                    </button>
-                    {([1, 2, 3, 4, 5, 6, 7, 8] as const).map((t) => (
-                        <button key={t} onClick={() => setTierFilter(t)} style={{
-                            padding: "0.3rem 0.5rem", borderRadius: "4px", fontSize: "0.6rem", fontWeight: 600,
-                            border: "none", cursor: "pointer", letterSpacing: "0.03em",
-                            background: tierFilter === t ? TIER_CONFIG[t].color : "var(--color-surface-2)",
-                            color: tierFilter === t ? "#000" : TIER_CONFIG[t].color,
-                            transition: "all 0.15s",
-                        }}>
-                            T{t}
+                <div className="flex items-center gap-2">
+                    <span className="text-[10px] font-black uppercase tracking-tighter text-slate-400">Tier</span>
+                    <div className="flex gap-1">
+                        <button onClick={() => setTierFilter("ALL")} className={`size-7 flex items-center justify-center rounded font-black text-[10px] cursor-pointer transition-all ${tierFilter === "ALL" ? "bg-[#16a34a] text-white" : "bg-slate-200"
+                            }`}>
+                            ALL
                         </button>
-                    ))}
+                        {([1, 2, 3, 4, 5, 6, 7, 8] as const).map((t) => (
+                            <button key={t} onClick={() => setTierFilter(t)} className="size-7 flex items-center justify-center rounded font-black text-[10px] cursor-pointer transition-all" style={{
+                                background: tierFilter === t ? TIER_CONFIG[t].color : "#e2e8f0",
+                                color: tierFilter === t ? "#000" : TIER_CONFIG[t].color,
+                            }}>
+                                T{t}
+                            </button>
+                        ))}
+                    </div>
                 </div>
 
-                <div style={{ flex: 1 }} />
-
-                {/* Sort buttons */}
-                <div style={{ display: "flex", gap: "0.25rem", alignItems: "center" }}>
-                    <span style={{ fontSize: "0.7rem", color: "var(--color-muted)", marginRight: "0.25rem" }}>Sort:</span>
-                    {(["overall", "marketValue", "pace", "shooting"] as SortKey[]).map((k) => (
-                        <button key={k} onClick={() => handleSort(k)} style={{
-                            padding: "0.3rem 0.5rem", borderRadius: "4px", fontSize: "0.65rem",
-                            border: "none", cursor: "pointer", fontFamily: "var(--font-mono)",
-                            background: sortKey === k ? "rgba(131,110,249,0.2)" : "var(--color-surface-2)",
-                            color: sortKey === k ? "var(--color-monad)" : "var(--color-muted)",
-                        }}>
-                            {k === "marketValue" ? "VALUE" : k.toUpperCase()} {sortKey === k ? (sortAsc ? "↑" : "↓") : ""}
-                        </button>
-                    ))}
+                <div className="xl:ml-auto flex items-center gap-2">
+                    <span className="text-[10px] font-black uppercase tracking-tighter text-slate-400">Sort By</span>
+                    <select
+                        className="bg-slate-100 border-none text-xs font-bold rounded py-1.5 focus:ring-[#16a34a] cursor-pointer"
+                        value={sortKey}
+                        onChange={(e) => { setSortKey(e.target.value as SortKey); setSortAsc(false); }}
+                    >
+                        <option value="overall">Highest Overall</option>
+                        <option value="marketValue">Highest Value</option>
+                        <option value="pace">Top Pace</option>
+                        <option value="shooting">Top Shooting</option>
+                    </select>
                 </div>
             </div>
 
             {/* Results count */}
-            <div style={{ fontSize: "0.8rem", color: "var(--color-muted)", fontFamily: "var(--font-mono)" }}>
+            <div className="text-sm text-slate-500 font-medium">
                 Showing {filtered.length} of {allPlayers.length} players
             </div>
 
             {/* Player Grid */}
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: "0.75rem" }}>
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
                 {filtered.map((player) => {
                     const tierCfg = TIER_CONFIG[player.tier];
                     const isExpanded = expanded === player.name;
@@ -472,177 +445,105 @@ export function PlayerBazaar() {
                     return (
                         <div
                             key={player.name}
-                            className="card card-hover"
+                            className={`bg-white rounded-lg overflow-hidden flex flex-col transition-transform hover:-translate-y-1 cursor-pointer ${player.tier === 1 ? "legend-card" : player.tier === 2 ? "elite-card" : player.tier === 3 ? "great-card" : player.tier === 4 ? "good-card" : "border border-slate-200 shadow-sm"
+                                }`}
                             onClick={() => setExpanded(isExpanded ? null : player.name)}
-                            style={{
-                                cursor: "pointer",
-                                position: "relative",
-                                overflow: "hidden",
-                                borderLeft: `3px solid ${tierCfg.color}`,
-                                boxShadow: tierCfg.glow !== "none" ? `inset 0 0 30px ${tierCfg.glow}` : undefined,
-                                transition: "all 0.2s",
-                            }}
                         >
                             {/* Sold badge */}
                             {player.isSold && (
-                                <div style={{
-                                    position: "absolute", top: 8, right: 8,
-                                    fontSize: "0.55rem", fontWeight: 700, textTransform: "uppercase",
-                                    letterSpacing: "0.08em", padding: "0.15rem 0.4rem", borderRadius: "3px",
-                                    background: "rgba(34,197,94,0.15)", color: "#22c55e",
-                                }}>
+                                <div className="absolute top-2 right-2 text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded bg-green-100 text-green-600">
                                     SOLD
                                 </div>
                             )}
 
-                            {/* Header row */}
-                            <div style={{ display: "flex", alignItems: "center", gap: "0.6rem", marginBottom: "0.5rem" }}>
-                                {/* Player avatar placeholder */}
-                                <div style={{
-                                    width: 44, height: 44, borderRadius: "8px",
-                                    background: `linear-gradient(135deg, ${tierCfg.color}18, ${tierCfg.color}30)`,
-                                    border: `1px solid ${tierCfg.color}40`,
-                                    display: "flex", alignItems: "center", justifyContent: "center",
-                                    fontSize: "1.2rem", fontWeight: 700,
-                                    color: tierCfg.color,
-                                    imageRendering: "pixelated",
-                                    overflow: "hidden",
-                                    flexShrink: 0,
-                                }}>
-                                    ⚽
-                                </div>
-
-                                <div style={{ flex: 1 }}>
-                                    <div style={{ fontWeight: 700, fontSize: "0.95rem" }}>{player.name}</div>
-                                    <div style={{ display: "flex", gap: "0.35rem", marginTop: "0.15rem" }}>
-                                        <span style={{
-                                            fontSize: "0.6rem", fontWeight: 700, padding: "0.1rem 0.35rem",
-                                            borderRadius: "3px", background: `${posColor}22`, color: posColor,
-                                            fontFamily: "var(--font-mono)",
-                                        }}>
-                                            {player.position}
-                                        </span>
-                                        <span style={{
-                                            fontSize: "0.55rem", fontWeight: 600, padding: "0.1rem 0.35rem",
-                                            borderRadius: "3px", background: `${tierCfg.color}15`, color: tierCfg.color,
-                                            letterSpacing: "0.05em",
-                                        }}>
-                                            {tierCfg.label}
-                                        </span>
+                            {/* Card header with tier gradient */}
+                            <div className={`p-4 ${player.tier <= 2 ? `bg-gradient-to-b ${player.tier === 1 ? 'from-yellow-100/50' : 'from-purple-100/50'} to-transparent` : 'p-4'}`}>
+                                <div className="flex justify-between items-start mb-4">
+                                    <div className={`font-black px-2 py-0.5 text-[10px] flex items-center gap-1 rounded`} style={{ background: tierCfg.color, color: player.tier <= 2 ? '#000' : '#fff' }}>
+                                        <span className="material-symbols-outlined text-[14px]">{player.tier === 1 ? 'star' : player.tier === 2 ? 'shield' : 'person'}</span>
+                                        {tierCfg.label}
+                                    </div>
+                                    <div className="text-right">
+                                        <p className="text-[10px] font-black text-slate-400 uppercase">Market Value</p>
+                                        <p className="text-lg font-black italic" style={{ color: tierCfg.color }}>{player.marketValue} MON</p>
                                     </div>
                                 </div>
-
-                                {/* Market value */}
-                                <div style={{ textAlign: "right" }}>
-                                    <div style={{ fontFamily: "var(--font-mono)", fontWeight: 700, fontSize: "0.9rem", color: "var(--color-monad)" }}>
-                                        {player.marketValue} <span style={{ fontSize: "0.6rem", color: "var(--color-muted)" }}>MON</span>
+                                <div className="flex items-center gap-4 mb-4">
+                                    <div className="size-16 bg-slate-200 rounded p-1 flex items-center justify-center overflow-hidden" style={{ border: `2px solid ${tierCfg.color}` }}>
+                                        <span className="material-symbols-outlined text-slate-400" style={{ fontSize: 32 }}>sports_soccer</span>
+                                    </div>
+                                    <div>
+                                        <h3 className="text-2xl font-black italic uppercase leading-none">{player.name}</h3>
+                                        <p className="text-slate-500 font-bold text-xs">{player.position} • Tier {player.tier}</p>
                                     </div>
                                 </div>
                             </div>
 
-                            {/* Stats bar */}
-                            <div style={{ display: "flex", gap: "0.5rem", marginBottom: "0.5rem" }}>
-                                {([
-                                    { key: "pace", label: "PAC", color: "#22c55e" },
-                                    { key: "shooting", label: "SHO", color: "#ef4444" },
-                                    { key: "passing", label: "PAS", color: "#3b82f6" },
-                                    { key: "tackling", label: "TAC", color: "#f59e0b" },
-                                ] as const).map((stat) => (
-                                    <div key={stat.key} style={{ flex: 1 }}>
-                                        <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "0.15rem" }}>
-                                            <span style={{ fontSize: "0.55rem", color: "var(--color-muted)", fontFamily: "var(--font-mono)" }}>{stat.label}</span>
-                                            <span style={{ fontSize: "0.6rem", fontWeight: 700, fontFamily: "var(--font-mono)", color: stat.color }}>{player[stat.key]}</span>
-                                        </div>
-                                        <div style={{ height: 3, borderRadius: 2, background: "var(--color-surface-2)", overflow: "hidden" }}>
-                                            <div style={{ height: "100%", width: `${player[stat.key]}%`, background: stat.color, borderRadius: 2, transition: "width 0.3s" }} />
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-
-                            {/* Owner */}
-                            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", borderTop: "1px solid var(--color-border)", paddingTop: "0.4rem" }}>
-                                <div style={{ display: "flex", alignItems: "center", gap: "0.35rem" }}>
-                                    <div style={{ width: 6, height: 6, borderRadius: "50%", background: ownerColor }} />
-                                    <span style={{ fontSize: "0.7rem", color: "var(--color-muted)" }}>
-                                        Owned by <strong style={{ color: ownerColor }}>{player.owner}</strong>
-                                    </span>
-                                </div>
-                                <span style={{ fontSize: "0.6rem", color: "var(--color-muted)", fontFamily: "var(--font-mono)" }}>
-                                    {player.bidHistory.length} bid{player.bidHistory.length !== 1 ? "s" : ""}
-                                </span>
-                            </div>
-
-                            {/* Live log ticker */}
-                            <LiveLogTicker playerName={player.name} playerHash={nameHash(player.name)} />
-
-                            {/* Expanded: Bid History */}
-                            {isExpanded && (
-                                <div style={{
-                                    marginTop: "0.5rem", borderTop: "1px solid var(--color-border)",
-                                    paddingTop: "0.5rem",
-                                }}>
-                                    <div style={{
-                                        fontSize: "0.65rem", fontWeight: 600, color: "var(--color-muted)",
-                                        textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: "0.4rem",
-                                        fontFamily: "var(--font-mono)",
-                                    }}>
-                                        Bid History
-                                    </div>
-                                    {player.bidHistory.map((bid, i) => (
-                                        <div key={i} style={{
-                                            display: "flex", alignItems: "center", gap: "0.5rem",
-                                            padding: "0.3rem 0", fontSize: "0.72rem",
-                                            borderBottom: i < player.bidHistory.length - 1 ? "1px solid var(--color-border)" : "none",
-                                        }}>
-                                            <span style={{ fontFamily: "var(--font-mono)", color: "var(--color-muted)", fontSize: "0.6rem", flexShrink: 0 }}>
-                                                {bid.timestamp}
-                                            </span>
-                                            <div style={{
-                                                width: 5, height: 5, borderRadius: "50%", flexShrink: 0,
-                                                background: AGENT_COLORS[bid.bidder] || "#9ca3af",
-                                            }} />
-                                            <span style={{ color: AGENT_COLORS[bid.bidder] || "var(--color-muted)", fontWeight: 600 }}>
-                                                {bid.bidder}
-                                            </span>
-                                            <div style={{ flex: 1 }} />
-                                            <span style={{
-                                                fontFamily: "var(--font-mono)", fontWeight: 700,
-                                                color: bid.won ? "#22c55e" : "var(--color-text)",
-                                            }}>
-                                                {bid.amount.toFixed(3)} MON
-                                            </span>
-                                            {bid.won && (
-                                                <span style={{
-                                                    fontSize: "0.55rem", fontWeight: 700, padding: "0.1rem 0.3rem",
-                                                    borderRadius: "3px", background: "rgba(34,197,94,0.15)", color: "#22c55e",
-                                                }}>
-                                                    WON
-                                                </span>
-                                            )}
+                            {/* Stats */}
+                            <div className="px-4 pb-4">
+                                <div className="grid grid-cols-2 gap-x-4 gap-y-2">
+                                    {([
+                                        { key: "pace", label: "PAC" },
+                                        { key: "shooting", label: "SHO" },
+                                        { key: "passing", label: "PAS" },
+                                        { key: "tackling", label: "TAC" },
+                                    ] as const).map((stat) => (
+                                        <div key={stat.key}>
+                                            <div className="flex justify-between mb-1">
+                                                <span className="text-[9px] font-black text-slate-400 uppercase">{stat.label}</span>
+                                                <span className="text-[9px] font-black">{player[stat.key]}</span>
+                                            </div>
+                                            <div className="stat-bar rounded-full overflow-hidden">
+                                                <div className="stat-fill rounded-full" style={{ width: `${player[stat.key]}%`, background: tierCfg.color }} />
+                                            </div>
                                         </div>
                                     ))}
-
-                                    {/* Last sale summary */}
-                                    {lastBid && (
-                                        <div style={{
-                                            marginTop: "0.4rem", padding: "0.35rem 0.5rem",
-                                            background: "rgba(131,110,249,0.06)", borderRadius: "4px",
-                                            fontSize: "0.65rem", color: "var(--color-muted)",
-                                            fontFamily: "var(--font-mono)",
-                                        }}>
-                                            Final price: <strong style={{ color: "var(--color-monad)" }}>{lastBid.amount.toFixed(3)} MON</strong> → {lastBid.bidder}
-                                        </div>
-                                    )}
                                 </div>
-                            )}
+
+                                {/* Owner */}
+                                <div className="pt-3 border-t border-slate-100 px-4">
+                                    <div className="flex items-center gap-2 mb-2">
+                                        <div className="size-5 rounded-full" style={{ background: ownerColor }} />
+                                        <span className="text-[10px] font-bold">
+                                            Owned by <span style={{ color: ownerColor }}>{player.owner}</span>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                {/* Live log ticker */}
+                                <div className="px-4 pb-3">
+                                    <LiveLogTicker playerName={player.name} playerHash={nameHash(player.name)} />
+                                </div>
+
+                                {/* Expanded: Bid History */}
+                                {isExpanded && (
+                                    <div className="border-t border-slate-100 pt-3 px-4 pb-4">
+                                        <div className="text-[10px] font-black text-slate-400 uppercase tracking-wider mb-2">Bid History</div>
+                                        {player.bidHistory.map((bid, i) => (
+                                            <div key={i} className="flex items-center gap-2 py-1 text-xs" style={{ borderBottom: i < player.bidHistory.length - 1 ? "1px solid #f1f5f9" : "none" }}>
+                                                <span className="text-[10px] text-slate-400 shrink-0 font-mono">{bid.timestamp}</span>
+                                                <div className="size-2 rounded-full shrink-0" style={{ background: AGENT_COLORS[bid.bidder] || "#9ca3af" }} />
+                                                <span className="font-bold" style={{ color: AGENT_COLORS[bid.bidder] || "#64748b" }}>{bid.bidder}</span>
+                                                <div className="flex-1" />
+                                                <span className={`font-bold font-mono ${bid.won ? "text-green-600" : ""}`}>{bid.amount.toFixed(3)} MON</span>
+                                                {bid.won && <span className="text-[9px] font-black px-1.5 py-0.5 rounded bg-green-100 text-green-600">WON</span>}
+                                            </div>
+                                        ))}
+                                        {lastBid && (
+                                            <div className="mt-2 p-2 bg-slate-50 rounded text-[10px] text-slate-500 font-mono">
+                                                Final price: <strong className="text-[#16a34a]">{lastBid.amount.toFixed(3)} MON</strong> → {lastBid.bidder}
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+                            </div>
                         </div>
                     );
                 })}
             </div>
 
             {filtered.length === 0 && (
-                <div className="card" style={{ textAlign: "center", padding: "3rem", color: "var(--color-muted)" }}>
+                <div className="text-center p-12 text-slate-500 bg-white rounded-xl border border-slate-200">
                     No players match your filters.
                 </div>
             )}

@@ -10,9 +10,9 @@ import { SquadTable } from "@/components/agents/SquadTable";
 interface Props { tId: number }
 
 const PHASE_LABELS: Record<TournamentState, string> = {
-    [TournamentState.OPEN]: "Waiting for agents to join…",
-    [TournamentState.DRAFTING]: "Draft phase — assigning squads…",
-    [TournamentState.STRATEGY]: "Strategy phase — AI managers thinking…",
+    [TournamentState.OPEN]: "Waiting for agents to join...",
+    [TournamentState.DRAFTING]: "Draft phase - assigning squads...",
+    [TournamentState.STRATEGY]: "Strategy phase - AI managers thinking...",
     [TournamentState.COMPLETED]: "Tournament complete!",
 };
 
@@ -22,7 +22,6 @@ export function LiveTournamentView({ tId }: Props) {
     const prevStateRef = useRef<TournamentState | null>(null);
     const feedRef = useRef<HTMLDivElement>(null);
 
-    // Auto-redirect to results page when tournament transitions to COMPLETED
     useEffect(() => {
         if (!state) return;
         const prev = prevStateRef.current;
@@ -36,7 +35,6 @@ export function LiveTournamentView({ tId }: Props) {
         }
     }, [state, tId, router]);
 
-    // Auto-scroll feed to bottom on new events
     useEffect(() => {
         if (feedRef.current) {
             feedRef.current.scrollTop = 0;
@@ -45,17 +43,17 @@ export function LiveTournamentView({ tId }: Props) {
 
     if (!isConnected && !state) {
         return (
-            <div className="card" style={{ textAlign: "center", padding: "3rem" }}>
-                <div className="skeleton" style={{ width: 200, height: 20, margin: "0 auto 0.75rem" }} />
-                <div className="skeleton" style={{ width: 140, height: 14, margin: "0 auto" }} />
+            <div className="bg-white rounded-xl border border-slate-200 text-center p-12">
+                <div className="skeleton w-48 h-5 mx-auto mb-3" />
+                <div className="skeleton w-32 h-4 mx-auto" />
             </div>
         );
     }
 
     if (error && !state) {
         return (
-            <div className="card" style={{ textAlign: "center", padding: "2rem", color: "var(--color-amber)" }}>
-                ⚠️ {error}
+            <div className="bg-white rounded-xl border border-slate-200 text-center p-8 text-amber-600 font-bold">
+                {error}
             </div>
         );
     }
@@ -63,115 +61,84 @@ export function LiveTournamentView({ tId }: Props) {
     if (!state) return null;
 
     return (
-        <div style={{ display: "flex", flexDirection: "column", gap: "1.5rem" }}>
+        <div className="flex flex-col gap-6">
             {/* Status bar */}
-            <div className="card" style={{ display: "flex", alignItems: "center", gap: "1rem", flexWrap: "wrap" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+            <div className="bg-white rounded-xl border border-slate-200 p-4 flex items-center gap-4 flex-wrap">
+                <div className="flex items-center gap-2">
                     {isConnected ? (
-                        <><span className="pulse-dot" /><span style={{ fontSize: "0.8rem", color: "var(--color-pitch)" }}>Live</span></>
+                        <>
+                            <span className="w-2 h-2 bg-[#16a34a] rounded-full animate-pulse" />
+                            <span className="text-sm font-bold text-[#16a34a]">CONNECTED</span>
+                        </>
                     ) : (
-                        <span style={{ fontSize: "0.8rem", color: "var(--color-amber)" }}>Reconnecting…</span>
+                        <span className="text-sm text-amber-600 font-bold">Reconnecting...</span>
                     )}
                 </div>
-                <span className="badge badge-monad">Season {tId}</span>
-
-                <span style={{ color: "var(--color-muted)", fontSize: "0.875rem" }}>
-                    {PHASE_LABELS[state.state]}
-                </span>
-
-                <div style={{ flex: 1 }} />
-
-                <span style={{ fontFamily: "var(--font-mono)", fontSize: "0.8rem", color: "var(--color-muted)" }}>
-                    {state.participants.length}/8 joined · {state.spotsLeft} spots left · 🏆 {state.prizePool} MON pot
+                <span className="badge badge-primary font-pixel text-[10px]">Season {tId}</span>
+                <span className="text-slate-500 text-sm">{PHASE_LABELS[state.state]}</span>
+                <div className="flex-1" />
+                <span className="text-sm text-slate-500 font-medium">
+                    {state.participants.length}/8 joined - {state.spotsLeft} spots left - {state.prizePool} MON pot
                 </span>
             </div>
 
             {state.state === 3 /* COMPLETED */ ? (
-                /* Completed State View */
-                <div className="card" style={{ textAlign: "center", padding: "4rem 2rem", background: "rgba(131,110,249,0.03)", border: "1px dashed rgba(131,110,249,0.3)" }}>
-                    <div style={{ fontSize: "3rem", marginBottom: "1rem" }}>🏆</div>
-                    <h2 style={{ fontSize: "1.5rem", marginBottom: "0.5rem" }}>Season {tId} is Completed!</h2>
-                    <p style={{ color: "var(--color-muted)", marginBottom: "2rem", maxWidth: 400, margin: "0 auto 2rem" }}>
+                <div className="bg-white rounded-xl border-2 border-dashed border-[#16a34a]/30 text-center py-16 px-8">
+                    <span className="material-symbols-outlined text-[#16a34a] mb-4" style={{ fontSize: 64 }}>emoji_events</span>
+                    <h2 className="text-2xl font-black mb-2">Season {tId} is Completed!</h2>
+                    <p className="text-slate-500 mb-8 max-w-md mx-auto">
                         The matches have been played and the champion has been crowned.
-                        Waiting for the admin to start the next season...
                     </p>
-                    <a href={`/tournaments/${tId}`} className="btn btn-primary" style={{ display: "inline-block", textDecoration: "none" }}>
-                        View Tournament Results & Pitches →
+                    <a href={`/tournaments/${tId}`} className="bg-[#16a34a] text-white px-8 py-3 rounded-xl font-bold no-underline hover:bg-[#15803d] transition-colors inline-block">
+                        View Tournament Results →
                     </a>
                 </div>
             ) : (
-                /* Active Tournament — two-column: participants left, feed right */
-                <div style={{
-                    display: "grid",
-                    gridTemplateColumns: "1fr 320px",
-                    gap: "1.25rem",
-                    alignItems: "start",
-                }}>
+                <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-6 items-start">
                     {/* LEFT — Participants */}
                     <div>
-                        <div style={{ fontSize: "0.85rem", fontWeight: 600, color: "var(--color-muted)", marginBottom: "0.75rem", textTransform: "uppercase", letterSpacing: "0.06em" }}>
-                            Participants
-                        </div>
-                        <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+                        <div className="font-pixel text-[10px] text-slate-500 uppercase tracking-widest mb-4">Participants</div>
+                        <div className="flex flex-col gap-4">
                             {state.participants.map((p) => (
                                 <ParticipantCard key={p.profile.address} p={p} />
                             ))}
-
-                            {/* Empty slots */}
                             {Array.from({ length: state.spotsLeft }).map((_, i) => (
-                                <div key={`empty-${i}`} className="card" style={{
-                                    opacity: 0.4, border: "1px dashed var(--color-border)",
-                                    display: "flex", alignItems: "center", justifyContent: "center",
-                                    minHeight: 64,
-                                }}>
-                                    <span style={{ fontSize: "0.78rem", color: "var(--color-muted)" }}>Waiting for agent…</span>
+                                <div key={`empty-${i}`} className="bg-white rounded-xl border-2 border-dashed border-slate-200 flex items-center justify-center min-h-[64px] opacity-40">
+                                    <span className="text-sm text-slate-400">Waiting for agent...</span>
                                 </div>
                             ))}
                         </div>
                     </div>
 
                     {/* RIGHT — Event Feed */}
-                    <div style={{ position: "sticky", top: "1rem" }}>
-                        <div style={{ fontSize: "0.85rem", fontWeight: 600, color: "var(--color-muted)", marginBottom: "0.75rem", textTransform: "uppercase", letterSpacing: "0.06em" }}>
-                            Event Feed
-                        </div>
+                    <div className="sticky top-20">
+                        <div className="font-pixel text-[10px] text-slate-500 uppercase tracking-widest mb-4">Event Feed</div>
                         <div
                             ref={feedRef}
-                            className="card"
-                            style={{
-                                display: "flex",
-                                flexDirection: "column",
-                                gap: "0.5rem",
-                                maxHeight: "calc(100vh - 220px)",
-                                overflowY: "auto",
-                                padding: "0.75rem",
-                            }}
+                            className="bg-slate-900 rounded-xl p-4 flex flex-col gap-3 overflow-y-auto"
+                            style={{ maxHeight: "calc(100vh - 220px)" }}
                         >
                             {recentEvents.length === 0 && (
-                                <div style={{ textAlign: "center", padding: "2rem 0.5rem", color: "var(--color-muted)", fontSize: "0.78rem" }}>
-                                    Listening for events…
+                                <div className="text-center py-8 text-slate-500 text-sm">
+                                    Listening for events...
                                 </div>
                             )}
                             {recentEvents.map((ev) => (
-                                <div key={ev.timestamp} style={{
-                                    display: "flex", flexDirection: "column", gap: "0.2rem",
-                                    fontSize: "0.78rem", borderBottom: "1px solid var(--color-border)",
-                                    paddingBottom: "0.5rem",
-                                }}>
-                                    <span style={{ color: "var(--color-muted)", fontFamily: "var(--font-mono)", fontSize: "0.65rem" }}>
+                                <div key={ev.timestamp} className="flex flex-col gap-1 text-sm border-b border-slate-800 pb-3">
+                                    <span className="text-slate-500 font-mono text-xs">
                                         {new Date(ev.timestamp).toLocaleTimeString()}
                                     </span>
                                     {ev.type === "participant_joined" && (
-                                        <span><span className="text-pitch">→</span> <strong>{ev.payload?.agent?.name}</strong> joined</span>
+                                        <span className="text-slate-200"><span className="text-[#16a34a]">→</span> <strong>{ev.payload?.agent?.name}</strong> joined</span>
                                     )}
                                     {ev.type === "strategy_revealed" && (
-                                        <span><span className="text-monad">★</span> <strong>{ev.payload?.agent?.name}</strong> chose <strong>{ev.payload?.strategyName}</strong></span>
+                                        <span className="text-slate-200"><span className="text-amber-400">★</span> <strong>{ev.payload?.agent?.name}</strong> chose <strong>{ev.payload?.strategyName}</strong></span>
                                     )}
                                     {ev.type === "tournament_ended" && (
-                                        <span><span className="text-amber">🏆</span> Champion: {ev.payload?.champion?.slice(0, 10)}…</span>
+                                        <span className="text-slate-200"><span className="text-amber-400">🏆</span> Champion: {ev.payload?.champion?.slice(0, 10)}...</span>
                                     )}
                                     {ev.type === "error" && (
-                                        <span style={{ color: "var(--color-amber)" }}>⚠️ {ev.payload?.message}</span>
+                                        <span className="text-amber-400">{ev.payload?.message}</span>
                                     )}
                                 </div>
                             ))}
@@ -189,68 +156,51 @@ import type { LiveParticipant } from "@/lib/contracts";
 
 function ParticipantCard({ p }: { p: LiveParticipant }) {
     return (
-        <div className="card">
-            {/* Agent name + status badge */}
-            <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.75rem" }}>
-                <div style={{ fontWeight: 700, fontSize: "0.95rem" }}>{p.profile.name}</div>
+        <div className="bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
+            <div className="flex items-center gap-3 mb-3">
+                <div className="w-10 h-10 bg-slate-100 rounded border-2 border-black flex items-center justify-center">
+                    <span className="material-symbols-outlined text-[#16a34a]">smart_toy</span>
+                </div>
+                <div className="font-bold text-base">{p.profile.name}</div>
                 {p.strategyCommitted ? (
-                    <span className="badge badge-green">✓ Ready</span>
+                    <span className="badge badge-green">Ready</span>
                 ) : p.hasTeam ? (
-                    <span className="badge badge-amber" style={{ display: "flex", gap: "0.35rem" }}>
-                        <span className="pulse-dot" style={{ background: "var(--color-amber)", width: 6, height: 6 }} />
-                        Thinking…
+                    <span className="badge badge-amber flex items-center gap-1">
+                        <span className="w-1.5 h-1.5 bg-amber-500 rounded-full animate-pulse" />
+                        Thinking...
                     </span>
                 ) : (
                     <span className="badge badge-muted">Drafting</span>
                 )}
-                <div style={{ flex: 1 }} />
-                {/* Agent stats badges */}
-                <div style={{ display: "flex", gap: "0.35rem" }}>
-                    <span className="badge badge-muted" style={{ fontSize: "0.65rem", padding: "0.15rem 0.4rem" }}>
-                        ATK {p.profile.attack}
-                    </span>
-                    <span className="badge badge-muted" style={{ fontSize: "0.65rem", padding: "0.15rem 0.4rem" }}>
-                        DEF {p.profile.defense}
-                    </span>
-                    <span className="badge badge-muted" style={{ fontSize: "0.65rem", padding: "0.15rem 0.4rem" }}>
-                        DIS {p.profile.discipline}
-                    </span>
+                <div className="flex-1" />
+                <div className="flex gap-1">
+                    <span className="px-2 py-0.5 bg-slate-100 rounded text-xs font-bold">ATK {p.profile.attack}</span>
+                    <span className="px-2 py-0.5 bg-slate-100 rounded text-xs font-bold">DEF {p.profile.defense}</span>
+                    <span className="px-2 py-0.5 bg-slate-100 rounded text-xs font-bold">DIS {p.profile.discipline}</span>
                 </div>
             </div>
 
-            {/* Strategy + Reasoning */}
             {p.strategyCommitted && p.strategyId ? (
-                <div style={{ borderTop: "1px solid var(--color-border)", paddingTop: "0.75rem" }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.5rem" }}>
-                        <span style={{ fontSize: "1.1rem" }}>{STRATEGIES[p.strategyId]?.emoji}</span>
-                        <span style={{ fontSize: "0.8rem", fontWeight: 700, color: "var(--color-monad)" }}>
-                            {p.strategyName}
-                        </span>
+                <div className="border-t border-slate-100 pt-3">
+                    <div className="flex items-center gap-2 mb-2">
+                        <span className="text-lg">{STRATEGIES[p.strategyId]?.emoji}</span>
+                        <span className="text-sm font-bold text-[#16a34a]">{p.strategyName}</span>
                     </div>
                     {p.reasoning && (
-                        <p style={{ fontSize: "0.78rem", color: "var(--color-muted)", lineHeight: 1.6, margin: 0, fontStyle: "italic" }}>
-                            &ldquo;{p.reasoning.slice(0, 250)}{p.reasoning.length > 250 ? "…" : ""}&rdquo;
+                        <p className="text-sm text-slate-500 leading-relaxed italic">
+                            &ldquo;{p.reasoning.slice(0, 250)}{p.reasoning.length > 250 ? "..." : ""}&rdquo;
                         </p>
                     )}
                 </div>
             ) : (
-                <div style={{
-                    height: 48, background: "var(--color-surface-2)", borderRadius: 8,
-                    border: "1px dashed var(--color-border)",
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                }}>
-                    <span style={{ fontSize: "0.78rem", color: "var(--color-muted)" }}>Awaiting strategy…</span>
+                <div className="h-12 bg-slate-50 rounded-lg border border-dashed border-slate-200 flex items-center justify-center">
+                    <span className="text-sm text-slate-400">Awaiting strategy...</span>
                 </div>
             )}
 
-            {/* Squad section — always visible when team is assigned */}
             {p.hasTeam && p.team.length > 0 && (
-                <div style={{ borderTop: "1px solid var(--color-border)", marginTop: "0.75rem", paddingTop: "0.75rem" }}>
-                    <div style={{
-                        fontSize: "0.7rem", fontWeight: 600, color: "var(--color-muted)",
-                        textTransform: "uppercase", letterSpacing: "0.06em", marginBottom: "0.5rem",
-                        fontFamily: "var(--font-mono)",
-                    }}>
+                <div className="border-t border-slate-100 mt-3 pt-3">
+                    <div className="font-pixel text-[8px] text-slate-400 uppercase tracking-widest mb-2">
                         Squad ({p.team.filter(pl => pl.name).length} players)
                     </div>
                     <SquadTable players={p.team} />

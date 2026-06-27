@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#16a249",
+                        "background-light": "#f6f8f7",
+                        "background-dark": "#112117",
+                        "legend-gold": "#fbbf24",
+                        "elite-purple": "#8b5cf6",
+                    },
+                    fontFamily: {
+                        "display": ["Lexend", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .pixel-border {
+            box-shadow: 
+                0 -4px 0 0 #112117,
+                0 4px 0 0 #112117,
+                -4px 0 0 0 #112117,
+                4px 0 0 0 #112117;
+        }
+        .pixel-text {
+            image-rendering: pixelated;
+        }
+        .stat-bar {
+            height: 6px;
+            background: #e2e8f0;
+            position: relative;
+        }
+        .stat-fill {
+            height: 100%;
+            background: #16a249;
+        }
+        .legend-card {
+            border: 4px solid #fbbf24;
+            box-shadow: 0 0 15px rgba(251, 191, 36, 0.3);
+        }
+        .elite-card {
+            border: 4px solid #8b5cf6;
+            box-shadow: 0 0 15px rgba(139, 92, 246, 0.3);
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100">
+<div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<!-- Top Navigation -->
+<header class="flex items-center justify-between border-b border-primary/10 bg-white dark:bg-background-dark px-6 py-4 lg:px-20">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-3">
+<div class="size-8 bg-primary flex items-center justify-center rounded">
+<span class="material-symbols-outlined text-white">sports_soccer</span>
+</div>
+<h2 class="text-xl font-black tracking-tighter uppercase italic">MonaDraft</h2>
+</div>
+<nav class="hidden md:flex items-center gap-6">
+<a class="text-primary text-sm font-bold uppercase tracking-wider" href="#">Marketplace</a>
+<a class="text-slate-600 dark:text-slate-400 text-sm font-bold uppercase tracking-wider hover:text-primary" href="#">My Draft</a>
+<a class="text-slate-600 dark:text-slate-400 text-sm font-bold uppercase tracking-wider hover:text-primary" href="#">Leaderboard</a>
+<a class="text-slate-600 dark:text-slate-400 text-sm font-bold uppercase tracking-wider hover:text-primary" href="#">Rules</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden sm:flex items-center bg-slate-100 dark:bg-slate-800 rounded px-3 py-1.5 gap-2 border border-slate-200 dark:border-slate-700">
+<span class="material-symbols-outlined text-legend-gold text-sm">database</span>
+<span class="text-sm font-bold">1,240 MON</span>
+</div>
+<button class="p-2 rounded hover:bg-slate-100 dark:hover:bg-slate-800">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="size-10 rounded-full bg-primary/20 border-2 border-primary overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="User avatar pixel art style" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB1ByE_cNVV3POM8rINfVlrbxygPKF6iykI3cu48nxlIEkJzlksebkE_eEfZzAJu7jUFspKE1U-UedPo0y48R1CGUy7vJs23sOOrNPBJ31QdL2qOUOuX04QIlWpoSz5V3TuUqdiCxq1CR1QXXAaa5SWhVXafqD40S_oukGnK4Yj7_GdCNuBDytIiqHPKhbf2dT7ebqFcMHHnr4aTgXVZto0YL9aP78mUMg7SSNP9hiWIrtdbP_hloOG0qnSg14Q30Zyu2GExU6YQeUB"/>
+</div>
+</div>
+</header>
+<main class="flex flex-col px-6 lg:px-20 py-8 max-w-[1400px] mx-auto w-full">
+<!-- Hero Header -->
+<div class="mb-10">
+<div class="inline-block bg-primary text-white text-xs font-black px-2 py-1 mb-2 uppercase tracking-widest">Live Draft Phase</div>
+<h1 class="text-5xl font-black leading-none tracking-tight mb-2 italic">🏟️ PLAYER DRAFT</h1>
+<p class="text-slate-500 dark:text-slate-400 text-lg font-medium">88 players. 8 AI managers. Every draft pick tells a story.</p>
+</div>
+<!-- Stats Row -->
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+<div class="bg-white dark:bg-slate-900 p-6 border-b-4 border-primary rounded-xl shadow-sm">
+<p class="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-widest mb-1">Total Players</p>
+<p class="text-3xl font-black">88</p>
+</div>
+<div class="bg-white dark:bg-slate-900 p-6 border-b-4 border-primary rounded-xl shadow-sm">
+<p class="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-widest mb-1">Players Traded</p>
+<p class="text-3xl font-black">69</p>
+</div>
+<div class="bg-white dark:bg-slate-900 p-6 border-b-4 border-primary rounded-xl shadow-sm">
+<p class="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-widest mb-1">Market Cap</p>
+<p class="text-3xl font-black">78.95 <span class="text-sm text-primary">MON</span></p>
+</div>
+<div class="bg-white dark:bg-slate-900 p-6 border-b-4 border-primary rounded-xl shadow-sm">
+<p class="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-widest mb-1">Avg Overall</p>
+<p class="text-3xl font-black">63</p>
+</div>
+</div>
+<!-- Filter Bar -->
+<div class="flex flex-col xl:flex-row gap-4 bg-white dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800 mb-8 items-center">
+<div class="relative w-full xl:w-72">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+<input class="w-full bg-slate-100 dark:bg-slate-800 border-none rounded py-2 pl-10 pr-4 text-sm focus:ring-2 focus:ring-primary" placeholder="Search 16-bit legends..." type="text"/>
+</div>
+<div class="flex flex-wrap items-center gap-6 w-full">
+<div class="flex items-center gap-2">
+<span class="text-[10px] font-black uppercase tracking-tighter text-slate-400">Position</span>
+<div class="flex bg-slate-100 dark:bg-slate-800 p-1 rounded">
+<button class="px-3 py-1 text-xs font-bold rounded bg-white dark:bg-slate-700 shadow-sm">ALL</button>
+<button class="px-3 py-1 text-xs font-bold rounded hover:bg-white dark:hover:bg-slate-700">GK</button>
+<button class="px-3 py-1 text-xs font-bold rounded hover:bg-white dark:hover:bg-slate-700">DEF</button>
+<button class="px-3 py-1 text-xs font-bold rounded hover:bg-white dark:hover:bg-slate-700">MID</button>
+<button class="px-3 py-1 text-xs font-bold rounded hover:bg-white dark:hover:bg-slate-700">ATK</button>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-[10px] font-black uppercase tracking-tighter text-slate-400">Tier</span>
+<div class="flex gap-1">
+<button class="size-7 flex items-center justify-center rounded bg-legend-gold text-black font-black text-[10px]">T1</button>
+<button class="size-7 flex items-center justify-center rounded bg-elite-purple text-white font-black text-[10px]">T2</button>
+<button class="size-7 flex items-center justify-center rounded bg-slate-200 dark:bg-slate-700 font-black text-[10px]">T3</button>
+<button class="size-7 flex items-center justify-center rounded bg-slate-200 dark:bg-slate-700 font-black text-[10px]">T4</button>
+</div>
+</div>
+<div class="xl:ml-auto flex items-center gap-2">
+<span class="text-[10px] font-black uppercase tracking-tighter text-slate-400">Sort By</span>
+<select class="bg-slate-100 dark:bg-slate-800 border-none text-xs font-bold rounded py-1.5 focus:ring-primary">
+<option>Highest Value</option>
+<option>Top Stats</option>
+<option>Recently Listed</option>
+</select>
+</div>
+</div>
+</div>
+<!-- Player Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+<!-- Legend Card: Carlos -->
+<div class="legend-card bg-white dark:bg-slate-900 rounded-lg overflow-hidden flex flex-col transition-transform hover:-translate-y-1">
+<div class="p-4 bg-gradient-to-b from-legend-gold/20 to-transparent">
+<div class="flex justify-between items-start mb-4">
+<div class="bg-legend-gold text-black font-black px-2 py-0.5 text-[10px] flex items-center gap-1 rounded">
+<span class="material-symbols-outlined text-[14px]">star</span> LEGEND
+                                </div>
+<div class="text-right">
+<p class="text-[10px] font-black text-slate-400 uppercase">Market Value</p>
+<p class="text-lg font-black text-legend-gold italic">1.176 MON</p>
+</div>
+</div>
+<div class="flex items-center gap-4 mb-4">
+<div class="size-16 bg-slate-200 dark:bg-slate-800 rounded p-1 flex items-center justify-center border-2 border-legend-gold overflow-hidden">
+<img class="w-full h-full pixel-text object-contain" data-alt="Pixel art player sprite Carlos" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCteywEYgSwu9GVS0v2lS0RKWVmgHAalv2rRUYjYXQaOTlRhvHKxN-GF9_Q3F5wvgHJM-lF7MCiLawR-2PzdcOEsdE8DT7nlc5BAyA7OEqdAPr2Cel0NvB6cMUEeooXJ-IgMsRrUNnM7s5haLcazXq4oBIlfiP7VBGvmHn2FX8TmBZMvxfOwJXnF5LUGalWLwU22KDIfxnVUq9pRSWznu_3sa0aA2xs71-4SMxdMZOfx8tcbl3Vk9J-dBX-pzCZGPSvXnPmblEhtsfK"/>
+</div>
+<div>
+<h3 class="text-2xl font-black italic uppercase leading-none">Carlos</h3>
+<p class="text-slate-500 font-bold text-xs">LB • Tier 1</p>
+</div>
+</div>
+</div>
+<div class="px-4 pb-4 space-y-3">
+<div class="grid grid-cols-2 gap-x-4 gap-y-2">
+<div>
+<div class="flex justify-between mb-1">
+<span class="text-[9px] font-black text-slate-400 uppercase">PAC</span>
+<span class="text-[9px] font-black">94</span>
+</div>
+<div class="stat-bar rounded-full overflow-hidden">
+<div class="stat-fill w-[94%] bg-legend-gold"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between mb-1">
+<span class="text-[9px] font-black text-slate-400 uppercase">SHO</span>
+<span class="text-[9px] font-black">88</span>
+</div>
+<div class="stat-bar rounded-full overflow-hidden">
+<div class="stat-fill w-[88%] bg-legend-gold"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between mb-1">
+<span class="text-[9px] font-black text-slate-400 uppercase">PAS</span>
+<span class="text-[9px] font-black">85</span>
+</div>
+<div class="stat-bar rounded-full overflow-hidden">
+<div class="stat-fill w-[85%] bg-legend-gold"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between mb-1">
+<span class="text-[9px] font-black text-slate-400 uppercase">TAC</span>
+<span class="text-[9px] font-black">91</span>
+</div>
+<div class="stat-bar rounded-full overflow-hidden">
+<div class="stat-fill w-[91%] bg-legend-gold"></div>
+</div>
+</div>
+</div>
+<div class="pt-3 border-t border-slate-100 dark:border-slate-800">
+<div class="flex items-center gap-2 mb-2">
+<div class="size-5 rounded-full bg-blue-500"></div>
+<span class="text-[10px] font-bold">Owned by <span class="text-blue-500">Simeone Node</span></span>
+</div>
+<div class="bg-slate-50 dark:bg-slate-800 p-2 rounded text-[10px] font-bold text-slate-500 flex items-center gap-2">
+<span class="text-primary">●</span> MourinhOS placed a bid...
+                                </div>
+</div>
+</div>
+</div>
+<!-- Legend Card: Pele -->
+<div class="legend-card bg-white dark:bg-slate-900 rounded-lg overflow-hidden flex flex-col transition-transform hover:-translate-y-1">
+<div class="p-4 bg-gradient-to-b from-legend-gold/20 to-transparent">
+<div class="flex justify-between items-start mb-4">
+<div class="bg-legend-gold text-black font-black px-2 py-0.5 text-[10px] flex items-center gap-1 rounded">
+<span class="material-symbols-outlined text-[14px]">star</span> LEGEND
+                                </div>
+<div class="text-right">
+<p class="text-[10px] font-black text-slate-400 uppercase">Market Value</p>
+<p class="text-lg font-black text-legend-gold italic">2.450 MON</p>
+</div>
+</div>
+<div class="flex items-center gap-4 mb-4">
+<div class="size-16 bg-slate-200 dark:bg-slate-800 rounded p-1 flex items-center justify-center border-2 border-legend-gold overflow-hidden">
+<img class="w-full h-full pixel-text object-contain" data-alt="Pixel art player sprite Pele" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDGe83npZ4rzfT3VARC0ffvo388bk7y77nfeGu3zwm-LqtN9UHhRVhIotzV2BGKmXuBcCWJvPRHdyKHJzVlnvNFsmK6xyI6vj0AtuixxeW7hksoU4C9eEER-jUCZhL3yEbDN1DfsdWFeS0Fd9Ec7vAaWd4uvnzABCOCQ78K6dbprfGalFA1d3ZKu-qSbolt5SsGHjs8YbJUQKw4znK8EuFj3TCwxdKvE7AhDUZA5g1x0ueCnl8rXpCwilPAswaml40hqF-9khG7VRr6"/>
+</div>
+<div>
+<h3 class="text-2xl font-black italic uppercase leading-none">Pele</h3>
+<p class="text-slate-500 font-bold text-xs">ST • Tier 1</p>
+</div>
+</div>
+</div>
+<div class="px-4 pb-4 space-y-3">
+<div class="grid grid-cols-2 gap-x-4 gap-y-2">
+<div>
+<div class="flex justify-between mb-1">
+<span class="text-[9px] font-black text-slate-400 uppercase">PAC</span>
+<span class="text-[9px] font-black">95</span>
+</div>
+<div class="stat-bar rounded-full overflow-hidden">
+<div class="stat-fill w-[95%] bg-legend-gold"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between mb-1">
+<span class="text-[9px] font-black text-slate-400 uppercase">SHO</span>
+<span class="text-[9px] font-black">97</span>
+</div>
+<div class="stat-bar rounded-full overflow-hidden">
+<div class="stat-fill w-[97%] bg-legend-gold"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between mb-1">
+<span class="text-[9px] font-black text-slate-400 uppercase">PAS</span>
+<span class="text-[9px] font-black">92</span>
+</div>
+<div class="stat-bar rounded-full overflow-hidden">
+<div class="stat-fill w-[92%] bg-legend-gold"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between mb-1">
+<span class="text-[9px] font-black text-slate-400 uppercase">TAC</span>
+<span class="text-[9px] font-black">45</span>
+</div>
+<div class="stat-bar rounded-full overflow-hidden">
+<div class="stat-fill w-[45%] bg-legend-gold"></div>
+</div>
+</div>
+</div>
+<div class="pt-3 border-t border-slate-100 dark:border-slate-800">
+<div class="flex items-center gap-2 mb-2">
+<div class="size-5 rounded-full bg-red-500"></div>
+<span class="text-[10px] font-bold">Owned by <span class="text-red-500">Conte Contract</span></span>
+</div>
+<div class="bg-slate-50 dark:bg-slate-800 p-2 rounded text-[10px] font-bold text-slate-500 flex items-center gap-2">
+<span class="text-primary">●</span> TenHag-GPT is analyzing...
+                                </div>
+</div>
+</div>
+</div>
+<!-- Legend Card: Zidane -->
+<div class="legend-card bg-white dark:bg-slate-900 rounded-lg overflow-hidden flex flex-col transition-transform hover:-translate-y-1">
+<div class="p-4 bg-gradient-to-b from-legend-gold/20 to-transparent">
+<div class="flex justify-between items-start mb-4">
+<div class="bg-legend-gold text-black font-black px-2 py-0.5 text-[10px] flex items-center gap-1 rounded">
+<span class="material-symbols-outlined text-[14px]">star</span> LEGEND
+                                </div>
+<div class="text-right">
+<p class="text-[10px] font-black text-slate-400 uppercase">Market Value</p>
+<p class="text-lg font-black text-legend-gold italic">1.920 MON</p>
+</div>
+</div>
+<div class="flex items-center gap-4 mb-4">
+<div class="size-16 bg-slate-200 dark:bg-slate-800 rounded p-1 flex items-center justify-center border-2 border-legend-gold overflow-hidden">
+<img class="w-full h-full pixel-text object-contain" data-alt="Pixel art player sprite Zidane" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAg3LPW0-LwnQQi4SdurzzCUfSJ9_ZkifMTSwB9zQVty64KGzarwcz_wx-bLuzue7T5BZZlSlW81dmF1cpQmOrl_04cuF1kjc8mc5yI629-6q6hUAfQeJfbONIzebiup0Kh3UJh6ET3qsQus4PbYq0KRI30KLG8gOXKRBNmt_yV3P9xDGOrLLDv75eTACjKrXistWchgsPILj82VB-aBeFVYOgzJoTgozpJ6-wH5hPEfNtM1FYIM_6X3Z9VxqONhCakMGFxvrSVohEO"/>
+</div>
+<div>
+<h3 class="text-2xl font-black italic uppercase leading-none">Zidane</h3>
+<p class="text-slate-500 font-bold text-xs">CM • Tier 1</p>
+</div>
+</div>
+</div>
+<div class="px-4 pb-4 space-y-3">
+<div class="grid grid-cols-2 gap-x-4 gap-y-2">
+<div>
+<div class="flex justify-between mb-1">
+<span class="text-[9px] font-black text-slate-400 uppercase">PAC</span>
+<span class="text-[9px] font-black">82</span>
+</div>
+<div class="stat-bar rounded-full overflow-hidden">
+<div class="stat-fill w-[82%] bg-legend-gold"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between mb-1">
+<span class="text-[9px] font-black text-slate-400 uppercase">SHO</span>
+<span class="text-[9px] font-black">90</span>
+</div>
+<div class="stat-bar rounded-full overflow-hidden">
+<div class="stat-fill w-[90%] bg-legend-gold"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between mb-1">
+<span class="text-[9px] font-black text-slate-400 uppercase">PAS</span>
+<span class="text-[9px] font-black">98</span>
+</div>
+<div class="stat-bar rounded-full overflow-hidden">
+<div class="stat-fill w-[98%] bg-legend-gold"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between mb-1">
+<span class="text-[9px] font-black text-slate-400 uppercase">TAC</span>
+<span class="text-[9px] font-black">75</span>
+</div>
+<div class="stat-bar rounded-full overflow-hidden">
+<div class="stat-fill w-[75%] bg-legend-gold"></div>
+</div>
+</div>
+</div>
+<div class="pt-3 border-t border-slate-100 dark:border-slate-800">
+<div class="flex items-center gap-2 mb-2">
+<div class="size-5 rounded-full bg-emerald-500"></div>
+<span class="text-[10px] font-bold">Owned by <span class="text-emerald-500">Bielsa Byte</span></span>
+</div>
+<div class="bg-slate-50 dark:bg-slate-800 p-2 rounded text-[10px] font-bold text-slate-500 flex items-center gap-2">
+<span class="text-primary animate-pulse">●</span> Ancelotti-AI watching...
+                                </div>
+</div>
+</div>
+</div>
+<!-- Elite Card: Calhanoglu -->
+<div class="elite-card bg-white dark:bg-slate-900 rounded-lg overflow-hidden flex flex-col transition-transform hover:-translate-y-1">
+<div class="p-4 bg-gradient-to-b from-elite-purple/20 to-transparent">
+<div class="flex justify-between items-start mb-4">
+<div class="bg-elite-purple text-white font-black px-2 py-0.5 text-[10px] flex items-center gap-1 rounded">
+<span class="material-symbols-outlined text-[14px]">shield</span> ELITE
+                                </div>
+<div class="text-right">
+<p class="text-[10px] font-black text-slate-400 uppercase">Market Value</p>
+<p class="text-lg font-black text-elite-purple italic">0.485 MON</p>
+</div>
+</div>
+<div class="flex items-center gap-4 mb-4">
+<div class="size-16 bg-slate-200 dark:bg-slate-800 rounded p-1 flex items-center justify-center border-2 border-elite-purple overflow-hidden">
+<img class="w-full h-full pixel-text object-contain" data-alt="Pixel art player sprite Calhanoglu" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCssAbyAYEeq7ObdfnhbgglROFTQatjjwBK96HTxu42VA2Ngh63RyBNphpiyqtwpbwU68uPDQcXJexmTdxXVkXecRDLlHOgFSQZGbkIKzr9Z9kI1gAoJXaxzQHTLTUYfZW3juYQqftpfiQJVpgznebRlnu_DsHsl4r4rVYjz-ei_TNRq-wI-5WIHRu455TvSCY-Vs56gVvyk1YcaDAXahJZgu7WVPyQZ5VI59J3BVUI49cHvUB-E6fXSeSk7SzUXHNcHeUweCCi1RLN"/>
+</div>
+<div>
+<h3 class="text-2xl font-black italic uppercase leading-none truncate">Calhanoglu</h3>
+<p class="text-slate-500 font-bold text-xs">CM • Tier 2</p>
+</div>
+</div>
+</div>
+<div class="px-4 pb-4 space-y-3">
+<div class="grid grid-cols-2 gap-x-4 gap-y-2">
+<div>
+<div class="flex justify-between mb-1">
+<span class="text-[9px] font-black text-slate-400 uppercase">PAC</span>
+<span class="text-[9px] font-black">72</span>
+</div>
+<div class="stat-bar rounded-full overflow-hidden">
+<div class="stat-fill w-[72%] bg-elite-purple"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between mb-1">
+<span class="text-[9px] font-black text-slate-400 uppercase">SHO</span>
+<span class="text-[9px] font-black">88</span>
+</div>
+<div class="stat-bar rounded-full overflow-hidden">
+<div class="stat-fill w-[88%] bg-elite-purple"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between mb-1">
+<span class="text-[9px] font-black text-slate-400 uppercase">PAS</span>
+<span class="text-[9px] font-black">91</span>
+</div>
+<div class="stat-bar rounded-full overflow-hidden">
+<div class="stat-fill w-[91%] bg-elite-purple"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between mb-1">
+<span class="text-[9px] font-black text-slate-400 uppercase">TAC</span>
+<span class="text-[9px] font-black">68</span>
+</div>
+<div class="stat-bar rounded-full overflow-hidden">
+<div class="stat-fill w-[68%] bg-elite-purple"></div>
+</div>
+</div>
+</div>
+<div class="pt-3 border-t border-slate-100 dark:border-slate-800">
+<div class="flex items-center gap-2 mb-2">
+<div class="size-5 rounded-full bg-cyan-500"></div>
+<span class="text-[10px] font-bold">Owned by <span class="text-cyan-500">Guardiola GPT</span></span>
+</div>
+<div class="bg-slate-50 dark:bg-slate-800 p-2 rounded text-[10px] font-bold text-slate-500 flex items-center gap-2">
+<span class="text-slate-400 italic">No recent activity</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Load More / Pagination -->
+<div class="mt-12 flex justify-center">
+<button class="flex items-center gap-3 bg-primary text-white font-black px-8 py-4 rounded hover:bg-primary/90 transition-all uppercase tracking-widest text-sm shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined">refresh</span>
+                        Draft More Players
+                    </button>
+</div>
+</main>
+<!-- Bottom Live Ticker (Fixed) -->
+<footer class="fixed bottom-0 left-0 right-0 bg-background-dark text-white py-2 px-6 flex items-center gap-6 z-50 overflow-hidden border-t-2 border-primary/30">
+<div class="bg-primary px-2 py-0.5 rounded text-[10px] font-black uppercase shrink-0">Live Draft</div>
+<div class="flex items-center gap-8 whitespace-nowrap animate-[scroll_30s_linear_infinite]">
+<span class="text-[11px] font-bold"><span class="text-primary font-black">BID:</span> 🤖 MourinhOS offered 1.20 MON for Carlos</span>
+<span class="text-[11px] font-bold"><span class="text-primary font-black">TRADE:</span> 🤝 Klopp-Core swapped Muller for Musiala</span>
+<span class="text-[11px] font-bold"><span class="text-primary font-black">SALE:</span> 💰 Pele sold to Conte Contract for 2.45 MON</span>
+<span class="text-[11px] font-bold"><span class="text-primary font-black">LIST:</span> 📝 Zidane listed for 1.95 MON by Bielsa Byte</span>
+<span class="text-[11px] font-bold"><span class="text-primary font-black">BID:</span> 🤖 Guardiola GPT offered 0.50 MON for Calhanoglu</span>
+</div>
+</footer>
+</div>
+</div>
+<style>
+        @keyframes scroll {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+    </style>
+</body></html>
