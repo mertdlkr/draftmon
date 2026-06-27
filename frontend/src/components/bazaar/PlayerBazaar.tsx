@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { PixelSelect } from "@/components/ui/PixelSelect";
 
 // ─── Player Database (mirrors scripts/players.ts) ────────────────────────────
 
@@ -45,9 +46,9 @@ const TIER_COLORS: Record<number, { bg: string; border: string; text: string }> 
 
 const POSITION_BG: Record<string, string> = {
     GK: "bg-slate-700",
-    CB: "bg-[#16a249]", LB: "bg-[#16a249]", RB: "bg-[#16a249]",
+    CB: "bg-primary-dark", LB: "bg-primary-dark", RB: "bg-primary-dark",
     CDM: "bg-slate-500", CM: "bg-slate-500", CAM: "bg-slate-500",
-    LW: "bg-[#16a249]", RW: "bg-[#16a249]", ST: "bg-[#16a249]",
+    LW: "bg-primary-dark", RW: "bg-primary-dark", ST: "bg-primary-dark",
 };
 
 const POS_LABELS: Record<string, string> = {
@@ -66,7 +67,7 @@ function nameHash(name: string): number {
 // ─── Ticker helpers ───────────────────────────────────────────────────────────
 
 function TickerSep() {
-    return <span className="text-[#13ec5b]/20 px-5 font-pixel text-[10px] select-none">◆</span>;
+    return <span className="text-primary/20 px-5 font-pixel text-[10px] select-none">◆</span>;
 }
 
 function TickerItem({ icon, color, agent, action, value, ago }: {
@@ -77,9 +78,9 @@ function TickerItem({ icon, color, agent, action, value, ago }: {
         <span className="inline-flex items-center gap-2 font-code text-sm shrink-0 px-1">
             <span className="material-symbols-outlined text-sm shrink-0" style={{ color }}>{icon}</span>
             {agent && <span className="font-bold" style={{ color }}>{agent}</span>}
-            <span className="text-[#cfe7d7]">{action}</span>
+            <span className="text-border-green">{action}</span>
             <span className="text-white font-bold">{value}</span>
-            <span className="text-[#13ec5b]/40 text-xs">· {ago}</span>
+            <span className="text-primary/40 text-xs">· {ago}</span>
         </span>
     );
 }
@@ -243,7 +244,7 @@ function PixelStatBar({ label, value }: { label: string; value: number }) {
             }}>
                 <div className="h-full" style={{
                     width: `${pct}%`,
-                    backgroundImage: `linear-gradient(to right, ${isHigh ? '#16a249' : '#ca8a04'} 50%, transparent 50%)`,
+                    backgroundImage: `linear-gradient(to right, ${isHigh ? 'var(--color-primary-dark)' : 'var(--color-retro-gold)'} 50%, transparent 50%)`,
                     backgroundSize: '6px 100%',
                 }} />
             </div>
@@ -297,7 +298,7 @@ export function PlayerBazaar() {
             {/* Title */}
             <div className="flex flex-col gap-2">
                 <h1 className="text-2xl md:text-4xl font-pixel leading-tight">PLAYER DRAFT</h1>
-                <p className="text-[#16a249] font-bold text-lg font-code">Scout and acquire 16-bit legends for your Monad league.</p>
+                <p className="text-primary-dark font-bold text-lg font-code">Scout and acquire 16-bit legends for your Monad league.</p>
             </div>
 
             {/* Stats Summary */}
@@ -313,7 +314,7 @@ export function PlayerBazaar() {
                         margin: '2px',
                     }}>
                         <p className="text-slate-500 text-xs font-bold uppercase tracking-wider">{s.label}</p>
-                        <p className={`text-2xl font-pixel mt-2 ${s.label === "Market Cap" ? "text-[#16a249]" : ""}`}>{s.value}</p>
+                        <p className={`text-2xl font-pixel mt-2 ${s.label === "Market Cap" ? "text-primary-dark" : ""}`}>{s.value}</p>
                     </div>
                 ))}
             </div>
@@ -326,7 +327,7 @@ export function PlayerBazaar() {
                         <div className="relative flex-1 min-w-[200px]">
                             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 material-symbols-outlined">search</span>
                             <input
-                                className="w-full pl-10 pr-4 py-3 bg-white border-2 border-slate-300 focus:border-[#16a249] focus:ring-0 font-code text-sm font-medium placeholder:text-slate-400 outline-none"
+                                className="w-full pl-10 pr-4 py-3 bg-white border-2 border-slate-300 focus:border-primary-dark focus:ring-0 font-code text-sm font-medium placeholder:text-slate-400 outline-none"
                                 style={{ boxShadow: '-1px 0 0 0 #d1d5db, 1px 0 0 0 #d1d5db, 0 -1px 0 0 #d1d5db, 0 1px 0 0 #d1d5db', margin: '1px' }}
                                 placeholder="Search player..."
                                 type="text"
@@ -341,7 +342,7 @@ export function PlayerBazaar() {
                                     key={p}
                                     onClick={() => setPosFilter(p)}
                                     className={`px-3 py-2 text-xs font-bold cursor-pointer transition-all ${posFilter === p
-                                        ? "bg-[#16a249] text-white"
+                                        ? "bg-primary-dark text-white"
                                         : "bg-slate-200 hover:bg-slate-300 text-slate-700"
                                         }`}
                                     style={posFilter === p ? {
@@ -362,7 +363,7 @@ export function PlayerBazaar() {
                         <span className="text-xs font-bold text-slate-500 mr-2 uppercase">Tier:</span>
                         <button
                             onClick={() => setTierFilter("ALL")}
-                            className={`size-8 flex items-center justify-center text-[10px] font-bold border-2 border-black cursor-pointer ${tierFilter === "ALL" ? "bg-[#16a249] text-white shadow-[2px_2px_0_0_rgba(0,0,0,0.2)]" : "bg-slate-200 opacity-50 hover:opacity-100"}`}
+                            className={`size-8 flex items-center justify-center text-[10px] font-bold border-2 border-black cursor-pointer ${tierFilter === "ALL" ? "bg-primary-dark text-white shadow-[2px_2px_0_0_rgba(0,0,0,0.2)]" : "bg-slate-200 opacity-50 hover:opacity-100"}`}
                         >ALL</button>
                         {([1, 2, 3, 4] as const).map((t) => {
                             const tc = TIER_COLORS[t];
@@ -378,18 +379,18 @@ export function PlayerBazaar() {
                 </div>
                 {/* Sort */}
                 <div className="flex items-center gap-3 w-full lg:w-auto justify-end">
-                    <span className="text-xs font-bold text-slate-500 uppercase">Sort by:</span>
-                    <select
-                        className="px-4 py-2 bg-white border-2 border-slate-300 text-sm font-bold focus:border-[#16a249] focus:ring-0 cursor-pointer"
-                        style={{ boxShadow: '-1px 0 0 0 #d1d5db, 1px 0 0 0 #d1d5db, 0 -1px 0 0 #d1d5db, 0 1px 0 0 #d1d5db', margin: '1px' }}
+                    <span className="font-pixel text-[9px] text-slate-500 uppercase tracking-widest">Sort by:</span>
+                    <PixelSelect
                         value={sortKey}
-                        onChange={(e) => { setSortKey(e.target.value as SortKey); setSortAsc(false); }}
-                    >
-                        <option value="overall">Overall Rating</option>
-                        <option value="marketValue">Market Value</option>
-                        <option value="pace">Pace</option>
-                        <option value="shooting">Shooting</option>
-                    </select>
+                        onChange={(v) => { setSortKey(v as SortKey); setSortAsc(false); }}
+                        options={[
+                            { value: "overall",     label: "Overall Rating" },
+                            { value: "marketValue", label: "Market Value"   },
+                            { value: "pace",        label: "Pace"           },
+                            { value: "shooting",    label: "Shooting"       },
+                        ]}
+                        className="min-w-[180px]"
+                    />
                 </div>
             </div>
 
@@ -455,7 +456,7 @@ export function PlayerBazaar() {
                                         <span className={`${tierCfg.bg} ${tierCfg.text} text-[10px] font-bold px-1 py-0.5 border border-black`}>T{player.tier}</span>
                                     </div>
                                     <p className="text-xs text-slate-500 font-code leading-none">
-                                        Owned by <span className="text-[#16a249] font-bold">{player.owner}</span>
+                                        Owned by <span className="text-primary-dark font-bold">{player.owner}</span>
                                     </p>
                                 </div>
                             </div>
@@ -472,14 +473,14 @@ export function PlayerBazaar() {
                             <div className={`flex justify-between items-end border-t-2 border-dashed border-slate-200 pt-3 ${player.isSold ? 'opacity-50' : ''}`}>
                                 <div className="flex flex-col">
                                     <span className="text-[10px] text-slate-400 uppercase font-bold">{player.isSold ? "Sold For" : "Current Bid"}</span>
-                                    <span className={`text-sm font-pixel ${player.isSold ? "text-slate-700" : "text-[#16a249]"}`}>
+                                    <span className={`text-sm font-pixel ${player.isSold ? "text-slate-700" : "text-primary-dark"}`}>
                                         {lastBid ? lastBid.amount.toFixed(3) : player.marketValue.toFixed(3)} MON
                                     </span>
                                 </div>
                                 {player.isSold ? (
                                     <button className="bg-slate-300 text-slate-500 px-3 py-2 text-xs font-bold font-pixel cursor-not-allowed" disabled>CLOSED</button>
                                 ) : (
-                                    <button className="bg-black text-white px-3 py-2 text-xs font-bold font-pixel hover:bg-[#16a249] transition-colors cursor-pointer">BID</button>
+                                    <button className="bg-black text-white px-3 py-2 text-xs font-bold font-pixel hover:bg-primary-dark transition-colors cursor-pointer">BID</button>
                                 )}
                             </div>
                         </div>
@@ -497,12 +498,12 @@ export function PlayerBazaar() {
             <div className="h-14" />
 
             {/* Fixed Live Activity Ticker */}
-            <div className="fixed bottom-0 left-0 w-full border-t-2 border-[#0e1b13] z-50 overflow-hidden" style={{ background: "#071009" }}>
+            <div className="fixed bottom-0 left-0 w-full border-t-2 border-dark-green z-50 overflow-hidden" style={{ background: "var(--color-bg-darkest)" }}>
                 <div className="flex items-center">
                     {/* Label — fixed, does not scroll */}
-                    <div className="flex items-center gap-2 px-4 py-2 shrink-0 border-r-2 border-[#13ec5b]/30" style={{ background: "#0d1b12" }}>
-                        <div className="w-1.5 h-1.5 bg-[#13ec5b] rounded-full animate-pulse" />
-                        <span className="font-pixel text-[9px] text-[#13ec5b] tracking-widest whitespace-nowrap">LIVE FEED</span>
+                    <div className="flex items-center gap-2 px-4 py-2 shrink-0 border-r-2 border-primary/30" style={{ background: "var(--color-dark-green)" }}>
+                        <div className="w-1.5 h-1.5 bg-primary rounded-full animate-pulse" />
+                        <span className="font-pixel text-[9px] text-primary tracking-widest whitespace-nowrap">LIVE FEED</span>
                     </div>
 
                     {/* Scrolling track — content duplicated for seamless loop */}
@@ -512,7 +513,7 @@ export function PlayerBazaar() {
                                 <span key={copy} className="inline-flex items-center">
                                     <TickerItem icon="gavel"                color="#f59e0b" agent="The Crusher"     action="bid on Pelé"               value="1.18 MON"  ago="1m" />
                                     <TickerSep />
-                                    <TickerItem icon="shopping_cart_checkout" color="#13ec5b" agent="The Maestro"     action="signed"                    value="Zidane · 0.88 MON"  ago="3m" />
+                                    <TickerItem icon="shopping_cart_checkout" color="var(--color-primary)" agent="The Maestro"     action="signed"                    value="Zidane · 0.88 MON"  ago="3m" />
                                     <TickerSep />
                                     <TickerItem icon="manage_search"          color="#3b82f6" agent="The Philosopher" action="scouting"                   value="Haaland"            ago="4m" />
                                     <TickerSep />
@@ -524,7 +525,7 @@ export function PlayerBazaar() {
                                     <TickerSep />
                                     <TickerItem icon="gavel"                  color="#f59e0b" agent="The Artist"      action="bid on Carlos"              value="0.34 MON"           ago="8m" />
                                     <TickerSep />
-                                    <TickerItem icon="shopping_cart_checkout" color="#13ec5b" agent="The Veteran"     action="acquired"                   value="Ronaldo · 0.92 MON" ago="9m" />
+                                    <TickerItem icon="shopping_cart_checkout" color="var(--color-primary)" agent="The Veteran"     action="acquired"                   value="Ronaldo · 0.92 MON" ago="9m" />
                                     <TickerSep />
                                     <TickerItem icon="manage_search"          color="#3b82f6" agent="The Tinkerman"   action="scouting"                   value="Neymar"             ago="11m" />
                                     <TickerSep />
@@ -532,7 +533,7 @@ export function PlayerBazaar() {
                                     <TickerSep />
                                     <TickerItem icon="trending_up"            color="#f97316" agent=""                action="Ramos price spike"          value="now 0.58 MON"       ago="13m" />
                                     <TickerSep />
-                                    <TickerItem icon="shopping_cart_checkout" color="#13ec5b" agent="The Crusher"     action="signed"                     value="DeBruyne · 0.71 MON" ago="14m" />
+                                    <TickerItem icon="shopping_cart_checkout" color="var(--color-primary)" agent="The Crusher"     action="signed"                     value="DeBruyne · 0.71 MON" ago="14m" />
                                     <TickerSep />
                                     <TickerItem icon="gavel"                  color="#f59e0b" agent="The Maestro"     action="bid on Pelé"                value="1.22 MON"           ago="16m" />
                                     <TickerSep />
@@ -542,7 +543,7 @@ export function PlayerBazaar() {
                                     <TickerSep />
                                     <TickerItem icon="gavel"                  color="#f59e0b" agent="The Artist"      action="bid on Van Dijk"            value="0.45 MON"           ago="19m" />
                                     <TickerSep />
-                                    <TickerItem icon="shopping_cart_checkout" color="#13ec5b" agent="The Philosopher" action="bought"                     value="Salah · 0.73 MON"   ago="20m" />
+                                    <TickerItem icon="shopping_cart_checkout" color="var(--color-primary)" agent="The Philosopher" action="bought"                     value="Salah · 0.73 MON"   ago="20m" />
                                     <TickerSep />
                                     <TickerItem icon="trending_up"            color="#f97316" agent=""                action="Neuer market value"         value="↑ 8%"               ago="22m" />
                                     <TickerSep />
@@ -550,7 +551,7 @@ export function PlayerBazaar() {
                                     <TickerSep />
                                     <TickerItem icon="manage_search"          color="#3b82f6" agent="The Wildcard"    action="scouting"                   value="Davies"             ago="25m" />
                                     <TickerSep />
-                                    <TickerItem icon="shopping_cart_checkout" color="#13ec5b" agent="The Tinkerman"   action="acquired"                   value="Iniesta · 0.65 MON" ago="26m" />
+                                    <TickerItem icon="shopping_cart_checkout" color="var(--color-primary)" agent="The Tinkerman"   action="acquired"                   value="Iniesta · 0.65 MON" ago="26m" />
                                     <TickerSep />
                                     <TickerItem icon="gavel"                  color="#f59e0b" agent="The Philosopher" action="bid on Pele"                value="1.31 MON"           ago="28m" />
                                     <TickerSep />

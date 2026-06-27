@@ -1,8 +1,11 @@
 "use client";
 
 import { useEffect } from "react";
+import { usePathname } from "next/navigation";
 
 export function ScrollReveal() {
+  const pathname = usePathname();
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -14,13 +17,13 @@ export function ScrollReveal() {
           }
         });
       },
-      { threshold: 0 } // fire as soon as any pixel is visible
+      { threshold: 0 }
     );
 
     document.querySelectorAll("[data-reveal]").forEach((el) => observer.observe(el));
 
     return () => observer.disconnect();
-  }, []);
+  }, [pathname]); // re-run on every route change so new [data-reveal] elements are observed
 
   return null;
 }

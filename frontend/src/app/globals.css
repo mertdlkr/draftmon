@@ -2,8 +2,17 @@
 
 /* ── Tailwind v4 Theme ──────────────────────────────────────────────────── */
 @theme {
-  --color-primary: #13ec5b;
-  --color-primary-dim: #0ea640;
+  /* ── Brand greens ── */
+  --color-primary: #13ec5b;          /* main brand green */
+  --color-primary-dim: #0ea640;      /* hover state for primary */
+  --color-primary-dark: #16a249;     /* darker green — badges, active states */
+  --color-primary-deep: #15803d;     /* deepest green — deep hover, pitch accents */
+  /* ── Dark backgrounds ── */
+  --color-dark-green: #0d1b12;       /* near-black bg (hero, ticker, feed) */
+  --color-bg-darkest: #071009;       /* terminal header / deepest dark */
+  /* ── Light greens / borders ── */
+  --color-border-green: #cfe7d7;     /* light green card borders */
+  /* ── Retro palette ── */
   --color-retro-cream: #faf7f2;
   --color-retro-border: #d6d3d1;
   --color-retro-gold: #ca8a04;
@@ -11,8 +20,7 @@
   --color-bg-light: #f6f8f6;
   --color-bg-dark: #102216;
   --color-cream: #f8fcf9;
-  --color-dark-green: #0d1b12;
-  --color-border-green: #cfe7d7;
+  /* ── Fonts ── */
   --font-display: "Lexend", sans-serif;
   --font-pixel: "Press Start 2P", cursive;
   --font-body: "VT323", monospace;
@@ -137,12 +145,32 @@ pre,
   box-shadow: 4px 4px 0px 0px rgba(0, 0, 0, 0.1);
 }
 
+.pixel-card-shadow-dark {
+  box-shadow: 4px 4px 0px 0px rgba(0, 0, 0, 0.2);
+}
+
 .retro-shadow {
   box-shadow: 4px 4px 0px 0px var(--color-retro-border);
 }
 
 .retro-shadow-sm {
   box-shadow: 2px 2px 0px 0px var(--color-retro-border);
+}
+
+.retro-shadow-lg {
+  box-shadow: 6px 6px 0px 0px rgba(214, 211, 209, 1);
+}
+
+.retro-shadow-lg-hover {
+  box-shadow: 6px 6px 0px 0px rgba(0, 0, 0, 0.15);
+}
+
+.green-glow {
+  box-shadow: 0 0 15px rgba(19, 236, 91, 0.3);
+}
+
+.green-glow-sm {
+  box-shadow: 0 0 8px rgba(19, 236, 91, 0.2);
 }
 
 /* Stadium / pitch backgrounds */
@@ -502,10 +530,16 @@ html::before {
     0 0 18px rgba(19, 236, 91, 0.5);
 }
 
-/* ── Retro button press (2px pixel shift on click) ──────────────────────── */
+/* ── Global pixel button press (2px shift on click) ─────────────────────── */
+/* Applies to every <button> and any <a> styled as a button.                  */
+/* !important overrides Tailwind active: utilities so no per-button classes   */
+/* are needed. Disabled buttons are excluded.                                  */
+button:not([disabled]):active,
+a.retro-btn:active,
 .retro-btn:active {
   transform: translate(2px, 2px) !important;
-  box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.2) !important;
+  box-shadow: none !important;
+  transition-duration: 0s !important; /* instant press, animated release */
 }
 
 /* ── Nav link ▶ cursor ───────────────────────────────────────────────────── */

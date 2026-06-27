@@ -43,7 +43,7 @@ function CountUp({ value }: { value: string | number }) {
   }, [triggered, target]);
 
   return (
-    <div ref={ref} className="font-pixel text-xl md:text-2xl text-[#13ec5b] mb-1 pixel-glow">
+    <div ref={ref} className="font-pixel text-xl md:text-2xl text-primary mb-1 pixel-glow">
       {target !== null ? `${count}${suffix}` : value}
     </div>
   );

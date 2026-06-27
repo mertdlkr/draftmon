@@ -15,7 +15,7 @@
  */
 
 import { NextRequest } from "next/server";
-import { fetchLiveTournamentState } from "@/lib/contracts";
+import { fetchLiveTournamentState, TournamentState } from "@/lib/contracts";
 import type { LiveTournamentState } from "@/lib/contracts";
 
 const POLL_INTERVAL_MS = 5000;
@@ -101,7 +101,7 @@ export async function GET(req: NextRequest) {
                             }
                         }
 
-                        if (state.state === 3 /* COMPLETED */ && lastSignature !== "") {
+                        if (state.state === TournamentState.COMPLETED && lastSignature !== "") {
                             sendEvent("tournament_ended", { champion: state.champion, prizePool: state.prizePool });
                         }
 

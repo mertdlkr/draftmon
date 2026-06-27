@@ -1,6 +1,8 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { fetchTournamentDetail } from "@/lib/contracts";
+import { fetchTournamentDetail, TournamentState } from "@/lib/contracts";
+import { retryAsync } from "@/lib/utils/retry";
+import { shortenAddress } from "@/lib/utils/format";
 import { MatchBracket } from "@/components/tournaments/MatchBracket";
 import { AgentCard } from "@/components/agents/AgentCard";
 import { SquadTable } from "@/components/agents/SquadTable";
@@ -16,18 +18,10 @@ export default async function TournamentResultsPage({ params }: Props) {
 
     if (isNaN(tId) || tId < 1) return notFound();
 
-    let tournament = null;
-    for (let attempt = 0; attempt < 5; attempt++) {
-        try {
-            tournament = await fetchTournamentDetail(tId);
-            break;
-        } catch {
-            if (attempt < 4) await new Promise((r) => setTimeout(r, 2000));
-        }
-    }
+    const tournament = await retryAsync(() => fetchTournamentDetail(tId), 4, 2000).catch(() => null);
     if (!tournament) return notFound();
 
-    const isCompleted = tournament.state === 3;
+    const isCompleted = tournament.state === TournamentState.COMPLETED;
 
     const agentByAddr = (addr: string) =>
         tournament.agents.find(a => a.profile.address.toLowerCase() === addr.toLowerCase());
@@ -38,14 +32,14 @@ export default async function TournamentResultsPage({ params }: Props) {
             <div className="flex flex-wrap justify-between items-end gap-6 border-b-2 border-slate-200 pb-6">
                 <div className="flex flex-col gap-2">
                     <h1 className="text-slate-900 text-2xl md:text-3xl font-pixel leading-tight">Season {tId} Tournament</h1>
-                    <p className="text-[#16a249] text-xl md:text-2xl font-code font-bold uppercase tracking-wider">{tournament.stateLabel}</p>
+                    <p className="text-primary-dark text-xl md:text-2xl font-code font-bold uppercase tracking-wider">{tournament.stateLabel}</p>
                 </div>
                 <div className="flex gap-4">
                     <button className="flex items-center justify-center rounded border-2 border-slate-900 bg-white text-slate-900 h-10 px-4 font-code text-xl font-bold hover:bg-slate-50 transition-colors">
                         {tournament.prizePool} MON Prize Pool
                     </button>
                     {isCompleted && (
-                        <button className="flex items-center justify-center rounded border-2 border-[#16a249] bg-white text-[#16a249] h-10 px-4 font-code text-xl font-bold hover:bg-green-50 transition-colors">
+                        <button className="flex items-center justify-center rounded border-2 border-primary-dark bg-white text-primary-dark h-10 px-4 font-code text-xl font-bold hover:bg-green-50 transition-colors">
                             <span className="material-symbols-outlined mr-2 text-base">check_circle</span> Completed
                         </button>
                     )}
@@ -55,18 +49,18 @@ export default async function TournamentResultsPage({ params }: Props) {
             {/* Champion Banner */}
             {isCompleted && tournament.champion && tournament.champion !== "0x0000000000000000000000000000000000000000" && (() => {
                 const champion = agentByAddr(tournament.champion);
-                const championName = champion?.profile.name ?? `${tournament.champion.slice(0, 6)}…${tournament.champion.slice(-4)}`;
+                const championName = champion?.profile.name ?? shortenAddress(tournament.champion);
                 return (
                     <section className="w-full relative">
                         {/* Retro header badge */}
                         <div className="flex justify-center mb-0">
-                            <div className="bg-[#16a249] text-white px-8 py-2 font-pixel text-xs tracking-widest border-2 border-[#0e1b13] shadow-[3px_3px_0px_0px_rgba(0,0,0,0.2)] z-10 relative">
+                            <div className="bg-primary-dark text-white px-8 py-2 font-pixel text-xs tracking-widest border-2 border-dark-green shadow-[3px_3px_0px_0px_rgba(0,0,0,0.2)] z-10 relative">
                                 SEASON CHAMPION
                             </div>
                         </div>
 
                         <div
-                            className="bg-[#f0fdf4] border-2 border-[#16a249] p-8 flex flex-col md:flex-row items-center justify-center gap-10"
+                            className="bg-[#f0fdf4] border-2 border-primary-dark p-8 flex flex-col md:flex-row items-center justify-center gap-10"
                             style={{ boxShadow: "6px 6px 0px 0px rgba(22,162,73,0.15)" }}
                         >
                             {/* Avatar with gold star badge */}
@@ -84,12 +78,12 @@ export default async function TournamentResultsPage({ params }: Props) {
                                     {championName}
                                 </h2>
                                 <div className="font-code text-xl md:text-2xl text-slate-600">
-                                    Strategy: <span className="text-[#16a249] font-bold">{champion?.entry?.strategyName ?? "Unknown"}</span>
+                                    Strategy: <span className="text-primary-dark font-bold">{champion?.entry?.strategyName ?? "Unknown"}</span>
                                 </div>
                                 <div className="flex flex-wrap justify-center md:justify-start gap-3 mt-1">
-                                    <div className="bg-white border-2 border-[#16a249] px-4 py-1.5" style={{ boxShadow: "2px 2px 0px 0px rgba(22,162,73,0.2)" }}>
+                                    <div className="bg-white border-2 border-primary-dark px-4 py-1.5" style={{ boxShadow: "2px 2px 0px 0px rgba(22,162,73,0.2)" }}>
                                         <span className="font-code text-base text-slate-500">Prize</span>
-                                        <span className="font-pixel text-sm ml-2 text-[#16a249]">{tournament.prizePool} MON</span>
+                                        <span className="font-pixel text-sm ml-2 text-primary-dark">{tournament.prizePool} MON</span>
                                     </div>
                                 </div>
                             </div>
@@ -101,7 +95,7 @@ export default async function TournamentResultsPage({ params }: Props) {
             {/* Knockout Bracket */}
             {isCompleted && tournament.matches.length > 0 && (
                 <section className="flex flex-col gap-6 mb-10 w-full overflow-hidden">
-                    <h3 className="text-xl font-pixel text-slate-900 border-l-8 border-[#16a249] pl-4">Knockout Stage</h3>
+                    <h3 className="text-xl font-pixel text-slate-900 border-l-8 border-primary-dark pl-4">Knockout Stage</h3>
                     <div className="overflow-x-auto pb-6 w-full">
                         <MatchBracket matches={tournament.matches} agents={tournament.agents} />
                     </div>
@@ -112,7 +106,7 @@ export default async function TournamentResultsPage({ params }: Props) {
             {isCompleted && tournament.matches.length > 0 && (
                 <section className="flex flex-col gap-6 mb-10 w-full">
                     <div className="flex justify-between items-center">
-                        <h3 className="text-xl font-pixel text-slate-900 border-l-8 border-[#16a249] pl-4">Match Replays</h3>
+                        <h3 className="text-xl font-pixel text-slate-900 border-l-8 border-primary-dark pl-4">Match Replays</h3>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 pb-4 w-full">
                         {tournament.matches.map((match, i) => {
@@ -128,30 +122,51 @@ export default async function TournamentResultsPage({ params }: Props) {
                             const subtitle = `${teamAAgent.entry.strategyName || "Unknown"} vs ${teamBAgent.entry.strategyName || "Unknown"}`;
 
                             return (
-                                <Link key={`pitch-${i}`} href={`/tournaments/${tId}/match/${i}`} className="bg-white p-2 rounded-lg shadow-sm border border-slate-200 hover:shadow-md transition-shadow cursor-pointer group">
-                                    {/* Mini Pitch with Winner Overlay */}
-                                    <div
-                                        className="bg-[#22c55e] aspect-[3/4] rounded border-2 border-[#15803d] relative overflow-hidden flex flex-col shadow-inner"
-                                        style={{ backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 20px, rgba(0,0,0,0.1) 20px, rgba(0,0,0,0.1) 40px)' }}
-                                    >
-                                        {/* Field Markings */}
-                                        <div className="absolute top-0 left-[25%] w-[50%] h-[15%] border-2 border-white/80 border-t-0" />
-                                        <div className="absolute bottom-0 left-[25%] w-[50%] h-[15%] border-2 border-white/80 border-b-0" />
-                                        <div className="absolute top-1/2 left-0 w-full h-0.5 bg-white/60 -translate-y-1/2" />
-                                        <div className="absolute top-1/2 left-1/2 w-[30%] aspect-square border-2 border-white/60 rounded-full -translate-x-1/2 -translate-y-1/2" />
-                                        {/* Winner Display */}
-                                        <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 z-10">
-                                            <span className="material-symbols-outlined text-4xl text-yellow-400 drop-shadow-md">emoji_events</span>
-                                            <span className="font-pixel text-[10px] text-white bg-black/60 px-2 py-1 rounded border border-white/20 uppercase tracking-tighter">{winnerName}</span>
+                                <Link
+                                    key={`pitch-${i}`}
+                                    href={`/tournaments/${tId}/match/${i}`}
+                                    className="relative bg-white border-2 border-slate-300 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.1)] hover:-translate-y-1.5 hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,0.15)] hover:border-primary transition-all overflow-hidden group"
+                                >
+                                    {/* Top accent bar slides in on hover */}
+                                    <div className="h-[4px] w-full bg-primary scale-x-0 group-hover:scale-x-100 transition-transform origin-left" />
+
+                                    <div className="p-2">
+                                        {/* Mini Pitch with Winner Overlay */}
+                                        <div
+                                            className="bg-[#22c55e] aspect-[3/4] border-2 border-primary-deep relative overflow-hidden flex flex-col shadow-inner"
+                                            style={{ backgroundImage: 'repeating-linear-gradient(0deg, transparent, transparent 20px, rgba(0,0,0,0.1) 20px, rgba(0,0,0,0.1) 40px)' }}
+                                        >
+                                            {/* Field Markings */}
+                                            <div className="absolute top-0 left-[25%] w-[50%] h-[15%] border-2 border-white/80 border-t-0" />
+                                            <div className="absolute bottom-0 left-[25%] w-[50%] h-[15%] border-2 border-white/80 border-b-0" />
+                                            <div className="absolute top-1/2 left-0 w-full h-0.5 bg-white/60 -translate-y-1/2" />
+                                            <div className="absolute top-1/2 left-1/2 w-[30%] aspect-square border-2 border-white/60 rounded-full -translate-x-1/2 -translate-y-1/2" />
+                                            {/* Winner Display */}
+                                            <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 z-10">
+                                                <span className="material-symbols-outlined text-4xl text-yellow-400 drop-shadow-md">emoji_events</span>
+                                                <span className="font-pixel text-[10px] text-white bg-black/60 px-2 py-1 border border-white/20 uppercase tracking-tighter">{winnerName}</span>
+                                            </div>
+                                            {/* Score Overlay */}
+                                            <div className="absolute top-2 right-2 bg-black/80 text-white font-pixel text-[10px] px-2 py-1 border border-white/20">
+                                                {match.goalsA} - {match.goalsB}
+                                            </div>
+                                            {/* Play button overlay — appears on hover */}
+                                            <div className="absolute inset-0 flex items-center justify-center z-20 opacity-0 group-hover:opacity-100 transition-opacity bg-black/30">
+                                                <div className="bg-primary text-dark-green font-pixel text-[9px] px-4 py-2 flex items-center gap-1.5 shadow-[3px_3px_0px_0px_rgba(0,0,0,0.4)]">
+                                                    ▶ REPLAY
+                                                </div>
+                                            </div>
                                         </div>
-                                        {/* Score Overlay */}
-                                        <div className="absolute top-2 right-2 bg-black/80 text-white font-pixel text-[10px] px-2 py-1 rounded border border-white/20">
-                                            {match.goalsA} - {match.goalsB}
+
+                                        {/* Text + CTA footer */}
+                                        <div className="mt-3 px-1">
+                                            <h4 className="font-pixel text-xs text-slate-800 truncate">{title}</h4>
+                                            <p className="font-code text-sm text-slate-500 mt-1 truncate">{subtitle}</p>
+                                            <div className="mt-2 pt-2 border-t-2 border-dashed border-slate-100 flex items-center justify-between">
+                                                <span className="font-pixel text-[8px] text-slate-400 group-hover:text-primary transition-colors">▶ WATCH REPLAY</span>
+                                                <span className="material-symbols-outlined text-base text-slate-300 group-hover:text-primary transition-colors">play_circle</span>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div className="mt-3 px-1">
-                                        <h4 className="font-pixel text-xs text-slate-800 truncate">{title}</h4>
-                                        <p className="font-code text-sm text-slate-500 mt-1 truncate">{subtitle}</p>
                                     </div>
                                 </Link>
                             );
@@ -162,7 +177,7 @@ export default async function TournamentResultsPage({ params }: Props) {
 
             {/* Roster & Strategies */}
             <section className="flex flex-col gap-6">
-                <h3 className="text-xl font-pixel text-slate-900 border-l-8 border-[#16a249] pl-4">Top Managers</h3>
+                <h3 className="text-xl font-pixel text-slate-900 border-l-8 border-primary-dark pl-4">Top Managers</h3>
                 <div className="flex flex-col gap-6">
                     {tournament.agents.map(({ profile, entry }) => (
                         <div key={profile.address} className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm flex flex-col gap-4">
@@ -177,7 +192,7 @@ export default async function TournamentResultsPage({ params }: Props) {
                                             <h4 className="font-pixel text-xs text-slate-900 mb-1">{profile.name}</h4>
                                             {entry.strategyId ? (
                                                 <div className="flex items-center gap-2">
-                                                    <span className="px-2 py-0.5 bg-green-50 text-[#16a249] text-[10px] font-bold rounded uppercase font-code border border-green-200">
+                                                    <span className="px-2 py-0.5 bg-green-50 text-primary-dark text-[10px] font-bold rounded uppercase font-code border border-green-200">
                                                         {entry.strategyName}
                                                     </span>
                                                 </div>
@@ -187,7 +202,7 @@ export default async function TournamentResultsPage({ params }: Props) {
                                         </div>
                                         {/* Example status badge */}
                                         {tournament.champion === profile.address && (
-                                            <div className="bg-green-50 text-[#16a249] px-2 py-0.5 rounded font-code text-xs font-bold border border-green-200">
+                                            <div className="bg-green-50 text-primary-dark px-2 py-0.5 rounded font-code text-xs font-bold border border-green-200">
                                                 WINNER
                                             </div>
                                         )}

@@ -1,6 +1,7 @@
 import type { AgentProfile } from "@/lib/contracts";
 import { PixelStatBar } from "@/components/ui/PixelStatBar";
 import { ManagerAvatar, getManagerColor } from "@/components/ui/ManagerAvatar";
+import { shortenAddress } from "@/lib/utils/format";
 
 interface Props {
     agent: AgentProfile;
@@ -48,7 +49,7 @@ export function AgentCard({ agent }: Props) {
             <div>
                 <h3 className="font-pixel text-[10px] text-slate-500 mb-1 uppercase tracking-widest">{agent.name}</h3>
                 <p className="text-sm text-slate-900 font-bold mb-2">
-                    {agent.address.slice(0, 6)}...{agent.address.slice(-4)}
+                    {shortenAddress(agent.address)}
                 </p>
             </div>
 
@@ -60,7 +61,7 @@ export function AgentCard({ agent }: Props) {
             </div>
 
             {/* Style label */}
-            <div className="pt-4 mt-2 border-t border-[#cfe7d7]">
+            <div className="pt-4 mt-2 border-t border-border-green">
                 <span className="inline-block text-white px-2 py-1 text-[10px] uppercase font-bold rounded font-pixel" style={{ background: color }}>
                     {label}
                 </span>

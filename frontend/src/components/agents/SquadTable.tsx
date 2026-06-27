@@ -1,59 +1,14 @@
 "use client";
 
 import type { Player } from "@/lib/contracts";
+import {
+    POS_ORDER, POS_COLOR, POS_GROUP,
+    GROUP_LABEL, GROUP_COLOR, GROUP_ORDER,
+    statDots, statColor,
+} from "@/lib/constants/squad";
 
 interface Props {
     players: Player[];
-}
-
-const POS_ORDER: Record<string, number> = {
-    GK: 0, CB: 1, LB: 2, RB: 3,
-    CDM: 4, CM: 5, CAM: 6,
-    LW: 7, RW: 8, ST: 9,
-};
-
-const POS_COLOR: Record<string, string> = {
-    GK: "#f59e0b",
-    CB: "#13ec5b", LB: "#13ec5b", RB: "#13ec5b",
-    CDM: "#3b82f6", CM: "#3b82f6", CAM: "#3b82f6",
-    LW: "#8b5cf6", RW: "#8b5cf6",
-    ST: "#ef4444",
-};
-
-const POS_GROUP: Record<string, string> = {
-    GK: "GK",
-    CB: "DEF", LB: "DEF", RB: "DEF",
-    CDM: "MID", CM: "MID", CAM: "MID",
-    LW: "ATT", RW: "ATT", ST: "ATT",
-};
-
-const GROUP_LABEL: Record<string, string> = {
-    GK: "Goalkeeper",
-    DEF: "Defenders",
-    MID: "Midfielders",
-    ATT: "Attackers",
-};
-
-const GROUP_COLOR: Record<string, string> = {
-    GK: "#f59e0b",
-    DEF: "#13ec5b",
-    MID: "#3b82f6",
-    ATT: "#ef4444",
-};
-
-function statDots(val: number): number {
-    if (val >= 85) return 5;
-    if (val >= 70) return 4;
-    if (val >= 55) return 3;
-    if (val >= 40) return 2;
-    return 1;
-}
-
-function statColor(val: number): string {
-    if (val >= 85) return "#13ec5b";
-    if (val >= 70) return "#3b82f6";
-    if (val >= 55) return "#f59e0b";
-    return "#94a3b8";
 }
 
 function StatDots({ val }: { val: number }) {
@@ -87,7 +42,6 @@ export function SquadTable({ players }: Props) {
         if (!groups[g]) groups[g] = [];
         groups[g].push(p);
     }
-    const groupOrder = ["GK", "DEF", "MID", "ATT"];
 
     return (
         <div className="overflow-x-auto">
@@ -103,7 +57,7 @@ export function SquadTable({ players }: Props) {
                     </tr>
                 </thead>
                 <tbody>
-                    {groupOrder.map((group) => {
+                    {GROUP_ORDER.map((group) => {
                         const groupPlayers = groups[group];
                         if (!groupPlayers || groupPlayers.length === 0) return null;
                         const color = GROUP_COLOR[group];
@@ -128,7 +82,7 @@ export function SquadTable({ players }: Props) {
                                 {groupPlayers.map((p, i) => (
                                     <tr
                                         key={`${p.name}-${i}`}
-                                        className="group border-b border-slate-100 hover:border-[#13ec5b]/30 transition-colors cursor-default"
+                                        className="group border-b border-slate-100 hover:border-primary/30 transition-colors cursor-default"
                                         style={{ background: "transparent" }}
                                         onMouseEnter={(e) => {
                                             (e.currentTarget as HTMLTableRowElement).style.background = "rgba(19,236,91,0.05)";

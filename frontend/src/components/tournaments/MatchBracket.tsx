@@ -60,7 +60,7 @@ const SX = {
     qfRl:  COL.qfR.x,                                     // QF-Right left edge
 };
 
-const CONNECTOR = "#16a249";
+const CONNECTOR = "var(--color-primary-dark)";
 const CONNECTOR_W = 2;
 
 function MatchCard({
@@ -73,11 +73,11 @@ function MatchCard({
     const borderStyle = isFinal
         ? { border: "3px solid #eab308", boxShadow: "0 0 12px rgba(234,179,8,0.2), 4px 4px 0px 0px rgba(0,0,0,0.15)" }
         : isSemi
-        ? { border: "2px solid #16a249", boxShadow: "3px 3px 0px 0px rgba(22,162,73,0.3)" }
-        : { border: "2px solid #0e1b13", boxShadow: "3px 3px 0px 0px rgba(0,0,0,0.12)" };
+        ? { border: "2px solid var(--color-primary-dark)", boxShadow: "3px 3px 0px 0px rgba(22,162,73,0.3)" }
+        : { border: "2px solid var(--color-dark-green)", boxShadow: "3px 3px 0px 0px rgba(0,0,0,0.12)" };
 
-    const headerBg = isFinal ? "#eab308" : isSemi ? "#0d1b12" : "#1e293b";
-    const headerText = isFinal ? "#1e293b" : "#13ec5b";
+    const headerBg = isFinal ? "#eab308" : isSemi ? "var(--color-dark-green)" : "#1e293b";
+    const headerText = isFinal ? "#1e293b" : "var(--color-primary)";
 
     return (
         <div className="bg-white" style={borderStyle}>
@@ -94,7 +94,7 @@ function MatchCard({
                         {nameA}
                     </span>
                 </div>
-                <span className={`font-pixel text-[9px] ml-1 shrink-0 ${aWon ? "bg-[#16a249] text-white px-1 py-0.5" : "text-slate-400"}`}>
+                <span className={`font-pixel text-[9px] ml-1 shrink-0 ${aWon ? "bg-primary-dark text-white px-1 py-0.5" : "text-slate-400"}`}>
                     {goalsA}
                 </span>
             </div>
@@ -106,7 +106,7 @@ function MatchCard({
                         {nameB}
                     </span>
                 </div>
-                <span className={`font-pixel text-[9px] ml-1 shrink-0 ${!aWon ? "bg-[#16a249] text-white px-1 py-0.5" : "text-slate-400"}`}>
+                <span className={`font-pixel text-[9px] ml-1 shrink-0 ${!aWon ? "bg-primary-dark text-white px-1 py-0.5" : "text-slate-400"}`}>
                     {goalsB}
                 </span>
             </div>

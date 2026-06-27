@@ -3,6 +3,7 @@ import Link from "next/link";
 import { fetchTournamentDetail } from "@/lib/contracts";
 import { FootballPitch } from "@/components/tournaments/FootballPitch";
 import { SquadTable } from "@/components/agents/SquadTable";
+import { ManagerAvatar } from "@/components/ui/ManagerAvatar";
 
 interface Props {
     params: Promise<{ id: string; matchIndex: string }>;
@@ -35,56 +36,86 @@ export default async function MatchDetailPage({ params }: Props) {
             <div className="flex flex-wrap items-center gap-2">
                 <Link
                     href={`/tournaments/${tId}`}
-                    className="flex items-center justify-center size-8 bg-white border border-slate-200 rounded shadow-sm text-slate-500 hover:text-[#16a249] transition-colors"
+                    className="flex items-center justify-center size-8 bg-white border border-slate-200 rounded shadow-sm text-slate-500 hover:text-primary-dark transition-colors"
                 >
                     <span className="material-symbols-outlined text-sm">arrow_back</span>
                 </Link>
                 <div className="flex items-center gap-2 px-4 py-1 bg-white border border-slate-200 rounded shadow-sm">
-                    <Link href="/tournaments" className="text-slate-500 hover:text-[#16a249] text-sm font-code">Tournaments</Link>
+                    <Link href="/tournaments" className="text-slate-500 hover:text-primary-dark text-sm font-code">Tournaments</Link>
                     <span className="material-symbols-outlined text-xs text-slate-400">chevron_right</span>
-                    <Link href={`/tournaments/${tId}`} className="text-slate-500 hover:text-[#16a249] text-sm font-code">Season {tId}</Link>
+                    <Link href={`/tournaments/${tId}`} className="text-slate-500 hover:text-primary-dark text-sm font-code">Season {tId}</Link>
                     <span className="material-symbols-outlined text-xs text-slate-400">chevron_right</span>
                     <span className="text-slate-900 font-bold text-sm font-code">{matchLabel}</span>
                 </div>
             </div>
 
             {/* Scoreboard Jumbotron */}
-            <section className="w-full relative retro-card bg-white mt-4 shadow-sm">
-                <div className="p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6 relative">
+            <section className="w-full overflow-hidden border-2 border-slate-900 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.15)] mt-4">
+                {/* Dark header strip */}
+                <div className="bg-bg-darkest px-5 py-2.5 flex items-center justify-between border-b-2 border-slate-900">
+                    <span className="font-pixel text-[8px] text-slate-400 uppercase tracking-widest">{matchLabel}</span>
+                    <span className="font-pixel text-[8px] px-3 py-1 bg-primary/20 text-primary border border-primary/50 animate-pulse">● FT</span>
+                </div>
+
+                {/* Teams + score */}
+                <div className="bg-white p-6 md:p-8 flex flex-col md:flex-row items-center justify-between gap-6">
                     {/* Home Team */}
-                    <div className="flex flex-col items-center gap-3 z-20 w-1/3">
-                        <div className={`size-24 md:size-32 bg-white rounded border-4 ${aWon ? 'border-[#13ec5b] shadow-[0_0_15px_rgba(19,236,91,0.4)]' : 'border-slate-300'} overflow-hidden flex items-center justify-center p-2`}>
-                            <img src="/logo.png" alt="MonaDraft Logo" className="opacity-20 max-w-full" />
-                        </div>
-                        <h3 className="text-slate-900 text-sm md:text-base font-pixel text-center leading-relaxed mt-2">{teamAAgent.profile.name}</h3>
-                        <span className="text-xs font-code text-[#13ec5b] font-bold px-2 py-0.5 bg-green-50 border border-green-200 rounded uppercase">{teamAAgent.entry.strategyName || "Unknown"}</span>
+                    <div className="flex flex-col items-center gap-3 w-1/3">
+                        <ManagerAvatar
+                            name={teamAAgent.profile.name}
+                            size={96}
+                            className={`border-4 ${aWon ? 'border-primary green-glow' : 'border-slate-300'}`}
+                        />
+                        <h3 className="text-slate-900 text-sm md:text-base font-pixel text-center leading-relaxed mt-1">
+                            {teamAAgent.profile.name}
+                        </h3>
+                        {aWon && (
+                            <span className="font-pixel text-[8px] px-2 py-1 bg-primary/10 text-primary border border-primary/40 tracking-widest">
+                                ★ WINNER
+                            </span>
+                        )}
+                        <span className="font-pixel text-[7px] px-2 py-1 bg-slate-100 border border-slate-200 text-slate-500 uppercase tracking-widest">
+                            ▶ {teamAAgent.entry.strategyName || "Unknown"}
+                        </span>
                     </div>
 
                     {/* Score */}
-                    <div className="flex flex-col items-center z-20 w-1/3 my-6 md:my-0">
-                        <div className="bg-[#13ec5b]/10 px-6 py-2 rounded border border-[#13ec5b]/30 mb-4 shadow-inner">
-                            <span className="text-[#13ec5b] text-xs font-pixel animate-pulse">FT</span>
-                        </div>
+                    <div className="flex flex-col items-center w-1/3 my-6 md:my-0 gap-5">
                         <div className="flex items-center gap-4">
-                            <span className="text-6xl md:text-8xl font-pixel text-slate-900 leading-none">{match.goalsA}</span>
-                            <span className="text-4xl font-pixel text-slate-300">-</span>
-                            <span className="text-6xl md:text-8xl font-pixel text-slate-900 leading-none">{match.goalsB}</span>
+                            <span className={`text-6xl md:text-8xl font-pixel leading-none ${aWon ? 'text-primary' : 'text-slate-400'}`}>
+                                {match.goalsA}
+                            </span>
+                            <span className="text-3xl font-pixel text-slate-300">—</span>
+                            <span className={`text-6xl md:text-8xl font-pixel leading-none ${!aWon ? 'text-primary' : 'text-slate-400'}`}>
+                                {match.goalsB}
+                            </span>
                         </div>
-                        <div className="mt-6 text-slate-500 text-xs md:text-sm font-code flex items-center gap-2 bg-slate-50 px-3 py-1.5 rounded border border-slate-200">
-                            <span className="font-bold text-slate-400">PWR</span>
-                            <span className="text-slate-800 font-bold">{match.scoreA}</span>
-                            <span className="text-slate-300">-</span>
-                            <span className="text-slate-800 font-bold">{match.scoreB}</span>
+                        <div className="flex items-center gap-2 border-2 border-slate-200 px-4 py-2 shadow-[2px_2px_0px_0px_rgba(0,0,0,0.06)]">
+                            <span className="font-pixel text-[7px] text-slate-400 tracking-widest">PWR</span>
+                            <span className="font-pixel text-[8px] text-slate-700">{match.scoreA}</span>
+                            <span className="font-pixel text-[8px] text-slate-300">—</span>
+                            <span className="font-pixel text-[8px] text-slate-700">{match.scoreB}</span>
                         </div>
                     </div>
 
                     {/* Away Team */}
-                    <div className="flex flex-col items-center gap-3 z-20 w-1/3">
-                        <div className={`size-24 md:size-32 bg-white rounded border-4 ${!aWon ? 'border-[#13ec5b] shadow-[0_0_15px_rgba(19,236,91,0.4)]' : 'border-slate-300'} overflow-hidden flex items-center justify-center p-2`}>
-                            <img src="/logo.png" alt="MonaDraft Logo" className="opacity-20 max-w-full" />
-                        </div>
-                        <h3 className="text-slate-900 text-sm md:text-base font-pixel text-center leading-relaxed mt-2">{teamBAgent.profile.name}</h3>
-                        <span className="text-xs font-code text-[#13ec5b] font-bold px-2 py-0.5 bg-green-50 border border-green-200 rounded uppercase">{teamBAgent.entry.strategyName || "Unknown"}</span>
+                    <div className="flex flex-col items-center gap-3 w-1/3">
+                        <ManagerAvatar
+                            name={teamBAgent.profile.name}
+                            size={96}
+                            className={`border-4 ${!aWon ? 'border-primary green-glow' : 'border-slate-300'}`}
+                        />
+                        <h3 className="text-slate-900 text-sm md:text-base font-pixel text-center leading-relaxed mt-1">
+                            {teamBAgent.profile.name}
+                        </h3>
+                        {!aWon && (
+                            <span className="font-pixel text-[8px] px-2 py-1 bg-primary/10 text-primary border border-primary/40 tracking-widest">
+                                ★ WINNER
+                            </span>
+                        )}
+                        <span className="font-pixel text-[7px] px-2 py-1 bg-slate-100 border border-slate-200 text-slate-500 uppercase tracking-widest">
+                            ▶ {teamBAgent.entry.strategyName || "Unknown"}
+                        </span>
                     </div>
                 </div>
             </section>
@@ -92,13 +123,13 @@ export default async function MatchDetailPage({ params }: Props) {
             {/* Formations */}
             <section>
                 <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-xl font-pixel text-slate-900 border-l-8 border-[#16a249] pl-4">Formations</h2>
+                    <h2 className="text-xl font-pixel text-slate-900 border-l-8 border-primary-dark pl-4">Formations</h2>
                     <div className="flex gap-4 text-sm font-code">
                         <span className="flex items-center gap-2"><span className="size-3 rounded-full bg-red-500 border border-black" /> {teamAAgent.profile.name}</span>
                         <span className="flex items-center gap-2"><span className="size-3 rounded-full bg-blue-500 border border-black" /> {teamBAgent.profile.name}</span>
                     </div>
                 </div>
-                <div className="bg-white p-3 rounded-lg shadow-sm border border-slate-200">
+                <div className="shadow-[4px_4px_0px_0px_rgba(0,0,0,0.1)]">
                     <FootballPitch
                         teamA={teamAAgent.entry.team}
                         teamB={teamBAgent.entry.team}
@@ -124,7 +155,7 @@ export default async function MatchDetailPage({ params }: Props) {
                             <p className="font-pixel text-[8px] text-slate-400 uppercase tracking-widest mb-0.5">Manager</p>
                             <p className="font-pixel text-xs text-slate-900">{teamAAgent.profile.name}</p>
                         </div>
-                        <span className={`px-2 py-1 text-[9px] font-pixel font-bold border-2 ${aWon ? 'bg-[#13ec5b]/10 text-[#16a249] border-[#13ec5b]' : 'bg-slate-100 text-slate-500 border-slate-300'}`}>
+                        <span className={`px-2 py-1 text-[9px] font-pixel font-bold border-2 ${aWon ? 'bg-primary/10 text-primary-dark border-primary' : 'bg-slate-100 text-slate-500 border-slate-300'}`}>
                             {aWon ? 'WINNER' : 'HOME'}
                         </span>
                     </div>
@@ -140,7 +171,7 @@ export default async function MatchDetailPage({ params }: Props) {
                             <p className="font-pixel text-[8px] text-slate-400 uppercase tracking-widest mb-0.5">Manager</p>
                             <p className="font-pixel text-xs text-slate-900">{teamBAgent.profile.name}</p>
                         </div>
-                        <span className={`px-2 py-1 text-[9px] font-pixel font-bold border-2 ${!aWon ? 'bg-[#13ec5b]/10 text-[#16a249] border-[#13ec5b]' : 'bg-slate-100 text-slate-500 border-slate-300'}`}>
+                        <span className={`px-2 py-1 text-[9px] font-pixel font-bold border-2 ${!aWon ? 'bg-primary/10 text-primary-dark border-primary' : 'bg-slate-100 text-slate-500 border-slate-300'}`}>
                             {!aWon ? 'WINNER' : 'AWAY'}
                         </span>
                     </div>

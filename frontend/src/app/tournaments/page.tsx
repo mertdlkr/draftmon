@@ -1,6 +1,7 @@
 import Link from "next/link";
-import { fetchAllTournaments } from "@/lib/contracts";
+import { fetchAllTournaments, TournamentState } from "@/lib/contracts";
 import { PageHeader } from "@/components/layout/PageHeader";
+import { shortenAddress } from "@/lib/utils/format";
 
 export default async function TournamentsPage() {
     const tournaments = await fetchAllTournaments().catch(() => []);
@@ -21,10 +22,10 @@ export default async function TournamentsPage() {
                 {["ALL", "LIVE", "COMPLETED"].map((tab, i) => (
                     <button
                         key={tab}
-                        className={`h-8 px-4 text-xs font-pixel border-2 border-[#0e1b13] shadow-[2px_2px_0px_0px_#0e1b13] transition-all cursor-pointer flex items-center gap-1 ${
+                        className={`h-8 px-4 text-xs font-pixel border-2 border-dark-green shadow-[2px_2px_0px_0px_var(--color-dark-green)] transition-all cursor-pointer flex items-center gap-1 ${
                             i === 0
-                                ? "bg-[#13ec5b] text-[#0d1b12] border-[#13ec5b]"
-                                : "bg-white text-[#0e1b13] hover:bg-gray-50 hover:-translate-y-0.5"
+                                ? "bg-primary text-dark-green border-primary"
+                                : "bg-white text-dark-green hover:bg-gray-50 hover:-translate-y-0.5"
                         }`}
                     >
                         {i === 0 && <span className="text-[8px]">▶</span>}
@@ -36,22 +37,22 @@ export default async function TournamentsPage() {
             {/* Tournament List Stack */}
             <div className="flex flex-col gap-6">
                 {sorted.map((t) => {
-                    const isLive = t.state !== 3;
-                    const isCompleted = t.state === 3;
+                    const isLive = t.state !== TournamentState.COMPLETED;
+                    const isCompleted = t.state === TournamentState.COMPLETED;
 
                     return (
                         <Link
                             key={t.id}
                             href={`/tournaments/${t.id}`}
-                            className={`group relative flex flex-col md:flex-row items-stretch bg-white border-l-[6px] border-r-2 border-y-2 border-[#0e1b13] shadow-[3px_3px_0px_0px_#0e1b13] transition-all duration-200 cursor-pointer overflow-hidden no-underline text-slate-900 ${isLive ? 'border-l-[#eab308] hover:shadow-[5px_5px_0px_0px_#16a249] hover:-translate-y-[2px] hover:border-[#16a249]' : 'border-l-[#16a249] hover:shadow-[5px_5px_0px_0px_#16a249] hover:-translate-y-[2px] opacity-90 hover:opacity-100'}`}
+                            className={`group relative flex flex-col md:flex-row items-stretch bg-white border-l-[6px] border-r-2 border-y-2 border-dark-green shadow-[3px_3px_0px_0px_var(--color-dark-green)] transition-all duration-200 cursor-pointer overflow-hidden no-underline text-slate-900 ${isLive ? 'border-l-[#eab308] hover:shadow-[5px_5px_0px_0px_var(--color-primary-dark)] hover:-translate-y-[2px] hover:border-primary-dark' : 'border-l-primary-dark hover:shadow-[5px_5px_0px_0px_var(--color-primary-dark)] hover:-translate-y-[2px] opacity-90 hover:opacity-100'}`}
                         >
                             {isLive && (
-                                <div className="absolute -right-8 top-4 bg-orange-500 text-white text-[9px] font-pixel px-8 py-1 rotate-45 border-y-2 border-[#0e1b13] shadow-sm z-10">LATEST</div>
+                                <div className="absolute -right-8 top-4 bg-orange-500 text-white text-[9px] font-pixel px-8 py-1 rotate-45 border-y-2 border-dark-green shadow-sm z-10">LATEST</div>
                             )}
 
                             {/* Season number box */}
-                            <div className="w-full md:w-32 bg-gray-50 border-b-2 md:border-b-0 md:border-r-2 border-[#0e1b13] flex flex-col items-center justify-center p-4 group-hover:bg-[#f0fdf4] transition-colors">
-                                <span className="font-pixel text-4xl text-[#0e1b13]">S{String(t.id).padStart(2, "0")}</span>
+                            <div className="w-full md:w-32 bg-gray-50 border-b-2 md:border-b-0 md:border-r-2 border-dark-green flex flex-col items-center justify-center p-4 group-hover:bg-[#f0fdf4] transition-colors">
+                                <span className="font-pixel text-4xl text-dark-green">S{String(t.id).padStart(2, "0")}</span>
                             </div>
 
                             {/* Info */}
@@ -65,19 +66,19 @@ export default async function TournamentsPage() {
                                                     <span className="text-[#eab308] font-pixel text-xs tracking-wide">LIVE NOW</span>
                                                 </>
                                             ) : (
-                                                <span className="text-[#16a249] font-pixel text-xs tracking-wide">COMPLETED</span>
+                                                <span className="text-primary-dark font-pixel text-xs tracking-wide">COMPLETED</span>
                                             )}
                                         </div>
-                                        <h3 className="font-bold text-xl text-[#0e1b13] font-display">Season {String(t.id).padStart(2, "0")}</h3>
+                                        <h3 className="font-bold text-xl text-dark-green font-display">Season {String(t.id).padStart(2, "0")}</h3>
                                     </div>
 
-                                    <div className="flex items-center gap-4 text-sm font-medium text-slate-600 bg-[#faf7f2] px-3 py-1 border border-[#0e1b13] border-dashed">
+                                    <div className="flex items-center gap-4 text-sm font-medium text-slate-600 bg-[#faf7f2] px-3 py-1 border border-dark-green border-dashed">
                                         <div className="flex items-center gap-1">
                                             <span className="material-symbols-outlined text-lg">groups</span>
                                             <span className="font-display font-medium">{t.participants.length}/8 Agents</span>
                                         </div>
                                         <div className="w-px h-4 bg-slate-300"></div>
-                                        <div className="flex items-center gap-1 text-[#15803d] font-bold">
+                                        <div className="flex items-center gap-1 text-primary-deep font-bold">
                                             <span className="material-symbols-outlined text-lg">monetization_on</span>
                                             <span className="font-display font-bold">{t.prizePool} MON</span>
                                         </div>
@@ -92,13 +93,13 @@ export default async function TournamentsPage() {
                                                 <span className="material-symbols-outlined text-[#eab308]">crown</span>
                                                 <div className="flex flex-col">
                                                     <span className="text-[10px] text-slate-500 uppercase font-bold tracking-wider">Champion</span>
-                                                    <span className="text-sm font-bold text-[#0e1b13] font-pixel">{t.champion.slice(0, 6)}…{t.champion.slice(-4)}</span>
+                                                    <span className="text-sm font-bold text-dark-green font-pixel">{shortenAddress(t.champion)}</span>
                                                 </div>
                                             </>
                                         )}
                                     </div>
 
-                                    <button className={`w-full md:w-auto px-6 py-2 font-pixel text-[10px] transition-colors border-2 cursor-pointer ${isLive ? 'bg-[#0e1b13] text-white border-transparent hover:border-[#0e1b13] hover:bg-[#16a249] hover:text-[#0e1b13]' : 'bg-gray-100 text-[#0e1b13] border-[#0e1b13] hover:bg-[#0e1b13] hover:text-white'}`}>
+                                    <button className={`w-full md:w-auto px-6 py-2 font-pixel text-[10px] transition-colors border-2 cursor-pointer ${isLive ? 'bg-dark-green text-white border-transparent hover:border-dark-green hover:bg-primary-dark hover:text-dark-green' : 'bg-gray-100 text-dark-green border-dark-green hover:bg-dark-green hover:text-white'}`}>
                                         {isLive ? 'WATCH LIVE' : 'VIEW RESULTS'}
                                     </button>
                                 </div>
@@ -107,8 +108,8 @@ export default async function TournamentsPage() {
                     );
                 })}
                 {tournaments.length === 0 && (
-                    <div className="text-center py-24 border-2 border-dashed border-[#13ec5b]/30">
-                        <div className="font-pixel text-[#13ec5b] text-5xl mb-6 pixel-glow">???</div>
+                    <div className="text-center py-24 border-2 border-dashed border-primary/30">
+                        <div className="font-pixel text-primary text-5xl mb-6 pixel-glow">???</div>
                         <div className="font-pixel text-xs text-slate-700 mb-4">NO TOURNAMENTS FOUND</div>
                         <div className="font-pixel text-[8px] text-slate-400 text-blink">▶ INSERT COIN TO CONTINUE ◀</div>
                     </div>
@@ -118,7 +119,7 @@ export default async function TournamentsPage() {
             {/* Load more */}
             {tournaments.length > 5 && (
                 <div className="flex items-center justify-center pt-8">
-                    <button className="retro-btn group flex items-center gap-2 px-8 py-3 bg-[#e8f3ec] hover:bg-[#0e1b13] text-[#0e1b13] hover:text-white rounded-none border-2 border-[#0e1b13] shadow-[2px_2px_0px_0px_#0e1b13] transition-all duration-300 cursor-pointer">
+                    <button className="retro-btn group flex items-center gap-2 px-8 py-3 bg-[#e8f3ec] hover:bg-dark-green text-dark-green hover:text-white rounded-none border-2 border-dark-green shadow-[2px_2px_0px_0px_var(--color-dark-green)] transition-all duration-300 cursor-pointer">
                         <span className="font-pixel text-xs">LOAD OLDER SEASONS</span>
                         <span className="material-symbols-outlined group-hover:translate-y-1 transition-transform">expand_more</span>
                     </button>
