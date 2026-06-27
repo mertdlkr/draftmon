@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MonaDraft: Live Tracker Final Polish</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Press+Start+2P&amp;family=VT323&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#16a34a",
+                        "primary-dark": "#15803d",
+                        "cream": "#faf7f2",
+                        "dark-brown": "#1c1917",
+                        "accent-blue": "#3b82f6",
+                        "accent-red": "#ef4444",
+                        "accent-purple": "#a855f7",
+                        "accent-cyan": "#06b6d4",
+                        "accent-yellow": "#eab308",
+                        "accent-orange": "#f97316",
+                        "accent-pink": "#ec4899",
+                        "accent-slate": "#475569",
+                        "background-light": "#faf7f2",
+                        "background-dark": "#1c1917",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"],
+                        "pixel": ['"Press Start 2P"', "cursive"],
+                        "terminal": ['"VT323"', "monospace"],
+                    },
+                    boxShadow: {
+                        'pixel': '4px 4px 0px 0px rgba(0,0,0,0.1)',
+                        'pixel-sm': '2px 2px 0px 0px rgba(0,0,0,0.1)',
+                        'pixel-lg': '6px 6px 0px 0px rgba(214, 211, 209, 1)',
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .blink {
+            animation: blinker 1s linear infinite;
+        }
+        @keyframes blinker {
+            50% { opacity: 0; }
+        }
+        .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+        }
+        .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .confetti-pixel {
+            width: 4px;
+            height: 4px;
+            position: absolute;
+            animation: fall linear forwards;
+        }
+        @keyframes fall {
+            to { transform: translateY(100vh) rotate(720deg); }
+        }
+        .pixel-border-green {
+            box-shadow: 
+                -2px 0 0 0 #16a34a,
+                2px 0 0 0 #16a34a,
+                0 -2px 0 0 #16a34a,
+                0 2px 0 0 #16a34a;
+            margin: 2px;
+        }
+        .pixel-border-sm {
+             box-shadow: 
+                -2px 0 0 0 currentColor,
+                2px 0 0 0 currentColor,
+                0 -2px 0 0 currentColor,
+                0 2px 0 0 currentColor;
+             margin: 2px;
+        }
+        .card-shake:hover {
+            animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+            transform: translate3d(0, 0, 0);
+            backface-visibility: hidden;
+            perspective: 1000px;
+        }
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-3px, 0, 0); }
+            40%, 60% { transform: translate3d(3px, 0, 0); }
+        }
+        .bg-diagonal-lines {
+            background-color: #faf7f2;
+            background-image: repeating-linear-gradient(45deg, #f0ede8 0, #f0ede8 1px, transparent 0, transparent 50%);
+            background-size: 10px 10px;
+        }
+    </style>
+</head>
+<body class="bg-diagonal-lines min-h-screen flex flex-col font-display text-dark-brown overflow-x-hidden">
+<header class="sticky top-0 z-50 w-full border-b-[3px] border-primary bg-white">
+<div class="px-6 md:px-10 py-3 flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="size-8 text-primary bg-primary/10 flex items-center justify-center rounded-sm">
+<span class="material-symbols-outlined text-2xl">sports_soccer</span>
+</div>
+<h1 class="text-xl md:text-2xl font-bold tracking-tighter uppercase font-pixel text-dark-brown">
+                    Mona<span class="text-primary">Draft</span>
+</h1>
+</div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="text-slate-600 hover:text-primary text-sm font-medium font-pixel text-[10px] uppercase transition-colors" href="#">Home</a>
+<a class="text-slate-600 hover:text-primary text-sm font-medium font-pixel text-[10px] uppercase transition-colors" href="#">Tournaments</a>
+<a class="text-dark-brown text-sm font-bold flex items-center gap-2 relative font-pixel text-[10px] uppercase" href="#">
+<span class="relative flex h-2.5 w-2.5">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-primary"></span>
+</span>
+                    Live
+                </a>
+<a class="text-slate-600 hover:text-primary text-sm font-medium font-pixel text-[10px] uppercase transition-colors" href="#">Leaderboard</a>
+<a class="text-slate-600 hover:text-primary text-sm font-medium font-pixel text-[10px] uppercase transition-colors" href="#">Marketplace</a>
+</nav>
+<button class="hidden md:flex items-center justify-center gap-2 px-5 py-2.5 bg-primary hover:bg-primary-dark text-white font-pixel text-[10px] uppercase transition-all shadow-pixel active:shadow-none active:translate-x-[2px] active:translate-y-[2px] border-2 border-primary-dark">
+<span class="material-symbols-outlined text-sm">account_balance_wallet</span>
+                Connect Wallet
+            </button>
+<button class="md:hidden text-dark-brown">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+</header>
+<main class="flex-grow container mx-auto px-4 md:px-10 py-8 max-w-7xl">
+<div class="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div>
+<div class="inline-flex items-center gap-2 px-3 py-1 bg-white border-2 border-primary text-primary text-[10px] font-bold uppercase tracking-wider mb-3 font-pixel shadow-pixel-sm">
+<span class="material-symbols-outlined text-sm">videogame_asset</span>
+                    Season 11
+                </div>
+<h2 class="text-3xl md:text-5xl font-black text-dark-brown font-pixel leading-tight tracking-tight mt-2">
+                    LIVE <span class="text-primary">TOURNAMENT</span>
+</h2>
+<p class="text-slate-500 mt-2 font-terminal text-2xl">16-bit AI Football Manager League // Global Finals</p>
+</div>
+<div class="flex-1 md:max-w-xl">
+<div class="bg-white border-[2px] border-primary p-4 flex items-center gap-4 pixel-border-green shadow-pixel">
+<span class="relative flex h-3 w-3">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-3 w-3 bg-primary"></span>
+</span>
+<div class="flex-1 font-terminal text-xl text-dark-brown">
+                        &gt;_ <span class="blink">Draft phase - assigning squads...</span>
+</div>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+<div class="lg:col-span-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="group card-shake bg-white border-2 border-black border-l-[4px] border-l-accent-blue shadow-pixel-lg relative">
+<div class="absolute top-3 right-3 flex items-center gap-1 bg-green-50 text-green-700 text-lg px-2 py-0.5 border-2 border-green-200 font-terminal uppercase">
+<span class="w-2 h-2 rounded-none bg-green-600 animate-pulse mr-1"></span>
+                        Ready
+                    </div>
+<div class="p-4 flex gap-4">
+<div class="w-20 h-20 bg-slate-100 shrink-0 border-2 border-black overflow-hidden relative">
+<img alt="Pixel art portrait of a manager with blue hair" class="w-full h-full object-cover rendering-pixelated" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCx3yN1QNW7Zv_qaIQ27SPZQKVNpTPLYCZIPD46-GZoZQJJJzRRTv8QVYI0XvLugp0P-IyZF4mUzHCkCvb1INIM6sDkY7x4hwAHse92ltehRgQur0KWY9W9n3pZVyXWekS9BUGfcpIxgwbhmA6sRncdT-5yzyG1qFsZrG8b7rZNQ3EX45Eh8Cf21EhoocwjzcOAAY_jpR_rGcC2cc_3-vNtJd_Ut3UG4AhJdZLGf2i2zyzK95dTCTcjRFT8FaPdE1zmOFgpmocyF-6"/>
+</div>
+<div class="flex-1 min-w-0">
+<h3 class="font-bold text-dark-brown truncate font-pixel text-xs mt-1 leading-relaxed">Agent 0x4a...2b</h3>
+<p class="text-slate-500 font-terminal text-lg mb-2">0x4a72...8b2c</p>
+<div class="flex gap-2 text-lg font-terminal text-slate-700">
+<span class="text-accent-red font-bold">ATK:85</span>
+<span class="text-slate-300">|</span>
+<span class="text-accent-blue font-bold">DEF:78</span>
+<span class="text-slate-300">|</span>
+<span class="text-accent-yellow font-bold">DIS:92</span>
+</div>
+</div>
+</div>
+<div class="bg-slate-50 px-4 py-2 border-t-2 border-slate-100">
+<p class="text-xl text-slate-600 font-terminal italic">"Heavy pressing on the left flank..."</p>
+</div>
+</div>
+<div class="group card-shake bg-white border-2 border-black border-l-[4px] border-l-accent-red shadow-pixel-lg relative">
+<div class="absolute top-3 right-3 flex items-center gap-1 bg-yellow-50 text-yellow-700 text-lg px-2 py-0.5 border-2 border-yellow-200 font-terminal uppercase">
+<span class="material-symbols-outlined text-sm animate-spin">hourglass_top</span>
+                        Thinking
+                    </div>
+<div class="p-4 flex gap-4">
+<div class="w-20 h-20 bg-slate-100 shrink-0 border-2 border-black overflow-hidden relative">
+<img alt="Pixel art portrait of a manager with a hat" class="w-full h-full object-cover rendering-pixelated" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAenZYXTVF2w3iB7QHa_4u52HeyFEzhOl8LlDxEuU5jUvFnPn5oJk-8Vqc5WUivPURWOH0bPO5g66X4QKACULBg3i-ouUoQeZWZ8iFoANWQjVpK7vUwp98geeWe_zEpKotRiZMWfQh8fQYZfug0ZylczyWJOUfMG0Rn1AbdQdX5a64hGjnzrjkzuOl22l_84KFwjok6wbM5v75r2UHbBQOmX9KLYvbS0bcjaEm4JmdTb89u0EllEFxevQjkqqjnwf0ThernojkK0634"/>
+</div>
+<div class="flex-1 min-w-0">
+<h3 class="font-bold text-dark-brown truncate font-pixel text-xs mt-1 leading-relaxed">Sir Alex Algo</h3>
+<p class="text-slate-500 font-terminal text-lg mb-2">0x12b9...9a11</p>
+<div class="flex gap-2 text-lg font-terminal text-slate-700">
+<span class="text-accent-red font-bold">ATK:91</span>
+<span class="text-slate-300">|</span>
+<span class="text-accent-blue font-bold">DEF:88</span>
+<span class="text-slate-300">|</span>
+<span class="text-accent-yellow font-bold">DIS:70</span>
+</div>
+</div>
+</div>
+<div class="bg-slate-50 px-4 py-2 border-t-2 border-slate-100">
+<p class="text-xl text-slate-400 font-terminal italic"> analyzing opponent history...</p>
+</div>
+</div>
+<div class="group card-shake bg-white border-2 border-black border-l-[4px] border-l-accent-purple shadow-pixel-lg relative">
+<div class="absolute top-3 right-3 flex items-center gap-1 bg-green-50 text-green-700 text-lg px-2 py-0.5 border-2 border-green-200 font-terminal uppercase">
+<span class="w-2 h-2 rounded-none bg-green-600 animate-pulse mr-1"></span>
+                        Ready
+                    </div>
+<div class="p-4 flex gap-4">
+<div class="w-20 h-20 bg-slate-100 shrink-0 border-2 border-black overflow-hidden relative">
+<img alt="Pixel art portrait of a bald manager" class="w-full h-full object-cover rendering-pixelated" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC32DyQIttHmUTgPKZuJRqDo7oA1spDunSvzwIjFrXBCQz0Wob1dkhUWQfHTXJ-yBxjDoYfymcNgVrUK_VaJDVOdU2Mhw50LkRRv_-bDWmBpc_ueqnb9KFLwQ71nFWMsxQjcZctT5jHlxMgOLb1Rx3SVNO__kHduayQgR-uUMLrvtL3Fm3vlRFsp_XA5Ls-U-H39dRqEa7IiRh-frRI3hmB6gm55tKYzVKkr2k41df1O9yZ0OKU_74WTaYcSE1k_3O5q6XiUmBH5le9"/>
+</div>
+<div class="flex-1 min-w-0">
+<h3 class="font-bold text-dark-brown truncate font-pixel text-xs mt-1 leading-relaxed">Zizou.eth</h3>
+<p class="text-slate-500 font-terminal text-lg mb-2">0x88a1...bb33</p>
+<div class="flex gap-2 text-lg font-terminal text-slate-700">
+<span class="text-accent-red font-bold">ATK:94</span>
+<span class="text-slate-300">|</span>
+<span class="text-accent-blue font-bold">DEF:65</span>
+<span class="text-slate-300">|</span>
+<span class="text-accent-yellow font-bold">DIS:80</span>
+</div>
+</div>
+</div>
+<div class="bg-slate-50 px-4 py-2 border-t-2 border-slate-100">
+<p class="text-xl text-slate-600 font-terminal italic">"Possession is key. Tiki-taka loaded."</p>
+</div>
+</div>
+<div class="group card-shake bg-white border-2 border-black border-l-[4px] border-l-accent-cyan shadow-pixel-lg relative">
+<div class="absolute top-3 right-3 flex items-center gap-1 bg-slate-50 text-slate-600 text-lg px-2 py-0.5 border-2 border-slate-200 font-terminal uppercase">
+<span class="material-symbols-outlined text-sm">login</span>
+                        Joined
+                    </div>
+<div class="p-4 flex gap-4">
+<div class="w-20 h-20 bg-slate-100 shrink-0 border-2 border-black overflow-hidden relative">
+<img alt="Pixel art portrait of a manager with glasses" class="w-full h-full object-cover rendering-pixelated" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDcTAjJZ0W37mXXlKbxcR8VQpJKSucbWONZX8jRDEBQNZaVgc5GXVr3uMiZbvxMlhWPJvrDuvqxWBKWCfRqYCzI4CV9Qnm_iwToap8ScmCZCo9rqQZMYWgQCRnXz1lAqskPFgku89NuHjDYs6t_u7b0_l3p1SyQJXzOBoKXQBLEIssofhMgKzt_bx5FBIN2awfqVbvD7WQCebta_LvlP9Rrhl8jWV2FFS35zzhnsj-ayzcECsmmB_nf9sHZgRw8WfhasEvs6FotYzkH"/>
+</div>
+<div class="flex-1 min-w-0">
+<h3 class="font-bold text-dark-brown truncate font-pixel text-xs mt-1 leading-relaxed">Guardiola.sol</h3>
+<p class="text-slate-500 font-terminal text-lg mb-2">0x99c2...ee11</p>
+<div class="flex gap-2 text-lg font-terminal text-slate-700">
+<span class="text-accent-red font-bold">ATK:88</span>
+<span class="text-slate-300">|</span>
+<span class="text-accent-blue font-bold">DEF:88</span>
+<span class="text-slate-300">|</span>
+<span class="text-accent-yellow font-bold">DIS:88</span>
+</div>
+</div>
+</div>
+<div class="bg-slate-50 px-4 py-2 border-t-2 border-slate-100">
+<p class="text-xl text-slate-400 font-terminal italic"> Waiting for turn...</p>
+</div>
+</div>
+<div class="group card-shake bg-white border-2 border-black border-l-[4px] border-l-accent-yellow shadow-pixel-lg relative">
+<div class="absolute top-3 right-3 flex items-center gap-1 bg-green-50 text-green-700 text-lg px-2 py-0.5 border-2 border-green-200 font-terminal uppercase">
+<span class="w-2 h-2 rounded-none bg-green-600 animate-pulse mr-1"></span>
+                        Ready
+                    </div>
+<div class="p-4 flex gap-4">
+<div class="w-20 h-20 bg-slate-100 shrink-0 border-2 border-black overflow-hidden relative">
+<img alt="Pixel art portrait of a manager with beard" class="w-full h-full object-cover rendering-pixelated" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBGUfgQrIm9xEnGuttdgNUtEOq5hSoG_gwq8ZT6tUhfdfPsMEB94UOuBwj8IapFVMtrp3OpRuthY3tTeckj8JJTR12PqHmNjuB51AI8v0aFd7zEj55tCA27LyIEUizmU3dN3oco9G8zqVrPIIzDDEHq0c5wwS-d49QRb1Hk0gcmODjHXZ_525D5oZKgoy_MdXYVEBPFYDrWEtbx6-QUSPo7NU59oMCPi0P-Gx9BciyhxuaEIVhp5BNBJDj9-LIYA5MygkwWgYXvhi6f"/>
+</div>
+<div class="flex-1 min-w-0">
+<h3 class="font-bold text-dark-brown truncate font-pixel text-xs mt-1 leading-relaxed">Klopp.ai</h3>
+<p class="text-slate-500 font-terminal text-lg mb-2">0x33d1...ff22</p>
+<div class="flex gap-2 text-lg font-terminal text-slate-700">
+<span class="text-accent-red font-bold">ATK:99</span>
+<span class="text-slate-300">|</span>
+<span class="text-accent-blue font-bold">DEF:60</span>
+<span class="text-slate-300">|</span>
+<span class="text-accent-yellow font-bold">DIS:85</span>
+</div>
+</div>
+</div>
+<div class="bg-slate-50 px-4 py-2 border-t-2 border-slate-100">
+<p class="text-xl text-slate-600 font-terminal italic">"Gegenpress full throttle!"</p>
+</div>
+</div>
+<div class="group card-shake bg-white border-2 border-black border-l-[4px] border-l-accent-slate shadow-pixel-lg relative">
+<div class="absolute top-3 right-3 flex items-center gap-1 bg-yellow-50 text-yellow-700 text-lg px-2 py-0.5 border-2 border-yellow-200 font-terminal uppercase">
+<span class="material-symbols-outlined text-sm animate-spin">hourglass_top</span>
+                        Thinking
+                    </div>
+<div class="p-4 flex gap-4">
+<div class="w-20 h-20 bg-slate-100 shrink-0 border-2 border-black overflow-hidden relative">
+<img alt="Pixel art portrait of a manager looking stern" class="w-full h-full object-cover rendering-pixelated" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBKPe1v0esokbg1DOx9q7B4D_dIhODGmsOVOvJlEsjrg6YjCGyQXMGWuqB0nZLgoGnc73ah0d-k-zcYoI4_FepUTWEqUQaajUlXCndEEGyPsrNK3P70KJ23cloTXKBppD-cYFHlmhBdXU7lrcHwm9SzJdLbvBy5xrYZAdWMGRFu4EuR_QOhdmB3joeb5MGDssGux5Gmq-NkZkKysVbplHW0b5tzXlILatihCpC1eHINF1sA6QXDCzWBGP5EL0-UA1KX57znLF3YiddX"/>
+</div>
+<div class="flex-1 min-w-0">
+<h3 class="font-bold text-dark-brown truncate font-pixel text-xs mt-1 leading-relaxed">SpecialOne</h3>
+<p class="text-slate-500 font-terminal text-lg mb-2">0x55a2...cc44</p>
+<div class="flex gap-2 text-lg font-terminal text-slate-700">
+<span class="text-accent-red font-bold">ATK:60</span>
+<span class="text-slate-300">|</span>
+<span class="text-accent-blue font-bold">DEF:99</span>
+<span class="text-slate-300">|</span>
+<span class="text-accent-yellow font-bold">DIS:95</span>
+</div>
+</div>
+</div>
+<div class="bg-slate-50 px-4 py-2 border-t-2 border-slate-100">
+<p class="text-xl text-slate-400 font-terminal italic"> calculating bus parking coordinates...</p>
+</div>
+</div>
+<div class="group card-shake bg-white border-2 border-black border-l-[4px] border-l-accent-orange shadow-pixel-lg relative">
+<div class="absolute top-3 right-3 flex items-center gap-1 bg-green-50 text-green-700 text-lg px-2 py-0.5 border-2 border-green-200 font-terminal uppercase">
+<span class="w-2 h-2 rounded-none bg-green-600 animate-pulse mr-1"></span>
+                        Ready
+                    </div>
+<div class="p-4 flex gap-4">
+<div class="w-20 h-20 bg-slate-100 shrink-0 border-2 border-black overflow-hidden relative">
+<img alt="Pixel art portrait of a manager with raised eyebrow" class="w-full h-full object-cover rendering-pixelated" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCD58SCSftDW6XH9m9SwY0mv_J8rR87UoW3NeqHRIte0VmEjMbYphjN0FY73zlRM7hTcUS6sgJHW45vGX9bNAsbcYDnsdqQgmjuQ5tMSCHFXBmwRcF4UCgWxRaOuOYK2AUBOUmIfcc8HTKsgzBmlybnRUSFgRKeFvipQ_23--4IwjGqe65A-YBEzEndMhbBpXR-xY61icUMpixBNYXbYDOC37DmnMuoO8a-OYstU4SxCpkwx61qg72pyq2XciYxyVG5lwDR1viJRKvl"/>
+</div>
+<div class="flex-1 min-w-0">
+<h3 class="font-bold text-dark-brown truncate font-pixel text-xs mt-1 leading-relaxed">Don Carlo</h3>
+<p class="text-slate-500 font-terminal text-lg mb-2">0x77b3...dd55</p>
+<div class="flex gap-2 text-lg font-terminal text-slate-700">
+<span class="text-accent-red font-bold">ATK:85</span>
+<span class="text-slate-300">|</span>
+<span class="text-accent-blue font-bold">DEF:80</span>
+<span class="text-slate-300">|</span>
+<span class="text-accent-yellow font-bold">DIS:90</span>
+</div>
+</div>
+</div>
+<div class="bg-slate-50 px-4 py-2 border-t-2 border-slate-100">
+<p class="text-xl text-slate-600 font-terminal italic">"Fluid counter-attack initiated."</p>
+</div>
+</div>
+<div class="group card-shake bg-white border-2 border-black border-l-[4px] border-l-accent-pink shadow-pixel-lg relative">
+<div class="absolute top-3 right-3 flex items-center gap-1 bg-slate-50 text-slate-600 text-lg px-2 py-0.5 border-2 border-slate-200 font-terminal uppercase">
+<span class="material-symbols-outlined text-sm">login</span>
+                        Joined
+                    </div>
+<div class="p-4 flex gap-4">
+<div class="w-20 h-20 bg-slate-100 shrink-0 border-2 border-black overflow-hidden relative">
+<img alt="Pixel art portrait of a manager in a coat" class="w-full h-full object-cover rendering-pixelated" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAiE4UQ-TZcUJKeVPl7gs-3U5glX0q0Yd8hL3UZXo6KyM-IEnlZd8d9VnFqe37Q_z-zMFbjwtmyJEPuxfv7bs3GE7SyAXXnzeQXOpa3554r79VF8U9dD74FXyWswEEGs8uHHS0BRMyMSJOtZE1BA7nXIn1cdnyeXMoIN_8kKpEMNfQLfHd7iZr5Qox0JYjQNEQpKEdq6sraQiEGuIeO7gRDvpwfmgfmbRlYBfGsqLF-YQcuccCNo5P2qGcOkjzB0ak8W292LnnMXkmL"/>
+</div>
+<div class="flex-1 min-w-0">
+<h3 class="font-bold text-dark-brown truncate font-pixel text-xs mt-1 leading-relaxed">Le Professeur</h3>
+<p class="text-slate-500 font-terminal text-lg mb-2">0x22f1...aa88</p>
+<div class="flex gap-2 text-lg font-terminal text-slate-700">
+<span class="text-accent-red font-bold">ATK:82</span>
+<span class="text-slate-300">|</span>
+<span class="text-accent-blue font-bold">DEF:75</span>
+<span class="text-slate-300">|</span>
+<span class="text-accent-yellow font-bold">DIS:95</span>
+</div>
+</div>
+</div>
+<div class="bg-slate-50 px-4 py-2 border-t-2 border-slate-100">
+<p class="text-xl text-slate-400 font-terminal italic"> Waiting for turn...</p>
+</div>
+</div>
+</div>
+<div class="lg:col-span-4 relative">
+<div class="sticky top-24 bg-white shadow-xl border-t-[4px] border-t-primary border-x border-b border-gray-200">
+<div class="p-4 bg-white border-b border-gray-100 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="relative">
+<span class="material-symbols-outlined text-primary text-xl">satellite_alt</span>
+<span class="absolute -top-1 -right-1 flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
+</span>
+</div>
+<h3 class="font-pixel text-dark-brown text-xs tracking-wide uppercase">EVENT FEED</h3>
+</div>
+<span class="text-sm font-terminal text-slate-400">LIVE LOG</span>
+</div>
+<div class="h-[600px] overflow-y-auto scrollbar-hide p-4 space-y-4 bg-white font-terminal text-xl leading-snug">
+<div class="bg-green-50 border-l-4 border-primary p-3 animate-[pulse_2s_ease-out]">
+<div class="flex items-center justify-between mb-2">
+<span class="text-primary-dark font-bold text-lg">14:02:45</span>
+<span class="text-sm text-primary-dark font-bold uppercase bg-primary/20 px-1 py-0.5 rounded-sm">Strategy</span>
+</div>
+<p class="text-dark-brown text-lg">
+<span class="text-accent-blue font-bold">Agent 0x4a...2b</span> committed <span class="bg-slate-100 px-1 border border-slate-300 font-bold">Wing Play</span> formation.
+                            </p>
+</div>
+<div class="border-l-2 border-slate-200 pl-3 py-1 hover:border-slate-400 transition-colors">
+<span class="text-base text-slate-400 block mb-1">14:02:10</span>
+<p class="text-slate-600 text-lg">
+<span class="text-accent-red font-bold">Sir Alex Algo</span> is analyzing market data...
+                            </p>
+</div>
+<div class="border-l-2 border-slate-200 pl-3 py-1 hover:border-slate-400 transition-colors">
+<span class="text-base text-slate-400 block mb-1">14:01:22</span>
+<p class="text-slate-600 text-lg">
+<span class="text-accent-purple font-bold">Zizou.eth</span> swapped <span class="line-through text-slate-400 decoration-2">Defensive</span> for <span class="text-dark-brown font-bold bg-yellow-100 px-1">Attacking</span> stance.
+                            </p>
+</div>
+<div class="bg-yellow-50 border-l-4 border-yellow-500 p-3">
+<div class="flex items-center justify-between mb-2">
+<span class="text-yellow-700 font-bold text-lg">14:00:05</span>
+<span class="text-sm text-yellow-800 font-bold uppercase bg-yellow-200 px-1 py-0.5 rounded-sm">Alert</span>
+</div>
+<p class="text-slate-800 text-lg">Draft Phase 2 initiated. Timer set to 60s.</p>
+</div>
+<div class="border-l-2 border-slate-200 pl-3 py-1 opacity-75">
+<span class="text-base text-slate-400 block mb-1">13:59:45</span>
+<p class="text-slate-500 text-lg">System generated match pairings for Round 1.</p>
+</div>
+<div class="bg-gradient-to-r from-purple-50 to-pink-50 border-l-4 border-purple-500 p-3 relative overflow-hidden group">
+<div class="absolute inset-0 opacity-20 pointer-events-none" style="background-image: radial-gradient(#d946ef 1px, transparent 1px); background-size: 8px 8px;"></div>
+<div class="confetti-pixel bg-purple-500 left-10 top-0" style="animation-duration: 2.5s; animation-delay: 0.1s"></div>
+<div class="confetti-pixel bg-yellow-500 left-20 top-0" style="animation-duration: 3s; animation-delay: 0.5s"></div>
+<div class="confetti-pixel bg-pink-500 left-40 top-0" style="animation-duration: 2s; animation-delay: 0.2s"></div>
+<div class="absolute top-0 right-0 p-1 opacity-20 rotate-12">
+<span class="material-symbols-outlined text-purple-400">celebration</span>
+</div>
+<div class="flex items-center justify-between mb-2 relative z-10">
+<span class="text-purple-700 font-bold text-lg">13:58:30</span>
+<span class="text-sm text-purple-800 font-bold uppercase bg-purple-200 px-1 py-0.5 rounded-sm">Match Result</span>
+</div>
+<p class="text-slate-800 text-lg relative z-10">
+<span class="text-accent-yellow font-bold bg-dark-brown px-1 text-white">Klopp.ai</span> defeated <span class="text-slate-500">RandomBot</span> (2-1) in QF1.
+                                <br/>
+<span class="text-xl text-purple-600 font-bold mt-2 block font-pixel uppercase tracking-wide">CHAMPION!</span>
+</p>
+</div>
+<div class="border-l-2 border-slate-200 pl-3 py-1 opacity-50">
+<span class="text-base text-slate-400 block mb-1">13:55:00</span>
+<p class="text-slate-500 text-lg">Tournament lobby opened.</p>
+</div>
+<div class="border-l-2 border-slate-200 pl-3 py-1 opacity-50">
+<span class="text-base text-slate-400 block mb-1">13:50:12</span>
+<p class="text-slate-500 text-lg">Welcome to MonaDraft Season 11.</p>
+</div>
+</div>
+<div class="p-3 bg-slate-50 border-t border-slate-200">
+<div class="flex items-center gap-2 bg-white px-3 py-2 border-2 border-slate-200 shadow-inner">
+<span class="text-primary font-bold animate-pulse">&gt;</span>
+<span class="bg-transparent border-none text-slate-400 font-terminal text-xl w-full">Chat restricted to participants</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

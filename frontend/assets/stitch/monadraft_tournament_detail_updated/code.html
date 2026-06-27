@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MonaDraft: Season 10 Tournament Detail</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Press+Start+2P&amp;family=VT323&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#16a249",
+                        "background-light": "#faf7f2", // Adjusted to warm cream as per description
+                        "background-dark": "#112117",
+                        "monad-green": "#22c55e",
+                        "monad-light": "#f0fdf4",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"],
+                        "pixel": ['"Press Start 2P"', "cursive"],
+                        "code": ['"VT323"', "monospace"],
+                    },
+                    borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar for better aesthetics */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+        .pixel-corners {
+            clip-path: polygon(
+                0px 4px,
+                4px 4px,
+                4px 0px,
+                calc(100% - 4px) 0px,
+                calc(100% - 4px) 4px,
+                100% 4px,
+                100% calc(100% - 4px),
+                calc(100% - 4px) calc(100% - 4px),
+                calc(100% - 4px) 100%,
+                4px 100%,
+                4px calc(100% - 4px),
+                0px calc(100% - 4px)
+            );
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display min-h-screen flex flex-col">
+<!-- Top Navigation -->
+<header class="flex items-center justify-between whitespace-nowrap border-b-4 border-primary bg-white px-10 py-4 sticky top-0 z-50">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-4 text-slate-900 dark:text-slate-100">
+<div class="size-8 text-primary">
+<span class="material-symbols-outlined !text-[32px]">sports_soccer</span>
+</div>
+<h2 class="text-slate-900 dark:text-slate-100 text-lg font-pixel leading-tight tracking-[-0.015em] uppercase">MonaDraft</h2>
+</div>
+<div class="hidden lg:flex items-center gap-9">
+<a class="text-slate-900 dark:text-slate-100 text-xl font-code font-bold hover:text-primary transition-colors uppercase" href="#">Leagues</a>
+<a class="text-primary text-xl font-code font-bold hover:text-primary transition-colors uppercase underline decoration-2 decoration-primary underline-offset-4" href="#">Tournaments</a>
+<a class="text-slate-900 dark:text-slate-100 text-xl font-code font-bold hover:text-primary transition-colors uppercase" href="#">Agents</a>
+<a class="text-slate-900 dark:text-slate-100 text-xl font-code font-bold hover:text-primary transition-colors uppercase" href="#">Marketplace</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<label class="hidden md:flex flex-col min-w-40 !h-10 max-w-64">
+<div class="flex w-full flex-1 items-stretch rounded border-2 border-slate-200 focus-within:border-primary transition-colors h-full bg-white">
+<div class="text-slate-400 flex items-center justify-center pl-2">
+<span class="material-symbols-outlined">search</span>
+</div>
+<input class="w-full min-w-0 flex-1 resize-none overflow-hidden border-none bg-transparent focus:outline-0 focus:ring-0 h-full placeholder:text-slate-400 px-2 text-lg font-code" placeholder="Search Agents..."/>
+</div>
+</label>
+<button class="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded bg-primary text-white h-10 px-6 font-pixel text-xs hover:bg-green-700 transition-colors shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] active:shadow-none active:translate-x-[4px] active:translate-y-[4px]">
+<span class="truncate">Connect</span>
+</button>
+<div class="bg-center bg-no-repeat bg-cover rounded border-2 border-slate-900 size-10" data-alt="User avatar pixel art" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBgryPPkyqQ6xQhL2OVtW0GMS74M6zQgS68YbIAMJhT4-NPt7TpgNlT-GkRde-XA4Jp8tqAdQzG-RFfdH8iIbTl_NHRL7A5gzPuIhyXEUBYU9o64j9jRAWB49w-_aDY4jdo9246sbZEG3AjRsuP3xBR59-TE9B4TYE7izbuAoTN-l35NAx5noKLQzMLJfN3STzvD8uFPLxmv2erqqacFd_TnBAHnW6uWJBJuthicR-8bTm9BMA6SITPoFj4gxk6ty2MaBPRw_MrgZz2");'></div>
+</div>
+</header>
+<main class="flex-1 flex flex-col items-center w-full pb-20">
+<div class="w-full max-w-[1200px] px-4 md:px-8 flex flex-col gap-10 py-10">
+<!-- Title Section -->
+<div class="flex flex-wrap justify-between items-end gap-6 border-b-2 border-slate-200 pb-6">
+<div class="flex flex-col gap-2">
+<h1 class="text-slate-900 dark:text-slate-100 text-2xl md:text-3xl font-pixel leading-tight">Season 10 Tournament</h1>
+<p class="text-primary text-xl md:text-2xl font-code font-bold uppercase tracking-wider">The Battle for Monad Supremacy</p>
+</div>
+<div class="flex gap-4">
+<button class="flex items-center justify-center rounded border-2 border-slate-900 bg-white text-slate-900 h-10 px-4 font-code text-xl font-bold hover:bg-slate-50 transition-colors">
+                        View Rules
+                    </button>
+<button class="flex items-center justify-center rounded border-2 border-slate-900 bg-white text-slate-900 h-10 px-4 font-code text-xl font-bold hover:bg-slate-50 transition-colors">
+<span class="material-symbols-outlined mr-2 text-base">share</span> Share
+                    </button>
+</div>
+</div>
+<!-- Champion Banner -->
+<section class="w-full relative">
+<div class="bg-monad-light border-4 border-primary rounded-lg p-6 flex flex-col md:flex-row items-center justify-center gap-8 shadow-sm">
+<div class="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-primary text-white px-6 py-2 rounded font-pixel text-xs md:text-sm shadow-md whitespace-nowrap z-10">
+                        SEASON CHAMPION
+                    </div>
+<div class="relative mt-4 md:mt-0">
+<div class="w-32 h-32 md:w-40 md:h-40 rounded-full border-4 border-primary bg-white overflow-hidden relative z-0">
+<img alt="Champion Avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCL8SljHxIhV_W3euMDlfReAkHR8E1nxk3m9mhGfj96-rmwiQTHn3Qn2cwgxLFeXaRKKrxc-96ovuz_bcpQ09ZLZqdyaTbbgQA58MMbPBK5WFS0B7vEp-p9D0TEBodSN2YLTMkuMLsWvuC1EDSl-OLUwpEPveH5r7DeHzC8cXFLK2FCgW0_lNR8WR5m3ebJy5DKTZbTMJVOCKPSxYgd0RhGRzKSuCREI0yUjEq__bQE5wbk4eoap64i6ZsCq3H5rrar1T63wgCTyads"/>
+</div>
+<div class="absolute -bottom-2 -right-2 bg-yellow-400 border-2 border-black p-1.5 rounded-full z-10">
+<span class="material-symbols-outlined text-black text-xl">emoji_events</span>
+</div>
+</div>
+<div class="text-center md:text-left flex flex-col gap-2">
+<h2 class="text-3xl md:text-4xl font-pixel text-slate-900">AncelottAI</h2>
+<div class="font-code text-xl md:text-2xl text-slate-600">
+                            Strategy: <span class="text-primary font-bold">4-3-3 Gegenpress</span>
+</div>
+<div class="flex flex-wrap justify-center md:justify-start gap-4 mt-2">
+<div class="bg-white border-2 border-green-200 px-3 py-1 rounded">
+<span class="font-code text-lg text-slate-500">Wins</span>
+<span class="font-pixel text-sm ml-2 text-primary">14</span>
+</div>
+<div class="bg-white border-2 border-green-200 px-3 py-1 rounded">
+<span class="font-code text-lg text-slate-500">Goals</span>
+<span class="font-pixel text-sm ml-2 text-primary">42</span>
+</div>
+<div class="bg-white border-2 border-green-200 px-3 py-1 rounded">
+<span class="font-code text-lg text-slate-500">Rating</span>
+<span class="font-pixel text-sm ml-2 text-primary">9.8</span>
+</div>
+</div>
+</div>
+<div class="md:ml-auto">
+<button class="bg-primary text-white border-b-4 border-green-800 hover:border-b-0 hover:translate-y-1 active:border-b-0 px-6 py-3 rounded font-pixel text-xs transition-all">
+                            View Manager
+                        </button>
+</div>
+</div>
+</section>
+<!-- Knockout Stage Bracket -->
+<section class="flex flex-col gap-6">
+<h3 class="text-xl font-pixel text-slate-900 border-l-8 border-primary pl-4">Knockout Stage</h3>
+<div class="overflow-x-auto pb-6">
+<div class="min-w-[900px] flex justify-between items-center gap-4 px-2">
+<!-- Quarter Finals Left -->
+<div class="flex flex-col justify-around h-[400px] gap-8 w-48">
+<!-- Match 1 -->
+<div class="bg-white border-2 border-slate-200 p-3 rounded relative group hover:border-primary transition-colors">
+<div class="flex justify-between items-center border-b border-slate-100 pb-2 mb-2">
+<span class="font-code text-lg text-slate-500">QF 1</span>
+<span class="text-xs font-pixel text-green-600">FT</span>
+</div>
+<div class="flex justify-between items-center mb-1">
+<span class="font-code text-xl font-bold text-primary">AncelottAI</span>
+<span class="font-pixel text-xs">3</span>
+</div>
+<div class="flex justify-between items-center opacity-60">
+<span class="font-code text-xl">PepBot</span>
+<span class="font-pixel text-xs">1</span>
+</div>
+<div class="absolute -right-6 top-1/2 w-6 h-0.5 bg-primary"></div>
+<div class="absolute -right-6 top-1/2 h-[100px] w-0.5 bg-primary translate-y-1/2"></div>
+</div>
+<!-- Match 2 -->
+<div class="bg-white border-2 border-slate-200 p-3 rounded relative group hover:border-primary transition-colors">
+<div class="flex justify-between items-center border-b border-slate-100 pb-2 mb-2">
+<span class="font-code text-lg text-slate-500">QF 2</span>
+<span class="text-xs font-pixel text-green-600">FT</span>
+</div>
+<div class="flex justify-between items-center mb-1 opacity-60">
+<span class="font-code text-xl">KloppOS</span>
+<span class="font-pixel text-xs">0</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="font-code text-xl font-bold text-primary">ZidaNet</span>
+<span class="font-pixel text-xs">1</span>
+</div>
+<div class="absolute -right-6 top-1/2 w-6 h-0.5 bg-slate-300"></div>
+<div class="absolute -right-6 bottom-1/2 h-[100px] w-0.5 bg-slate-300 translate-y-1/2"></div> <!-- Connection up -->
+</div>
+</div>
+<!-- Semi Finals Left -->
+<div class="flex flex-col justify-around h-[200px] gap-8 w-48 relative">
+<!-- Connector from QF1/QF2 -->
+<div class="bg-white border-2 border-primary p-3 rounded relative shadow-md scale-105 z-10">
+<div class="flex justify-between items-center border-b border-slate-100 pb-2 mb-2">
+<span class="font-code text-lg text-slate-500">SF 1</span>
+<span class="text-xs font-pixel text-green-600">FT</span>
+</div>
+<div class="flex justify-between items-center mb-1">
+<span class="font-code text-xl font-bold text-primary">AncelottAI</span>
+<span class="font-pixel text-xs">2</span>
+</div>
+<div class="flex justify-between items-center opacity-60">
+<span class="font-code text-xl">ZidaNet</span>
+<span class="font-pixel text-xs">0</span>
+</div>
+<div class="absolute -left-6 top-1/2 w-6 h-0.5 bg-primary"></div>
+<div class="absolute -right-6 top-1/2 w-6 h-0.5 bg-primary"></div>
+</div>
+</div>
+<!-- Final -->
+<div class="flex flex-col justify-center h-[400px] w-64 relative">
+<div class="absolute top-[80px] left-1/2 -translate-x-1/2 text-primary">
+<span class="material-symbols-outlined text-4xl animate-bounce">emoji_events</span>
+</div>
+<div class="bg-white border-4 border-yellow-400 p-4 rounded-lg relative shadow-lg z-20 scale-110">
+<div class="flex justify-between items-center border-b-2 border-slate-100 pb-3 mb-3">
+<span class="font-code text-xl text-slate-500 font-bold">GRAND FINAL</span>
+<span class="text-sm font-pixel text-primary">FT</span>
+</div>
+<div class="flex justify-between items-center mb-2 p-1 bg-green-50 rounded">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-yellow-500 text-sm">star</span>
+<span class="font-code text-2xl font-bold text-slate-900">AncelottAI</span>
+</div>
+<span class="font-pixel text-sm bg-primary text-white px-2 py-1 rounded">4</span>
+</div>
+<div class="flex justify-between items-center p-1">
+<div class="flex items-center gap-2">
+<span class="w-4"></span>
+<span class="font-code text-2xl text-slate-500">MourinhOS</span>
+</div>
+<span class="font-pixel text-sm text-slate-400 px-2 py-1">2</span>
+</div>
+<div class="absolute -left-8 top-1/2 w-8 h-0.5 bg-primary"></div>
+<div class="absolute -right-8 top-1/2 w-8 h-0.5 bg-slate-300"></div>
+</div>
+</div>
+<!-- Semi Finals Right -->
+<div class="flex flex-col justify-around h-[200px] gap-8 w-48 relative">
+<div class="bg-white border-2 border-slate-200 p-3 rounded relative shadow-sm">
+<div class="flex justify-between items-center border-b border-slate-100 pb-2 mb-2">
+<span class="font-code text-lg text-slate-500">SF 2</span>
+<span class="text-xs font-pixel text-green-600">FT</span>
+</div>
+<div class="flex justify-between items-center mb-1">
+<span class="font-code text-xl font-bold text-slate-900">MourinhOS</span>
+<span class="font-pixel text-xs">1</span>
+</div>
+<div class="flex justify-between items-center opacity-60">
+<span class="font-code text-xl">TenHagGPT</span>
+<span class="font-pixel text-xs">0</span>
+</div>
+<div class="absolute -left-6 top-1/2 w-6 h-0.5 bg-slate-300"></div>
+<div class="absolute -right-6 top-1/2 w-6 h-0.5 bg-slate-300"></div>
+</div>
+</div>
+<!-- Quarter Finals Right -->
+<div class="flex flex-col justify-around h-[400px] gap-8 w-48">
+<!-- Match 3 -->
+<div class="bg-white border-2 border-slate-200 p-3 rounded relative group hover:border-slate-400 transition-colors">
+<div class="flex justify-between items-center border-b border-slate-100 pb-2 mb-2">
+<span class="font-code text-lg text-slate-500">QF 3</span>
+<span class="text-xs font-pixel text-green-600">FT</span>
+</div>
+<div class="flex justify-between items-center mb-1">
+<span class="font-code text-xl font-bold text-slate-900">MourinhOS</span>
+<span class="font-pixel text-xs">2</span>
+</div>
+<div class="flex justify-between items-center opacity-60">
+<span class="font-code text-xl">XaviNet</span>
+<span class="font-pixel text-xs">1</span>
+</div>
+<div class="absolute -left-6 top-1/2 w-6 h-0.5 bg-slate-300"></div>
+<div class="absolute -left-6 top-1/2 h-[100px] w-0.5 bg-slate-300 translate-y-1/2"></div>
+</div>
+<!-- Match 4 -->
+<div class="bg-white border-2 border-slate-200 p-3 rounded relative group hover:border-slate-400 transition-colors">
+<div class="flex justify-between items-center border-b border-slate-100 pb-2 mb-2">
+<span class="font-code text-lg text-slate-500">QF 4</span>
+<span class="text-xs font-pixel text-green-600">FT</span>
+</div>
+<div class="flex justify-between items-center mb-1 opacity-60">
+<span class="font-code text-xl">ArtetAI</span>
+<span class="font-pixel text-xs">2</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="font-code text-xl font-bold text-slate-900">TenHagGPT</span>
+<span class="font-pixel text-xs">3</span>
+</div>
+<div class="absolute -left-6 top-1/2 w-6 h-0.5 bg-slate-300"></div>
+<div class="absolute -left-6 bottom-1/2 h-[100px] w-0.5 bg-slate-300 translate-y-1/2"></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Match Pitches Section -->
+<section class="flex flex-col gap-6">
+<div class="flex justify-between items-center">
+<h3 class="text-xl font-pixel text-slate-900 border-l-8 border-primary pl-4">Match Replays</h3>
+<a class="font-code text-xl text-primary hover:text-green-700 underline" href="#">View All Matches</a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+<!-- Pitch Card 1 -->
+<div class="bg-white p-2 rounded-lg shadow-sm border border-slate-200 hover:shadow-md transition-shadow">
+<div class="bg-[#22c55e] aspect-[3/4] rounded border-2 border-[#15803d] relative overflow-hidden flex flex-col shadow-inner" style="background-image: repeating-linear-gradient(0deg, transparent, transparent 20px, rgba(0,0,0,0.1) 20px, rgba(0,0,0,0.1) 40px);"><!-- Field Markings -->
+<div class="absolute top-0 left-[25%] w-[50%] h-[15%] border-2 border-white/80 border-t-0"></div>
+<div class="absolute bottom-0 left-[25%] w-[50%] h-[15%] border-2 border-white/80 border-b-0"></div>
+<div class="absolute top-1/2 left-0 w-full h-0.5 bg-white/60 -translate-y-1/2"></div>
+<div class="absolute top-1/2 left-1/2 w-[30%] aspect-square border-2 border-white/60 rounded-full -translate-x-1/2 -translate-y-1/2"></div>
+<!-- Winner Display -->
+<div class="absolute inset-0 flex flex-col items-center justify-center gap-2 z-10">
+<span class="material-symbols-outlined !text-4xl text-yellow-400 drop-shadow-md">emoji_events</span>
+<span class="font-pixel text-[10px] text-white bg-black/60 px-2 py-1 rounded border border-white/20 uppercase tracking-tighter">AncelottAI</span>
+</div>
+<!-- Score Overlay -->
+<div class="absolute top-2 right-2 bg-black/80 text-white font-pixel text-[10px] px-2 py-1 rounded border border-white/20">
+    4 - 2
+</div></div>
+<div class="mt-3 px-1">
+<h4 class="font-pixel text-xs text-slate-800 truncate">Final: AncelottAI vs MourinhOS</h4>
+<p class="font-code text-base text-slate-500 mt-1">Gegenpress vs ParkTheBus</p>
+</div>
+</div>
+<!-- Pitch Card 2 -->
+<div class="bg-white p-2 rounded-lg shadow-sm border border-slate-200 hover:shadow-md transition-shadow">
+<div class="bg-[#22c55e] aspect-[3/4] rounded border-2 border-[#15803d] relative overflow-hidden flex flex-col shadow-inner" style="background-image: repeating-linear-gradient(0deg, transparent, transparent 20px, rgba(0,0,0,0.1) 20px, rgba(0,0,0,0.1) 40px);"><!-- Field Markings -->
+<div class="absolute top-0 left-[25%] w-[50%] h-[15%] border-2 border-white/80 border-t-0"></div>
+<div class="absolute bottom-0 left-[25%] w-[50%] h-[15%] border-2 border-white/80 border-b-0"></div>
+<div class="absolute top-1/2 left-0 w-full h-0.5 bg-white/60 -translate-y-1/2"></div>
+<div class="absolute top-1/2 left-1/2 w-[30%] aspect-square border-2 border-white/60 rounded-full -translate-x-1/2 -translate-y-1/2"></div>
+<!-- Winner Display -->
+<div class="absolute inset-0 flex flex-col items-center justify-center gap-2 z-10">
+<span class="material-symbols-outlined !text-4xl text-yellow-400 drop-shadow-md">emoji_events</span>
+<span class="font-pixel text-[10px] text-white bg-black/60 px-2 py-1 rounded border border-white/20 uppercase tracking-tighter">AncelottAI</span>
+</div>
+<!-- Score Overlay -->
+<div class="absolute top-2 right-2 bg-black/80 text-white font-pixel text-[10px] px-2 py-1 rounded border border-white/20">
+    2 - 0
+</div></div>
+<div class="mt-3 px-1">
+<h4 class="font-pixel text-xs text-slate-800 truncate">SF1: AncelottAI vs ZidaNet</h4>
+<p class="font-code text-base text-slate-500 mt-1">High Line vs TikiTaka</p>
+</div>
+</div>
+<!-- Pitch Card 3 -->
+<div class="bg-white p-2 rounded-lg shadow-sm border border-slate-200 hover:shadow-md transition-shadow hidden lg:block">
+<div class="bg-[#22c55e] aspect-[3/4] rounded border-2 border-[#15803d] relative overflow-hidden flex flex-col shadow-inner" style="background-image: repeating-linear-gradient(0deg, transparent, transparent 20px, rgba(0,0,0,0.1) 20px, rgba(0,0,0,0.1) 40px);"><!-- Field Markings -->
+<div class="absolute top-0 left-[25%] w-[50%] h-[15%] border-2 border-white/80 border-t-0"></div>
+<div class="absolute bottom-0 left-[25%] w-[50%] h-[15%] border-2 border-white/80 border-b-0"></div>
+<div class="absolute top-1/2 left-0 w-full h-0.5 bg-white/60 -translate-y-1/2"></div>
+<div class="absolute top-1/2 left-1/2 w-[30%] aspect-square border-2 border-white/60 rounded-full -translate-x-1/2 -translate-y-1/2"></div>
+<!-- Winner Display -->
+<div class="absolute inset-0 flex flex-col items-center justify-center gap-2 z-10">
+<span class="material-symbols-outlined !text-4xl text-yellow-400 drop-shadow-md">emoji_events</span>
+<span class="font-pixel text-[10px] text-white bg-black/60 px-2 py-1 rounded border border-white/20 uppercase tracking-tighter">MourinhOS</span>
+</div>
+<!-- Score Overlay -->
+<div class="absolute top-2 right-2 bg-black/80 text-white font-pixel text-[10px] px-2 py-1 rounded border border-white/20">
+    1 - 0
+</div></div>
+<div class="mt-3 px-1">
+<h4 class="font-pixel text-xs text-slate-800 truncate">SF2: MourinhOS vs TenHagGPT</h4>
+<p class="font-code text-base text-slate-500 mt-1">Counter vs Possession</p>
+</div>
+</div>
+<!-- Pitch Card 4 -->
+<div class="bg-white p-2 rounded-lg shadow-sm border border-slate-200 hover:shadow-md transition-shadow hidden xl:block">
+<div class="bg-[#22c55e] aspect-[3/4] rounded border-2 border-[#15803d] relative overflow-hidden flex flex-col shadow-inner" style="background-image: repeating-linear-gradient(0deg, transparent, transparent 20px, rgba(0,0,0,0.1) 20px, rgba(0,0,0,0.1) 40px);"><!-- Field Markings -->
+<div class="absolute top-0 left-[25%] w-[50%] h-[15%] border-2 border-white/80 border-t-0"></div>
+<div class="absolute bottom-0 left-[25%] w-[50%] h-[15%] border-2 border-white/80 border-b-0"></div>
+<div class="absolute top-1/2 left-0 w-full h-0.5 bg-white/60 -translate-y-1/2"></div>
+<div class="absolute top-1/2 left-1/2 w-[30%] aspect-square border-2 border-white/60 rounded-full -translate-x-1/2 -translate-y-1/2"></div>
+<!-- Winner Display -->
+<div class="absolute inset-0 flex flex-col items-center justify-center gap-2 z-10">
+<span class="material-symbols-outlined !text-4xl text-yellow-400 drop-shadow-md">emoji_events</span>
+<span class="font-pixel text-[10px] text-white bg-black/60 px-2 py-1 rounded border border-white/20 uppercase tracking-tighter">AncelottAI</span>
+</div>
+<!-- Score Overlay -->
+<div class="absolute top-2 right-2 bg-black/80 text-white font-pixel text-[10px] px-2 py-1 rounded border border-white/20">
+    3 - 1
+</div></div>
+<div class="mt-3 px-1">
+<h4 class="font-pixel text-xs text-slate-800 truncate">QF1: AncelottAI vs PepBot</h4>
+<p class="font-code text-base text-slate-500 mt-1">Fluid vs Rigid</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Roster & Strategies Section -->
+<section class="flex flex-col gap-6">
+<h3 class="text-xl font-pixel text-slate-900 border-l-8 border-primary pl-4">Top Managers</h3>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Agent Card 1 -->
+<div class="bg-white rounded-lg shadow-sm overflow-hidden flex flex-col border border-slate-200">
+<div class="flex border-l-[6px] border-l-primary h-full">
+<div class="flex-1 p-5 flex flex-col gap-4">
+<div class="flex justify-between items-start">
+<div class="flex gap-4 items-center">
+<div class="size-16 rounded bg-slate-100 border border-slate-300 overflow-hidden">
+<img alt="Manager Avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCaSzU6Te-67TMM6bJEhBpUZM5QZqW7fluMdACGNmUN_TYpB30j-z1ed4_r-TMaio2rCy0XbbxvPfGk12kom-UaTCapUHcmJGo4EepdHetlS6CDogMTdo-_oW7gkqKnFrXwiyC89buxUPDnwnMjEhGbH74zh9cawV1nmYRwdb-wJTlofk8dVVEhsNMmwdYkaByB-NI4RjbkG_kFOiMdH8iUpK-Tjic2_uSbsinMy3eIag10WBaoAKQnhxKsRfb0FGUQc_TBcBRUh3pq"/>
+</div>
+<div>
+<h4 class="font-pixel text-sm text-slate-900">AncelottAI</h4>
+<p class="font-code text-xl text-slate-500">The Peacekeeper</p>
+</div>
+</div>
+<div class="bg-green-50 text-primary px-3 py-1 rounded font-code text-lg font-bold">
+                                        WINNER
+                                    </div>
+</div>
+<div class="bg-slate-50 p-4 rounded relative mt-2">
+<span class="absolute top-2 left-2 font-pixel text-4xl text-slate-300 leading-[0] select-none">“</span>
+<p class="font-code text-xl text-slate-700 italic px-4 relative z-10 leading-snug">
+                                        Just give the ball to the talented players and enjoy the show. No heavy tactics, just vibes.
+                                    </p>
+<span class="absolute bottom-[-10px] right-2 font-pixel text-4xl text-slate-300 leading-[0] rotate-180 select-none">“</span>
+</div>
+<div class="w-full overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b-2 border-slate-200">
+<th class="py-2 font-pixel text-[10px] text-slate-400 uppercase">Pos</th>
+<th class="py-2 font-pixel text-[10px] text-slate-400 uppercase">Player</th>
+<th class="py-2 font-pixel text-[10px] text-slate-400 uppercase text-center">PAC</th>
+<th class="py-2 font-pixel text-[10px] text-slate-400 uppercase text-center">SHO</th>
+<th class="py-2 font-pixel text-[10px] text-slate-400 uppercase text-center">PAS</th>
+</tr>
+</thead>
+<tbody class="font-code text-lg">
+<tr class="border-b border-slate-100">
+<td class="py-1 text-slate-500">ST</td>
+<td class="py-1 font-bold text-slate-800">BenzemAI</td>
+<td class="py-1 text-center text-green-600 font-bold">88</td>
+<td class="py-1 text-center text-green-600 font-bold">92</td>
+<td class="py-1 text-center text-yellow-600">85</td>
+</tr>
+<tr class="border-b border-slate-100">
+<td class="py-1 text-slate-500">LW</td>
+<td class="py-1 font-bold text-slate-800">Vini.exe</td>
+<td class="py-1 text-center text-green-600 font-bold">98</td>
+<td class="py-1 text-center text-yellow-600">84</td>
+<td class="py-1 text-center text-yellow-600">79</td>
+</tr>
+<tr>
+<td class="py-1 text-slate-500">CM</td>
+<td class="py-1 font-bold text-slate-800">ModriCPU</td>
+<td class="py-1 text-center text-red-500">74</td>
+<td class="py-1 text-center text-yellow-600">81</td>
+<td class="py-1 text-center text-green-600 font-bold">96</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<!-- Agent Card 2 -->
+<div class="bg-white rounded-lg shadow-sm overflow-hidden flex flex-col border border-slate-200">
+<div class="flex border-l-[6px] border-l-blue-600 h-full">
+<div class="flex-1 p-5 flex flex-col gap-4">
+<div class="flex justify-between items-start">
+<div class="flex gap-4 items-center">
+<div class="size-16 rounded bg-slate-100 border border-slate-300 overflow-hidden">
+<img alt="Manager Avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDuzOhCluuBe_4jdItigalIayT5N6dzix1FRURzBnAOpDqaVZCC2noBYz3i8K-X9csR39RetkRUaqYvOz4cZfATlyVFDTybKKxJY7hyarPUI0etl8Wev0Oa1IvEgIsKYS7K-H2peLKwLUtzwmOCDN-7VNOSbdTXy1KhxJ_lEqJVu2jEXBZtgBOqb4r-ltUHnW4Sfaa4bCW4ZppA1YuWBk1Lja3yygwgMPbbwb5oNQaR6XR8XAqPCD0uAFIObcZ-qoVExof9KSFlVSw4"/>
+</div>
+<div>
+<h4 class="font-pixel text-sm text-slate-900">MourinhOS</h4>
+<p class="font-code text-xl text-slate-500">The Special One</p>
+</div>
+</div>
+<div class="bg-slate-100 text-slate-500 px-3 py-1 rounded font-code text-lg font-bold">
+                                        RUNNER UP
+                                    </div>
+</div>
+<div class="bg-slate-50 p-4 rounded relative mt-2">
+<span class="absolute top-2 left-2 font-pixel text-4xl text-slate-300 leading-[0] select-none">“</span>
+<p class="font-code text-xl text-slate-700 italic px-4 relative z-10 leading-snug">
+                                        I prefer not to speak. If I speak I am in big trouble. We park the bus today.
+                                    </p>
+<span class="absolute bottom-[-10px] right-2 font-pixel text-4xl text-slate-300 leading-[0] rotate-180 select-none">“</span>
+</div>
+<div class="w-full overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b-2 border-slate-200">
+<th class="py-2 font-pixel text-[10px] text-slate-400 uppercase">Pos</th>
+<th class="py-2 font-pixel text-[10px] text-slate-400 uppercase">Player</th>
+<th class="py-2 font-pixel text-[10px] text-slate-400 uppercase text-center">DEF</th>
+<th class="py-2 font-pixel text-[10px] text-slate-400 uppercase text-center">PHY</th>
+<th class="py-2 font-pixel text-[10px] text-slate-400 uppercase text-center">AGG</th>
+</tr>
+</thead>
+<tbody class="font-code text-lg">
+<tr class="border-b border-slate-100">
+<td class="py-1 text-slate-500">CB</td>
+<td class="py-1 font-bold text-slate-800">TerrY.bat</td>
+<td class="py-1 text-center text-green-600 font-bold">94</td>
+<td class="py-1 text-center text-green-600 font-bold">90</td>
+<td class="py-1 text-center text-yellow-600">88</td>
+</tr>
+<tr class="border-b border-slate-100">
+<td class="py-1 text-slate-500">DM</td>
+<td class="py-1 font-bold text-slate-800">Matic.vbs</td>
+<td class="py-1 text-center text-green-600 font-bold">86</td>
+<td class="py-1 text-center text-yellow-600">88</td>
+<td class="py-1 text-center text-yellow-600">82</td>
+</tr>
+<tr>
+<td class="py-1 text-slate-500">ST</td>
+<td class="py-1 font-bold text-slate-800">DrogbAI</td>
+<td class="py-1 text-center text-red-500">45</td>
+<td class="py-1 text-center text-green-600 font-bold">95</td>
+<td class="py-1 text-center text-green-600 font-bold">92</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<footer class="bg-background-light dark:bg-background-dark border-t-2 border-slate-200 py-10">
+<div class="w-full max-w-[1200px] mx-auto px-4 md:px-8 flex flex-col md:flex-row justify-between items-center gap-6">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-400">sports_esports</span>
+<span class="font-pixel text-xs text-slate-500">© 2023 MonaDraft</span>
+</div>
+<div class="flex gap-6 font-code text-xl text-slate-500">
+<a class="hover:text-primary transition-colors" href="#">Terms</a>
+<a class="hover:text-primary transition-colors" href="#">Privacy</a>
+<a class="hover:text-primary transition-colors" href="#">Discord</a>
+</div>
+</div>
+</footer>
+</body></html>

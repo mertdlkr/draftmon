@@ -98,47 +98,48 @@ export function FootballPitch({
             <div
                 style={{
                     display: "flex",
-                    justifyContent: "center",
+                    justifyContent: "space-between",
                     alignItems: "center",
                     gap: "1.5rem",
                     padding: "0.6rem 1rem",
-                    background: "#f8fafc",
-                    borderBottom: "1px solid #e2e8f0",
+                    background: "#0e1b13",
+                    borderBottom: "1px solid #0e1b13",
                     fontFamily: "var(--font-display)",
                 }}
             >
-                <span style={{ fontWeight: winner === "A" ? 800 : 500, color: winner === "A" ? "#16a34a" : "#0f172a", fontSize: "0.95rem" }}>
-                    {winner === "A" && "👑 "}{teamAName}
+                <span style={{ fontWeight: winner === "A" ? 800 : 500, color: winner === "A" ? "#eab308" : "#ffffff", fontSize: "0.95rem" }}>
+                    {winner === "A" && <span className="material-symbols-outlined text-[14px] align-middle mr-1 text-[#eab308]">emoji_events</span>}{teamAName}
                 </span>
                 {scoreA != null && scoreB != null && (
                     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "0.15rem" }}>
                         <span
                             style={{
-                                fontFamily: "var(--font-mono)",
-                                fontSize: "1.1rem",
-                                fontWeight: 700,
-                                color: "#0f172a",
+                                fontFamily: "var(--font-pixel)",
+                                fontSize: "12px",
+                                fontWeight: 300,
+                                color: "#ffffff",
                                 padding: "0.15rem 0.75rem",
-                                background: "#e2e8f0",
-                                borderRadius: "6px",
+                                background: "rgba(255,255,255,0.1)",
+                                borderRadius: "2px",
+                                border: "1px solid rgba(255,255,255,0.2)"
                             }}
                         >
-                            {scoreA} – {scoreB}
+                            {scoreA} - {scoreB}
                         </span>
                         {powerScoreA != null && powerScoreB != null && (
                             <span style={{
-                                fontFamily: "var(--font-mono)",
-                                fontSize: "0.65rem",
-                                color: "#64748b",
+                                fontFamily: "var(--font-code)",
+                                fontSize: "0.8rem",
+                                color: "#94a3b8",
                                 letterSpacing: "0.03em",
                             }}>
-                                ⚡ {powerScoreA} – {powerScoreB}
+                                ⚡ {powerScoreA} - {powerScoreB}
                             </span>
                         )}
                     </div>
                 )}
-                <span style={{ fontWeight: winner === "B" ? 800 : 500, color: winner === "B" ? "#16a34a" : "#0f172a", fontSize: "0.95rem" }}>
-                    {teamBName}{winner === "B" && " 👑"}
+                <span style={{ fontWeight: winner === "B" ? 800 : 500, color: winner === "B" ? "#eab308" : "#ffffff", fontSize: "0.95rem" }}>
+                    {teamBName}{winner === "B" && <span className="material-symbols-outlined text-[14px] align-middle ml-1 text-[#eab308]">emoji_events</span>}
                 </span>
             </div>
 

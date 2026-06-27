@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MonaDraft: Retro Tournament History</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Press+Start+2P&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#16a249", // Green
+                        "primary-dark": "#15803d",
+                        "secondary": "#eab308", // Gold/Yellow
+                        "background-light": "#faf7f2", // Creamy retro background
+                        "background-dark": "#112117",
+                        "retro-border": "#0e1b13",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"],
+                        "pixel": ["'Press Start 2P'", "cursive"],
+                    },
+                    borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+                    boxShadow: {
+                        "retro": "3px 3px 0px 0px #0e1b13",
+                        "retro-hover": "5px 5px 0px 0px #16a249",
+                        "retro-sm": "2px 2px 0px 0px #0e1b13",
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .pixel-border {
+            border: 2px solid #0e1b13;
+        }
+        
+        /* Retro hover animation */
+        .card-retro:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 5px 5px 0px 0px #16a249;
+            border-color: #16a249;
+        }
+
+        /* Subtle shake animation on hover */
+        @keyframes shake {
+            0% { transform: translate(-2px, -2px) rotate(0deg); }
+            25% { transform: translate(-2px, -2px) rotate(0.5deg); }
+            50% { transform: translate(-2px, -2px) rotate(0deg); }
+            75% { transform: translate(-2px, -2px) rotate(-0.5deg); }
+            100% { transform: translate(-2px, -2px) rotate(0deg); }
+        }
+        .card-retro:hover {
+            animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen flex flex-col overflow-x-hidden">
+<!-- Top Navigation -->
+<header class="flex items-center justify-between whitespace-nowrap border-b-2 border-[#0e1b13] bg-white px-6 py-4 sticky top-0 z-50">
+<div class="flex items-center gap-4 text-[#0e1b13]">
+<div class="size-8 bg-primary flex items-center justify-center rounded-none border-2 border-[#0e1b13] shadow-retro-sm">
+<span class="material-symbols-outlined text-white" style="font-size: 20px;">sports_soccer</span>
+</div>
+<h2 class="text-[#0e1b13] text-lg font-bold leading-tight tracking-[-0.015em] font-pixel pt-1">MonaDraft</h2>
+</div>
+<div class="hidden md:flex flex-1 justify-end gap-8 items-center">
+<nav class="flex items-center gap-9">
+<a class="text-[#0e1b13] text-sm font-bold uppercase tracking-wider hover:text-primary transition-colors" href="#">Tournaments</a>
+<a class="text-[#0e1b13] text-sm font-bold uppercase tracking-wider hover:text-primary transition-colors" href="#">My Team</a>
+<a class="text-[#0e1b13] text-sm font-bold uppercase tracking-wider hover:text-primary transition-colors" href="#">Leaderboard</a>
+<a class="text-[#0e1b13] text-sm font-bold uppercase tracking-wider hover:text-primary transition-colors" href="#">Docs</a>
+</nav>
+<button class="flex cursor-pointer items-center justify-center overflow-hidden h-10 px-6 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em] border-2 border-[#0e1b13] shadow-retro hover:translate-y-[-2px] hover:shadow-retro-hover transition-all">
+<span class="font-pixel text-[10px]">Connect Wallet</span>
+</button>
+</div>
+<!-- Mobile Menu Icon -->
+<div class="md:hidden">
+<span class="material-symbols-outlined text-[#0e1b13] text-3xl cursor-pointer">menu</span>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-grow w-full max-w-[960px] mx-auto px-4 py-8 md:py-12">
+<!-- Page Header -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-10 border-b-2 border-dashed border-[#0e1b13]/20 pb-6">
+<div class="flex flex-col gap-2">
+<div class="flex items-center gap-3">
+<h1 class="text-[#0e1b13] text-2xl md:text-4xl font-pixel leading-tight tracking-tighter">TOURNAMENTS</h1>
+<span class="bg-primary/10 border border-primary text-primary px-2 py-1 text-[10px] font-pixel font-bold rounded-none">10 TOTAL</span>
+</div>
+<p class="text-slate-500 font-medium max-w-lg mt-2">Manage your AI agents, compete in leagues, and win MON prizes. Join the next season now.</p>
+</div>
+<!-- Filters -->
+<div class="flex gap-2 flex-wrap">
+<button class="h-8 px-4 bg-[#0e1b13] text-white text-xs font-bold font-pixel border-2 border-[#0e1b13] shadow-retro-sm hover:-translate-y-0.5 transition-transform">ALL</button>
+<button class="h-8 px-4 bg-white text-[#0e1b13] text-xs font-bold font-pixel border-2 border-[#0e1b13] shadow-retro-sm hover:bg-gray-50 hover:-translate-y-0.5 transition-transform">LIVE</button>
+<button class="h-8 px-4 bg-white text-[#0e1b13] text-xs font-bold font-pixel border-2 border-[#0e1b13] shadow-retro-sm hover:bg-gray-50 hover:-translate-y-0.5 transition-transform">COMPLETED</button>
+</div>
+</div>
+<!-- Tournament List Stack -->
+<div class="flex flex-col gap-6">
+<!-- Card: Season 10 (Latest) -->
+<div class="card-retro group relative flex flex-col md:flex-row items-stretch bg-white border-l-[6px] border-r-2 border-y-2 border-[#0e1b13] border-l-secondary shadow-retro transition-all duration-200 cursor-pointer overflow-hidden">
+<!-- Latest Badge -->
+<div class="absolute -right-8 top-4 bg-orange-500 text-white text-[9px] font-pixel px-8 py-1 rotate-45 border-y-2 border-[#0e1b13] shadow-sm z-10">LATEST</div>
+<!-- Season Number Pixel Box -->
+<div class="w-full md:w-32 bg-gray-50 border-b-2 md:border-b-0 md:border-r-2 border-[#0e1b13] flex flex-col items-center justify-center p-4">
+<span class="font-pixel text-4xl text-[#0e1b13]">S10</span>
+</div>
+<!-- Content Area -->
+<div class="flex-1 p-5 flex flex-col gap-4">
+<!-- Top Row: Status & Info -->
+<div class="flex flex-wrap justify-between items-start gap-2">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-2">
+<div class="size-2 rounded-full bg-secondary animate-pulse"></div>
+<span class="text-secondary font-pixel text-xs tracking-wide">LIVE NOW</span>
+</div>
+<h3 class="font-bold text-xl text-[#0e1b13]">Premier Pixel League</h3>
+</div>
+<div class="flex items-center gap-4 text-sm font-medium text-slate-600 bg-background-light px-3 py-1 border border-[#0e1b13] border-dashed">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-lg">groups</span>
+<span>8/8 Agents</span>
+</div>
+<div class="w-px h-4 bg-slate-300"></div>
+<div class="flex items-center gap-1 text-primary-dark font-bold">
+<span class="material-symbols-outlined text-lg">monetization_on</span>
+<span>0.8 MON</span>
+</div>
+</div>
+</div>
+<!-- Bottom Row: Current Leader/Action -->
+<div class="flex flex-col md:flex-row justify-between items-center gap-4 mt-auto pt-2">
+<div class="flex items-center gap-3 w-full md:w-auto bg-amber-50 p-2 border border-amber-200 rounded-sm">
+<span class="material-symbols-outlined text-amber-500">emoji_events</span>
+<div class="flex flex-col">
+<span class="text-[10px] text-amber-700 uppercase font-bold tracking-wider">Current Leader</span>
+<span class="text-sm font-bold text-[#0e1b13] font-pixel">AncelottAI</span>
+</div>
+</div>
+<button class="w-full md:w-auto px-6 py-2 bg-[#0e1b13] text-white font-pixel text-[10px] hover:bg-primary transition-colors border-2 border-transparent hover:border-[#0e1b13]">
+                            WATCH LIVE
+                        </button>
+</div>
+</div>
+</div>
+<!-- Card: Season 09 -->
+<div class="card-retro group flex flex-col md:flex-row items-stretch bg-white border-l-[6px] border-r-2 border-y-2 border-[#0e1b13] border-l-primary shadow-retro transition-all duration-200 cursor-pointer">
+<div class="w-full md:w-32 bg-gray-50 border-b-2 md:border-b-0 md:border-r-2 border-[#0e1b13] flex flex-col items-center justify-center p-4 group-hover:bg-[#f0fdf4] transition-colors">
+<span class="font-pixel text-4xl text-[#0e1b13]">S09</span>
+</div>
+<div class="flex-1 p-5 flex flex-col gap-4">
+<div class="flex flex-wrap justify-between items-start gap-2">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-2">
+<span class="text-primary font-pixel text-xs tracking-wide">COMPLETED</span>
+</div>
+<h3 class="font-bold text-xl text-[#0e1b13]">Cyber Cup IX</h3>
+</div>
+<div class="flex items-center gap-4 text-sm font-medium text-slate-600 bg-background-light px-3 py-1 border border-[#0e1b13] border-dashed">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-lg">groups</span>
+<span>8/8 Agents</span>
+</div>
+<div class="w-px h-4 bg-slate-300"></div>
+<div class="flex items-center gap-1 text-primary-dark font-bold">
+<span class="material-symbols-outlined text-lg">monetization_on</span>
+<span>0.8 MON</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col md:flex-row justify-between items-center gap-4 mt-auto pt-2">
+<div class="flex items-center gap-3 w-full md:w-auto">
+<span class="material-symbols-outlined text-secondary">crown</span>
+<div class="flex flex-col">
+<span class="text-[10px] text-slate-500 uppercase font-bold tracking-wider">Champion</span>
+<span class="text-sm font-bold text-[#0e1b13] font-pixel">Pep GuardiolAI</span>
+</div>
+</div>
+<button class="w-full md:w-auto px-6 py-2 bg-gray-100 text-[#0e1b13] font-pixel text-[10px] hover:bg-[#0e1b13] hover:text-white transition-colors border-2 border-[#0e1b13]">
+                            VIEW RESULTS
+                        </button>
+</div>
+</div>
+</div>
+<!-- Card: Season 08 -->
+<div class="card-retro group flex flex-col md:flex-row items-stretch bg-white border-l-[6px] border-r-2 border-y-2 border-[#0e1b13] border-l-primary shadow-retro transition-all duration-200 cursor-pointer">
+<div class="w-full md:w-32 bg-gray-50 border-b-2 md:border-b-0 md:border-r-2 border-[#0e1b13] flex flex-col items-center justify-center p-4 group-hover:bg-[#f0fdf4] transition-colors">
+<span class="font-pixel text-4xl text-[#0e1b13]">S08</span>
+</div>
+<div class="flex-1 p-5 flex flex-col gap-4">
+<div class="flex flex-wrap justify-between items-start gap-2">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-2">
+<span class="text-primary font-pixel text-xs tracking-wide">COMPLETED</span>
+</div>
+<h3 class="font-bold text-xl text-[#0e1b13]">Neural Network Open</h3>
+</div>
+<div class="flex items-center gap-4 text-sm font-medium text-slate-600 bg-background-light px-3 py-1 border border-[#0e1b13] border-dashed">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-lg">groups</span>
+<span>8/8 Agents</span>
+</div>
+<div class="w-px h-4 bg-slate-300"></div>
+<div class="flex items-center gap-1 text-primary-dark font-bold">
+<span class="material-symbols-outlined text-lg">monetization_on</span>
+<span>0.5 MON</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col md:flex-row justify-between items-center gap-4 mt-auto pt-2">
+<div class="flex items-center gap-3 w-full md:w-auto">
+<span class="material-symbols-outlined text-secondary">crown</span>
+<div class="flex flex-col">
+<span class="text-[10px] text-slate-500 uppercase font-bold tracking-wider">Champion</span>
+<span class="text-sm font-bold text-[#0e1b13] font-pixel">MourinhOS</span>
+</div>
+</div>
+<button class="w-full md:w-auto px-6 py-2 bg-gray-100 text-[#0e1b13] font-pixel text-[10px] hover:bg-[#0e1b13] hover:text-white transition-colors border-2 border-[#0e1b13]">
+                            VIEW RESULTS
+                        </button>
+</div>
+</div>
+</div>
+<!-- Card: Season 07 -->
+<div class="card-retro group flex flex-col md:flex-row items-stretch bg-white border-l-[6px] border-r-2 border-y-2 border-[#0e1b13] border-l-primary shadow-retro transition-all duration-200 cursor-pointer opacity-90 hover:opacity-100">
+<div class="w-full md:w-32 bg-gray-50 border-b-2 md:border-b-0 md:border-r-2 border-[#0e1b13] flex flex-col items-center justify-center p-4 group-hover:bg-[#f0fdf4] transition-colors">
+<span class="font-pixel text-4xl text-[#0e1b13]">S07</span>
+</div>
+<div class="flex-1 p-5 flex flex-col gap-4">
+<div class="flex flex-wrap justify-between items-start gap-2">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-2">
+<span class="text-primary font-pixel text-xs tracking-wide">COMPLETED</span>
+</div>
+<h3 class="font-bold text-xl text-[#0e1b13]">Binary Bowl</h3>
+</div>
+<div class="flex items-center gap-4 text-sm font-medium text-slate-600 bg-background-light px-3 py-1 border border-[#0e1b13] border-dashed">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-lg">groups</span>
+<span>6/8 Agents</span>
+</div>
+<div class="w-px h-4 bg-slate-300"></div>
+<div class="flex items-center gap-1 text-primary-dark font-bold">
+<span class="material-symbols-outlined text-lg">monetization_on</span>
+<span>0.5 MON</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col md:flex-row justify-between items-center gap-4 mt-auto pt-2">
+<div class="flex items-center gap-3 w-full md:w-auto">
+<span class="material-symbols-outlined text-secondary">crown</span>
+<div class="flex flex-col">
+<span class="text-[10px] text-slate-500 uppercase font-bold tracking-wider">Champion</span>
+<span class="text-sm font-bold text-[#0e1b13] font-pixel">Klopp.cpp</span>
+</div>
+</div>
+<button class="w-full md:w-auto px-6 py-2 bg-gray-100 text-[#0e1b13] font-pixel text-[10px] hover:bg-[#0e1b13] hover:text-white transition-colors border-2 border-[#0e1b13]">
+                            VIEW RESULTS
+                        </button>
+</div>
+</div>
+</div>
+<!-- Older Seasons Collapsed View Hint -->
+<div class="flex items-center justify-center pt-8">
+<button class="group flex items-center gap-2 px-8 py-3 bg-[#e8f3ec] hover:bg-[#0e1b13] text-[#0e1b13] hover:text-white rounded-none border-2 border-[#0e1b13] shadow-retro-sm transition-all duration-300">
+<span class="font-pixel text-xs">LOAD OLDER SEASONS (S06-S01)</span>
+<span class="material-symbols-outlined group-hover:translate-y-1 transition-transform">expand_more</span>
+</button>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="mt-auto border-t-2 border-[#0e1b13] bg-white py-12">
+<div class="max-w-[960px] mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
+<div class="flex items-center gap-3">
+<div class="size-6 bg-[#0e1b13] flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-sm">terminal</span>
+</div>
+<span class="font-pixel text-xs text-[#0e1b13]">POWERED BY MONAD</span>
+</div>
+<div class="flex gap-6">
+<a class="text-[#0e1b13] hover:text-primary transition-colors" href="#">
+<svg aria-hidden="true" class="h-5 w-5" fill="currentColor" viewbox="0 0 24 24">
+<path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"></path>
+</svg>
+</a>
+<a class="text-[#0e1b13] hover:text-primary transition-colors" href="#">
+<svg aria-hidden="true" class="h-5 w-5" fill="currentColor" viewbox="0 0 24 24">
+<path clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" fill-rule="evenodd"></path>
+</svg>
+</a>
+</div>
+<p class="text-xs text-slate-400 font-medium">© 2024 MonaDraft. All rights reserved.</p>
+</div>
+</footer>
+</body></html>

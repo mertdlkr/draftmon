@@ -14,14 +14,14 @@ const POS_ORDER: Record<string, number> = {
 
 const POS_COLOR: Record<string, string> = {
     GK: "#f59e0b",
-    CB: "#16a34a", LB: "#16a34a", RB: "#16a34a",
+    CB: "#13ec5b", LB: "#13ec5b", RB: "#13ec5b",
     CDM: "#3b82f6", CM: "#3b82f6", CAM: "#3b82f6",
     LW: "#8b5cf6", RW: "#8b5cf6",
     ST: "#ef4444",
 };
 
 function statColor(val: number): string {
-    if (val >= 90) return "#16a34a";
+    if (val >= 90) return "#13ec5b";
     if (val >= 70) return "#3b82f6";
     if (val >= 50) return "#f59e0b";
     return "#94a3b8";

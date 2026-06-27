@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MonaDraft: Draft Marketplace Refinement</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&amp;family=VT323&amp;family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#16a249",
+                        "background-light": "#faf7f2",
+                        "background-dark": "#112117",
+                        "card-light": "#ffffff",
+                        "accent-gold": "#ca8a04","accent-tier1": "#fbbf24",
+                        "accent-tier2": "#a8a29e",
+                        "accent-tier3": "#b45309",
+                        "ticker-bg": "#f0fdf4",
+                        "sold-red": "#dc2626",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"],
+                        "pixel": ["'Press Start 2P'", "cursive"],
+                        "terminal": ["'VT323'", "monospace"],
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                },
+            },
+        }
+    </script>
+<style>.pixel-border {
+            box-shadow: 
+                -2px 0 0 0 #000,
+                2px 0 0 0 #000,
+                0 -2px 0 0 #000,
+                0 2px 0 0 #000;
+            margin: 2px;
+        }
+        .pixel-border-sm {
+            box-shadow: 
+                -1px 0 0 0 #d1d5db,
+                1px 0 0 0 #d1d5db,
+                0 -1px 0 0 #d1d5db,
+                0 1px 0 0 #d1d5db;
+            margin: 1px;
+        }.pixel-border-legend {
+            border-top: 5px solid #ca8a04;
+            border-left: 5px solid #ca8a04;
+            border-right: 2px solid #000;
+            border-bottom: 2px solid #000;
+            box-shadow: 3px 3px 0 0 #ca8a04;
+        }
+        .pixel-font {
+            font-family: 'Press Start 2P', cursive;
+        }
+        .terminal-font {
+            font-family: 'VT323', monospace;
+        }.pixel-progress-bg {
+            background-image: linear-gradient(to right, #e5e7eb 50%, transparent 50%);
+            background-size: 6px 100%;
+        }
+        .pixel-progress-fill-high {
+            background-image: linear-gradient(to right, #16a249 50%, transparent 50%);
+            background-size: 6px 100%;
+        }
+        .pixel-progress-fill-med {
+            background-image: linear-gradient(to right, #ca8a04 50%, transparent 50%);
+            background-size: 6px 100%;
+        }
+        .sold-stamp {
+            transform: rotate(-5deg);
+            border: 2px solid #fff;
+            background-color: #dc2626;
+            color: white;
+            box-shadow: 2px 2px 0 rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body class="bg-background-light font-display text-slate-900 min-h-screen flex flex-col pb-12">
+<header class="flex items-center justify-between border-b-4 border-[#0e1b13] bg-white px-6 py-4 sticky top-0 z-50">
+<div class="flex items-center gap-4 text-[#0e1b13]">
+<div class="size-8 text-primary">
+<span class="material-symbols-outlined text-4xl">sports_soccer</span>
+</div>
+<h2 class="text-[#0e1b13] text-xl pixel-font leading-tight tracking-[-0.015em] mt-1">MonaDraft</h2>
+</div>
+<div class="hidden md:flex flex-1 justify-end gap-8 items-center">
+<nav class="flex items-center gap-6">
+<a class="text-[#0e1b13] text-sm font-bold uppercase hover:text-primary transition-colors" href="#">Market</a>
+<a class="text-[#0e1b13] text-sm font-bold uppercase hover:text-primary transition-colors" href="#">My Draft</a>
+<a class="text-[#0e1b13] text-sm font-bold uppercase hover:text-primary transition-colors" href="#">Leaderboard</a>
+</nav>
+<button class="pixel-border bg-primary text-white text-xs font-bold px-4 py-3 hover:bg-green-700 transition-colors uppercase pixel-font">
+                Connect Wallet
+            </button>
+<div class="bg-center bg-no-repeat bg-cover border-2 border-black size-10" data-alt="User Avatar" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCRzik8nfG16du2huCluJ71WflDNydn_9tSWgOYMFxSPxLNhptHoYfLASnhSLKpa-iJ0O1a8zzWmvpd8uoWBDCgpu8mmhkG4hYij3WzMtvpksqOqG7452mmSnRWpjNQXt8ozMekjEzD7u_Fya3YB4hQzxM1VuxnBjkrkeOkV4EnhV4mWdyHldfzuDDR96iW3y5dHResOCX3xUlanU4wS068iZKYjen6hf3RRZnAzXNzA5OzGPfnfKVy9ghDxJbeDBJcK5SBYqXZ9oPY");'></div>
+</div>
+</header>
+<main class="layout-container flex flex-col grow w-full max-w-[1200px] mx-auto px-4 py-8">
+<div class="flex flex-col gap-6 mb-10">
+<div class="flex flex-col gap-2">
+<h1 class="text-[#0e1b13] text-2xl md:text-4xl pixel-font leading-tight">PLAYER DRAFT</h1>
+<p class="text-primary font-bold text-lg terminal-font text-2xl">Scout and acquire 16-bit legends for your Monad league.</p>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+<div class="bg-white p-6 pixel-border flex flex-col items-center justify-center gap-1">
+<p class="text-slate-500 text-xs font-bold uppercase tracking-wider">Total Players</p>
+<p class="text-2xl pixel-font mt-2">88</p>
+</div>
+<div class="bg-white p-6 pixel-border flex flex-col items-center justify-center gap-1">
+<p class="text-slate-500 text-xs font-bold uppercase tracking-wider">Players Traded</p>
+<p class="text-2xl pixel-font mt-2">69</p>
+</div>
+<div class="bg-white p-6 pixel-border flex flex-col items-center justify-center gap-1">
+<p class="text-slate-500 text-xs font-bold uppercase tracking-wider">Market Cap</p>
+<p class="text-2xl pixel-font mt-2 text-primary">78.9</p>
+</div>
+<div class="bg-white p-6 pixel-border flex flex-col items-center justify-center gap-1">
+<p class="text-slate-500 text-xs font-bold uppercase tracking-wider">Avg Overall</p>
+<p class="text-2xl pixel-font mt-2">63</p>
+</div>
+</div>
+</div>
+<div class="flex flex-col lg:flex-row gap-6 mb-8 items-start lg:items-end justify-between bg-white/50 p-4 rounded-lg border-2 border-slate-200">
+<div class="flex flex-col gap-4 w-full lg:w-auto flex-1">
+<div class="flex flex-col sm:flex-row gap-4">
+<div class="relative flex-1 min-w-[200px]">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 material-symbols-outlined">search</span>
+<input class="w-full pl-10 pr-4 py-3 bg-white border-2 border-slate-300 focus:border-primary focus:ring-0 font-display text-sm font-medium placeholder:text-slate-400 pixel-border-sm outline-none" placeholder="Search player..." type="text"/>
+</div>
+<div class="flex gap-2 flex-wrap">
+<button class="px-3 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-bold pixel-border-sm">GK</button>
+<button class="px-3 py-2 bg-primary text-white text-xs font-bold pixel-border shadow-[2px_2px_0_0_rgba(0,0,0,1)]">DEF</button>
+<button class="px-3 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-bold pixel-border-sm">MID</button>
+<button class="px-3 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-bold pixel-border-sm">ATK</button>
+</div>
+</div>
+<div class="flex flex-wrap gap-2 items-center">
+<span class="text-xs font-bold text-slate-500 mr-2 uppercase">Tier:</span>
+<button class="size-8 flex items-center justify-center bg-accent-tier1 text-white text-[10px] font-bold border-2 border-black shadow-[2px_2px_0_0_rgba(0,0,0,0.2)]">T1</button>
+<button class="size-8 flex items-center justify-center bg-accent-tier2 text-white text-[10px] font-bold border-2 border-black opacity-50 hover:opacity-100">T2</button>
+<button class="size-8 flex items-center justify-center bg-accent-tier3 text-white text-[10px] font-bold border-2 border-black opacity-50 hover:opacity-100">T3</button>
+<button class="size-8 flex items-center justify-center bg-slate-600 text-white text-[10px] font-bold border-2 border-black opacity-50 hover:opacity-100">T4</button>
+</div>
+</div>
+<div class="flex items-center gap-3 w-full lg:w-auto justify-end">
+<span class="text-xs font-bold text-slate-500 uppercase">Sort by:</span>
+<select class="px-4 py-2 bg-white border-2 border-slate-300 text-sm font-bold focus:border-primary focus:ring-0 cursor-pointer pixel-border-sm">
+<option>Overall Rating</option>
+<option>Market Value</option>
+<option>Recent Activity</option>
+</select>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+<div class="relative bg-card-light p-5 pixel-border-legend group transition-transform hover:-translate-y-1">
+<div class="absolute -top-3 -right-3 bg-accent-gold border-2 border-black text-black p-1 z-10 shadow-[2px_2px_0_0_rgba(0,0,0,1)]">
+<span class="material-symbols-outlined text-sm font-bold">star</span>
+</div>
+<div class="flex gap-4 items-start mb-4">
+<div class="size-[64px] bg-slate-100 border-2 border-black p-1 shrink-0">
+<img alt="Pixel Art Player" class="w-full h-full object-cover rendering-pixelated" data-alt="Pixel Art Player Avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDG4ycpRcso9_SgFi9IkiYaM61oC9FjfrpKeR0Q5IZQBVXWc2s2AySOStRrDYlI4oWgtHZAi_CDUtHyh7ESCVMoYmvIiM9fVoPl1aYYCvnehx6zoaGzNpf24jWJJBhgoqQfYYm0Sa9DPjWCLiic1qYgA4I-BeqSfVxvGWcRHxwxV91X5_PqmPq-hjvJCTtu9vHrcFHPr7dcA1JB6KxKOgVT8VqE1IgXTZJlWChrOAgVBdla_4TudyhzGWu4QZNb3RdAJUY8r9iyQTlP"/>
+</div>
+<div class="flex flex-col">
+<h3 class="pixel-font text-sm leading-tight mb-2 mt-1">PELE.ETH</h3>
+<div class="flex gap-2 mb-2">
+<span class="bg-primary text-white text-[10px] font-bold px-1 py-0.5 border border-black">FWD</span>
+<span class="bg-accent-gold text-black text-[10px] font-bold px-1 py-0.5 border border-black">T1</span>
+</div>
+<p class="text-sm text-slate-500 terminal-font leading-none">Owned by <span class="text-primary font-bold">Simeone Node</span></p>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-x-4 gap-y-2 mb-4 bg-slate-50 p-3 border border-slate-200">
+<div class="flex items-center gap-2">
+<span class="text-[10px] font-bold text-slate-400 w-6">PAC</span>
+<div class="h-3 flex-1 bg-slate-200 pixel-progress-bg">
+<div class="h-full w-[90%] bg-primary pixel-progress-fill-high"></div>
+</div>
+<span class="text-[10px] font-bold">90</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-[10px] font-bold text-slate-400 w-6">SHO</span>
+<div class="h-3 flex-1 bg-slate-200 pixel-progress-bg">
+<div class="h-full w-[88%] bg-primary pixel-progress-fill-high"></div>
+</div>
+<span class="text-[10px] font-bold">88</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-[10px] font-bold text-slate-400 w-6">PAS</span>
+<div class="h-3 flex-1 bg-slate-200 pixel-progress-bg">
+<div class="h-full w-[85%] bg-accent-gold pixel-progress-fill-med"></div>
+</div>
+<span class="text-[10px] font-bold">85</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-[10px] font-bold text-slate-400 w-6">DRI</span>
+<div class="h-3 flex-1 bg-slate-200 pixel-progress-bg">
+<div class="h-full w-[92%] bg-primary pixel-progress-fill-high"></div>
+</div>
+<span class="text-[10px] font-bold">92</span>
+</div>
+</div>
+<div class="flex justify-between items-end border-t-2 border-dashed border-slate-200 pt-3">
+<div class="flex flex-col">
+<span class="text-[10px] text-slate-400 uppercase font-bold">Current Bid</span>
+<span class="text-sm pixel-font text-primary">1.176 MON</span>
+</div>
+<button class="bg-black text-white px-3 py-2 text-xs font-bold pixel-font hover:bg-primary transition-colors">BID</button>
+</div>
+</div>
+<div class="relative bg-card-light p-5 pixel-border group">
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 px-4 py-2 z-20 sold-stamp">
+<span class="pixel-font text-xl font-bold">SOLD</span>
+</div>
+<div class="flex gap-4 items-start mb-4 opacity-50">
+<div class="size-[64px] bg-slate-100 border-2 border-black p-1 shrink-0">
+<img alt="Pixel Art Player" class="w-full h-full object-cover rendering-pixelated" data-alt="Pixel Art Player Avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCLj82FVunJVSvk1kJzQKwITOG10H_AbTcLBl74SWDN79e6qbzV89ZnSoeYC1lMHJhcztHlizVLa0sVqGAhKSkPvY55HTaAe2qn80wiU2ZKz04ZhwVjqJCFft8jq3z-QupXct15OLreXelVA1ospP2S-kZpxxyOyBXaWsegTT1M2Yuxuq9JS3mjmaBAOh_F5uDFbjcDdrNbSRQ0c9ahsfjmkns3NlsXGHtKEKATxfA41E1yN8xsin27h3Xo3OnetOPIrJWMEOJn7om7"/>
+</div>
+<div class="flex flex-col">
+<h3 class="pixel-font text-sm leading-tight mb-2 mt-1">ZIDANE.OP</h3>
+<div class="flex gap-2 mb-2">
+<span class="bg-slate-500 text-white text-[10px] font-bold px-1 py-0.5 border border-black">MID</span>
+<span class="bg-accent-tier2 text-white text-[10px] font-bold px-1 py-0.5 border border-black">T2</span>
+</div>
+<p class="text-sm text-slate-500 terminal-font leading-none">Owned by <span class="text-slate-700 font-bold">PepG.eth</span></p>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-x-4 gap-y-2 mb-4 bg-slate-50 p-3 border border-slate-200 opacity-50">
+<div class="flex items-center gap-2">
+<span class="text-[10px] font-bold text-slate-400 w-6">PAC</span>
+<div class="h-3 flex-1 bg-slate-200 pixel-progress-bg">
+<div class="h-full w-[70%] bg-slate-500 pixel-progress-fill-med"></div>
+</div>
+<span class="text-[10px] font-bold">70</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-[10px] font-bold text-slate-400 w-6">SHO</span>
+<div class="h-3 flex-1 bg-slate-200 pixel-progress-bg">
+<div class="h-full w-[82%] bg-slate-500 pixel-progress-fill-med"></div>
+</div>
+<span class="text-[10px] font-bold">82</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-[10px] font-bold text-slate-400 w-6">PAS</span>
+<div class="h-3 flex-1 bg-slate-200 pixel-progress-bg">
+<div class="h-full w-[88%] bg-slate-500 pixel-progress-fill-high"></div>
+</div>
+<span class="text-[10px] font-bold">88</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-[10px] font-bold text-slate-400 w-6">TAC</span>
+<div class="h-3 flex-1 bg-slate-200 pixel-progress-bg">
+<div class="h-full w-[65%] bg-slate-500 pixel-progress-fill-med"></div>
+</div>
+<span class="text-[10px] font-bold">65</span>
+</div>
+</div>
+<div class="flex justify-between items-end border-t-2 border-dashed border-slate-200 pt-3 opacity-50">
+<div class="flex flex-col">
+<span class="text-[10px] text-slate-400 uppercase font-bold">Sold For</span>
+<span class="text-sm pixel-font text-slate-700">0.85 MON</span>
+</div>
+<button class="bg-slate-300 text-slate-500 px-3 py-2 text-xs font-bold pixel-font cursor-not-allowed" disabled="">CLOSED</button>
+</div>
+</div>
+<div class="relative bg-card-light p-5 pixel-border group transition-transform hover:-translate-y-1">
+<div class="flex gap-4 items-start mb-4">
+<div class="size-[64px] bg-slate-100 border-2 border-black p-1 shrink-0">
+<img alt="Pixel Art Player" class="w-full h-full object-cover rendering-pixelated" data-alt="Pixel Art Player Avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCkFHZp81BepT13Dc7EjMVHHrxREBAgXsMiCzllTsStWFpH_QiCD2dhX4pEqIUm0JaWE0tJODEAclSUpJOUXSmXa-NgcYLIlN7jBBytDXD6UYqEFVYmUAcwUcW6xBfkXPyiSkE2XQA-nygBUkYrht_OSdHBenzRnhndKnQwO0zEt3YLH2_mfRPOTJa_x8Zf_FHEjZmZBeCp7DOkUvLhrgUuXEYhkuDBLKcJSsjuwd74nU6QuVc39i02aBhzH_uCmNA3bJva2gpij_wl"/>
+</div>
+<div class="flex flex-col">
+<h3 class="pixel-font text-sm leading-tight mb-2 mt-1">MALDINI_3</h3>
+<div class="flex gap-2 mb-2">
+<span class="bg-primary text-white text-[10px] font-bold px-1 py-0.5 border border-black">DEF</span>
+<span class="bg-accent-tier3 text-white text-[10px] font-bold px-1 py-0.5 border border-black">T3</span>
+</div>
+<p class="text-sm text-slate-500 terminal-font leading-none">Owned by <span class="text-primary font-bold">MilanDAO</span></p>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-x-4 gap-y-2 mb-4 bg-slate-50 p-3 border border-slate-200">
+<div class="flex items-center gap-2">
+<span class="text-[10px] font-bold text-slate-400 w-6">PAC</span>
+<div class="h-3 flex-1 bg-slate-200 pixel-progress-bg">
+<div class="h-full w-[78%] bg-accent-gold pixel-progress-fill-med"></div>
+</div>
+<span class="text-[10px] font-bold">78</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-[10px] font-bold text-slate-400 w-6">DEF</span>
+<div class="h-3 flex-1 bg-slate-200 pixel-progress-bg">
+<div class="h-full w-[94%] bg-primary pixel-progress-fill-high"></div>
+</div>
+<span class="text-[10px] font-bold">94</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-[10px] font-bold text-slate-400 w-6">PHY</span>
+<div class="h-3 flex-1 bg-slate-200 pixel-progress-bg">
+<div class="h-full w-[85%] bg-primary pixel-progress-fill-high"></div>
+</div>
+<span class="text-[10px] font-bold">85</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-[10px] font-bold text-slate-400 w-6">PAS</span>
+<div class="h-3 flex-1 bg-slate-200 pixel-progress-bg">
+<div class="h-full w-[70%] bg-accent-gold pixel-progress-fill-med"></div>
+</div>
+<span class="text-[10px] font-bold">70</span>
+</div>
+</div>
+<div class="flex justify-between items-end border-t-2 border-dashed border-slate-200 pt-3">
+<div class="flex flex-col">
+<span class="text-[10px] text-slate-400 uppercase font-bold">Current Bid</span>
+<span class="text-sm pixel-font text-primary">0.45 MON</span>
+</div>
+<button class="bg-black text-white px-3 py-2 text-xs font-bold pixel-font hover:bg-primary transition-colors">BID</button>
+</div>
+</div>
+<div class="relative bg-card-light p-5 pixel-border-legend group transition-transform hover:-translate-y-1">
+<div class="absolute -top-3 -right-3 bg-accent-gold border-2 border-black text-black p-1 z-10 shadow-[2px_2px_0_0_rgba(0,0,0,1)]">
+<span class="material-symbols-outlined text-sm font-bold">star</span>
+</div>
+<div class="flex gap-4 items-start mb-4">
+<div class="size-[64px] bg-slate-100 border-2 border-black p-1 shrink-0">
+<img alt="Pixel Art Player" class="w-full h-full object-cover rendering-pixelated" data-alt="Pixel Art Player Avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBRwR2Bb_aGCzbtiRF0GX2rB2zY1_TitBgYIIOZeCL98bzSjDvhy5EDySAgNGka0X-ukIhB71xlujGNRT3QGOONuXjMj68oIlyPbDRGKjfK9xTQE809IN23KkTrxBrHybxzxxi5tXXozXZurGzmcvE2gorGS7prTLTqGF2_EgxGNoGAraKv1ucjv6wWtnqx-x5BfAxgnmxxMG8XT6ruOMmV3ISIUcnODFyYI2cP-OKE7Q-afhkOpAZAl1Uy3Q0iCPRyEVt7FN4Y6WzN"/>
+</div>
+<div class="flex flex-col">
+<h3 class="pixel-font text-sm leading-tight mb-2 mt-1">GIGI.BN</h3>
+<div class="flex gap-2 mb-2">
+<span class="bg-slate-700 text-white text-[10px] font-bold px-1 py-0.5 border border-black">GK</span>
+<span class="bg-accent-tier1 text-white text-[10px] font-bold px-1 py-0.5 border border-black shadow-sm">T1</span>
+</div>
+<p class="text-sm text-slate-500 terminal-font leading-none">Owned by <span class="text-primary font-bold">JuveFans</span></p>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-x-4 gap-y-2 mb-4 bg-slate-50 p-3 border border-slate-200">
+<div class="flex items-center gap-2">
+<span class="text-[10px] font-bold text-slate-400 w-6">DIV</span>
+<div class="h-3 flex-1 bg-slate-200 pixel-progress-bg">
+<div class="h-full w-[88%] bg-primary pixel-progress-fill-high"></div>
+</div>
+<span class="text-[10px] font-bold">88</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-[10px] font-bold text-slate-400 w-6">HAN</span>
+<div class="h-3 flex-1 bg-slate-200 pixel-progress-bg">
+<div class="h-full w-[86%] bg-primary pixel-progress-fill-high"></div>
+</div>
+<span class="text-[10px] font-bold">86</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-[10px] font-bold text-slate-400 w-6">REF</span>
+<div class="h-3 flex-1 bg-slate-200 pixel-progress-bg">
+<div class="h-full w-[90%] bg-primary pixel-progress-fill-high"></div>
+</div>
+<span class="text-[10px] font-bold">90</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-[10px] font-bold text-slate-400 w-6">POS</span>
+<div class="h-3 flex-1 bg-slate-200 pixel-progress-bg">
+<div class="h-full w-[89%] bg-primary pixel-progress-fill-high"></div>
+</div>
+<span class="text-[10px] font-bold">89</span>
+</div>
+</div>
+<div class="flex justify-between items-end border-t-2 border-dashed border-slate-200 pt-3">
+<div class="flex flex-col">
+<span class="text-[10px] text-slate-400 uppercase font-bold">Current Bid</span>
+<span class="text-sm pixel-font text-primary">0.92 MON</span>
+</div>
+<button class="bg-black text-white px-3 py-2 text-xs font-bold pixel-font hover:bg-primary transition-colors">BID</button>
+</div>
+</div>
+<div class="relative bg-card-light p-5 pixel-border group transition-transform hover:-translate-y-1">
+<div class="flex gap-4 items-start mb-4">
+<div class="size-[64px] bg-slate-100 border-2 border-black p-1 shrink-0">
+<img alt="Pixel Art Player" class="w-full h-full object-cover rendering-pixelated" data-alt="Pixel Art Player Avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBGjXk3SKYp5BmxCjC525j3vUbnE1TzIQoTjbSW1T6ek9FtU_PKQowN6YuO7Gqcbtyx1fB7gLamXT3jn4EbJ0tZPiqXsGJvmyTcslvAwICx0wc_fMWnSeIlZirTdnPO88rU-wwExzKSvPQPVuNLLfNj-EFdbdy2swKEfNbv8-z5y8QMZKx9wkBjvMAAn7kZ58_2xx6RV-zlEEJrXoKYAHdeFCoE7V5ELumWaaj9r4G7ygjU9SlafSEQjrF93WH68K6t_ehd-1sxkNrz"/>
+</div>
+<div class="flex flex-col">
+<h3 class="pixel-font text-sm leading-tight mb-2 mt-1">TITI_14</h3>
+<div class="flex gap-2 mb-2">
+<span class="bg-primary text-white text-[10px] font-bold px-1 py-0.5 border border-black">FWD</span>
+<span class="bg-accent-tier2 text-white text-[10px] font-bold px-1 py-0.5 border border-black">T2</span>
+</div>
+<p class="text-sm text-slate-500 terminal-font leading-none">Owned by <span class="text-primary font-bold">Gunnerz</span></p>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-x-4 gap-y-2 mb-4 bg-slate-50 p-3 border border-slate-200">
+<div class="flex items-center gap-2">
+<span class="text-[10px] font-bold text-slate-400 w-6">PAC</span>
+<div class="h-3 flex-1 bg-slate-200 pixel-progress-bg">
+<div class="h-full w-[94%] bg-primary pixel-progress-fill-high"></div>
+</div>
+<span class="text-[10px] font-bold">94</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-[10px] font-bold text-slate-400 w-6">SHO</span>
+<div class="h-3 flex-1 bg-slate-200 pixel-progress-bg">
+<div class="h-full w-[88%] bg-primary pixel-progress-fill-high"></div>
+</div>
+<span class="text-[10px] font-bold">88</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-[10px] font-bold text-slate-400 w-6">DRI</span>
+<div class="h-3 flex-1 bg-slate-200 pixel-progress-bg">
+<div class="h-full w-[86%] bg-primary pixel-progress-fill-high"></div>
+</div>
+<span class="text-[10px] font-bold">86</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-[10px] font-bold text-slate-400 w-6">PAS</span>
+<div class="h-3 flex-1 bg-slate-200 pixel-progress-bg">
+<div class="h-full w-[80%] bg-accent-gold pixel-progress-fill-med"></div>
+</div>
+<span class="text-[10px] font-bold">80</span>
+</div>
+</div>
+<div class="flex justify-between items-end border-t-2 border-dashed border-slate-200 pt-3">
+<div class="flex flex-col">
+<span class="text-[10px] text-slate-400 uppercase font-bold">Current Bid</span>
+<span class="text-sm pixel-font text-primary">0.68 MON</span>
+</div>
+<button class="bg-black text-white px-3 py-2 text-xs font-bold pixel-font hover:bg-primary transition-colors">BID</button>
+</div>
+</div>
+<div class="relative bg-card-light p-5 pixel-border group transition-transform hover:-translate-y-1">
+<div class="flex gap-4 items-start mb-4">
+<div class="size-[64px] bg-slate-100 border-2 border-black p-1 shrink-0">
+<img alt="Pixel Art Player" class="w-full h-full object-cover rendering-pixelated" data-alt="Pixel Art Player Avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCqs6CGusSd5z87e_vdNdkR1GSV1XvMwzrfgDIeLLCqf8ego41zEFSyvrOZGQmMEXzywc0zUoaH8AKE24j0_Yh_vpYMLOWaQAmGgJzs_428F_Fn7BHetR5SjpvcjN5OJegF_jleFrhAniMrOPO1ueLPX9_9wu-grIwX5c1DwW8XEDp-TVTDgj-OdWjR3dQhVv8nZu48-gAFExy0BS2jax0oJ4Rt2xzVAYxJ1Kr8aVbUnGt9Dylab4u8k5ibOkch82BTXZS8IfX58za1"/>
+</div>
+<div class="flex flex-col">
+<h3 class="pixel-font text-sm leading-tight mb-2 mt-1">BECKS.ETH</h3>
+<div class="flex gap-2 mb-2">
+<span class="bg-slate-500 text-white text-[10px] font-bold px-1 py-0.5 border border-black">MID</span>
+<span class="bg-accent-tier3 text-white text-[10px] font-bold px-1 py-0.5 border border-black">T3</span>
+</div>
+<p class="text-sm text-slate-500 terminal-font leading-none">Owned by <span class="text-primary font-bold">UnitedFan</span></p>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-x-4 gap-y-2 mb-4 bg-slate-50 p-3 border border-slate-200">
+<div class="flex items-center gap-2">
+<span class="text-[10px] font-bold text-slate-400 w-6">PAC</span>
+<div class="h-3 flex-1 bg-slate-200 pixel-progress-bg">
+<div class="h-full w-[75%] bg-accent-gold pixel-progress-fill-med"></div>
+</div>
+<span class="text-[10px] font-bold">75</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-[10px] font-bold text-slate-400 w-6">SHO</span>
+<div class="h-3 flex-1 bg-slate-200 pixel-progress-bg">
+<div class="h-full w-[80%] bg-accent-gold pixel-progress-fill-med"></div>
+</div>
+<span class="text-[10px] font-bold">80</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-[10px] font-bold text-slate-400 w-6">PAS</span>
+<div class="h-3 flex-1 bg-slate-200 pixel-progress-bg">
+<div class="h-full w-[95%] bg-primary pixel-progress-fill-high"></div>
+</div>
+<span class="text-[10px] font-bold">95</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-[10px] font-bold text-slate-400 w-6">DRI</span>
+<div class="h-3 flex-1 bg-slate-200 pixel-progress-bg">
+<div class="h-full w-[82%] bg-primary pixel-progress-fill-high"></div>
+</div>
+<span class="text-[10px] font-bold">82</span>
+</div>
+</div>
+<div class="flex justify-between items-end border-t-2 border-dashed border-slate-200 pt-3">
+<div class="flex flex-col">
+<span class="text-[10px] text-slate-400 uppercase font-bold">Current Bid</span>
+<span class="text-sm pixel-font text-primary">0.55 MON</span>
+</div>
+<button class="bg-black text-white px-3 py-2 text-xs font-bold pixel-font hover:bg-primary transition-colors">BID</button>
+</div>
+</div>
+</div>
+</main>
+<div class="fixed bottom-0 left-0 w-full bg-ticker-bg border-t-4 border-[#0e1b13] py-2 z-50">
+<div class="flex items-center gap-4 px-4 overflow-hidden whitespace-nowrap">
+<div class="flex items-center gap-2 text-primary font-bold shrink-0 terminal-font text-lg">
+<div class="size-2 bg-[#22c55e] rounded-full animate-pulse"></div>
+                LIVE ACTIVITY:
+            </div>
+<div class="animate-[marquee_20s_linear_infinite] flex gap-12 text-lg font-medium text-[#0e1b13] terminal-font">
+<span class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">gavel</span>
+                    MourinhOS placed a bid on PELE.ETH (1.176 MON)
+                </span>
+<span class="flex items-center gap-2 text-slate-500">
+<span class="material-symbols-outlined text-sm">schedule</span>
+                    2 mins ago
+                </span>
+<span class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">shopping_cart_checkout</span>
+                    PepG.eth bought ZIDANE.OP for 0.85 MON
+                </span>
+<span class="flex items-center gap-2 text-slate-500">
+<span class="material-symbols-outlined text-sm">schedule</span>
+                    5 mins ago
+                </span>
+<span class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">gavel</span>
+                    Simeone Node placed a bid on MALDINI_3 (0.45 MON)
+                </span>
+<span class="flex items-center gap-2 text-slate-500">
+<span class="material-symbols-outlined text-sm">schedule</span>
+                    8 mins ago
+                </span>
+</div>
+</div>
+</div>
+<script>
+        tailwind.config.theme.extend.keyframes = {
+            marquee: {
+                '0%': { transform: 'translateX(100%)' },
+                '100%': { transform: 'translateX(-100%)' },
+            }
+        }
+        tailwind.config.theme.extend.animation = {
+            marquee: 'marquee 30s linear infinite',
+        }
+    </script>
+
+</body></html>

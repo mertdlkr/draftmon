@@ -34,9 +34,9 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className={`${lexend.variable} antialiased bg-[#f6f8f7] text-slate-900`}>
+      <body className={`${lexend.variable} antialiased bg-[#f6f8f6] text-slate-900`}>
         <Nav />
-        <main className="min-h-screen pt-[70px]">{children}</main>
+        <main className="min-h-screen">{children}</main>
       </body>
     </html>
   );

@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MonaDraft: Legendary AI Managers Gallery</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&amp;family=VT323&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#16a249",
+                        "primary-dark": "#15803d",
+                        "background-cream": "#faf7f2", 
+                        "background-dark": "#112117",
+                        "retro-border": "#1a1a1a",
+                        "retro-shadow": "#a3a3a3",
+                    },
+                    fontFamily: {
+                        "display": ['"Press Start 2P"', 'cursive'],
+                        "body": ['"VT323"', 'monospace'],
+                    },
+                    boxShadow: {
+                        'retro': '4px 4px 0px 0px rgba(0,0,0,0.1)',
+                        'retro-hover': '6px 6px 0px 0px rgba(0,0,0,0.15)',
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .scanlines {
+            background: linear-gradient(
+                to bottom,
+                rgba(255,255,255,0),
+                rgba(255,255,255,0) 50%,
+                rgba(0,0,0,0.02) 50%,
+                rgba(0,0,0,0.02)
+            );
+            background-size: 100% 4px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 50;
+        }
+        .pixel-bar-container {
+            position: relative;
+            background: #e5e7eb;
+            height: 12px;
+            border: 2px solid #1a1a1a;
+            width: 100%;
+        }.pixel-bar-fill {
+            height: 100%;
+            background-image: repeating-linear-gradient(
+                90deg,
+                currentColor,
+                currentColor 4px,
+                transparent 4px,
+                transparent 6px
+            );
+        }
+        .btn-retro:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px 0px rgba(0,0,0,0.2);
+        }.dashed-pixel-divider {
+            height: 2px;
+            background-image: linear-gradient(90deg, #cbd5e1 50%, transparent 50%);
+            background-size: 8px 100%;
+            border: none;
+        }.border-pixel-2 {
+            border-width: 2px;
+            border-style: solid;
+        }
+        .image-render-pixel {
+            image-rendering: pixelated;
+        }
+    </style>
+</head>
+<body class="bg-background-cream text-slate-900 font-body antialiased min-h-screen flex flex-col">
+<div class="scanlines"></div>
+<header class="sticky top-0 z-40 w-full border-b-4 border-slate-900 bg-[#fdfbf7] px-4 py-3 shadow-sm">
+<div class="mx-auto flex max-w-7xl items-center justify-between">
+<div class="flex items-center gap-6">
+<a class="flex items-center gap-3 group" href="#">
+<div class="flex h-10 w-10 items-center justify-center bg-primary border-2 border-slate-900 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">
+<span class="material-symbols-outlined text-white" style="font-size: 24px;">sports_soccer</span>
+</div>
+<span class="font-display text-sm md:text-base text-slate-900 tracking-tighter group-hover:text-primary transition-colors">MONADRAFT</span>
+</a>
+<nav class="hidden md:flex items-center gap-6 ml-8">
+<a class="font-display text-xs text-slate-900 hover:text-primary hover:underline decoration-2 underline-offset-4" href="#">HOME</a>
+<a class="font-display text-xs text-primary underline decoration-2 underline-offset-4" href="#">MANAGERS</a>
+<a class="font-display text-xs text-slate-900 hover:text-primary hover:underline decoration-2 underline-offset-4" href="#">LEAGUES</a>
+<a class="font-display text-xs text-slate-900 hover:text-primary hover:underline decoration-2 underline-offset-4" href="#">SCOUT</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden sm:flex h-10 w-64 items-center border-2 border-slate-900 bg-white px-2 shadow-[2px_2px_0px_0px_rgba(0,0,0,0.1)] focus-within:shadow-[2px_2px_0px_0px_rgba(22,162,73,1)] focus-within:border-primary transition-all">
+<span class="material-symbols-outlined text-slate-400">search</span>
+<input class="w-full border-none bg-transparent p-2 text-lg font-body focus:ring-0 placeholder:text-slate-400" placeholder="Search managers..." type="text"/>
+</div>
+<button class="btn-retro flex h-10 items-center justify-center bg-primary px-6 border-2 border-slate-900 text-white font-display text-xs shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:bg-primary-dark transition-transform">
+                    LOGIN
+                </button>
+</div>
+</div>
+</header>
+<main class="flex-grow px-4 py-8 md:px-8 lg:py-12">
+<div class="mx-auto max-w-7xl">
+<div class="mb-10 flex flex-col gap-6 md:flex-row md:items-end md:justify-between border-b-4 border-dashed border-slate-300 pb-6">
+<div class="flex flex-col gap-2">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-4xl animate-pulse">sports</span>
+<h1 class="font-display text-2xl md:text-4xl text-slate-900 leading-tight">AI MANAGERS</h1>
+</div>
+<p class="font-body text-xl text-slate-600 max-w-lg">Select your legendary 8-bit tactician to lead your squad to digital glory.</p>
+</div>
+<div class="flex gap-2 flex-wrap">
+<button class="group btn-retro flex items-center gap-2 bg-white px-4 py-2 border-2 border-slate-900 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.2)] hover:shadow-[2px_2px_0px_0px_rgba(22,162,73,1)] hover:border-primary transition-all active:shadow-[2px_2px_0px_0px_rgba(0,0,0,0.2)] active:translate-x-[2px] active:translate-y-[2px]">
+<span class="material-symbols-outlined text-slate-900 group-hover:text-primary">filter_list</span>
+<span class="font-display text-xs text-slate-900">FILTER</span>
+</button>
+<button class="group btn-retro flex items-center gap-2 bg-white px-4 py-2 border-2 border-slate-900 shadow-[4px_4px_0px_0px_rgba(0,0,0,0.2)] hover:shadow-[2px_2px_0px_0px_rgba(22,162,73,1)] hover:border-primary transition-all active:shadow-[2px_2px_0px_0px_rgba(0,0,0,0.2)] active:translate-x-[2px] active:translate-y-[2px]">
+<span class="material-symbols-outlined text-slate-900 group-hover:text-primary">sort</span>
+<span class="font-display text-xs text-slate-900">SORT BY SCORE</span>
+</button>
+</div>
+</div>
+<div class="mb-8 flex flex-wrap gap-3">
+<button class="bg-slate-900 text-white px-4 py-1 font-display text-xs border-2 border-slate-900 shadow-[2px_2px_0px_0px_rgba(100,100,100,0.5)] active:translate-y-0.5 active:shadow-none">ALL</button>
+<button class="bg-white hover:bg-slate-50 text-slate-900 px-4 py-1 font-display text-xs border-2 border-slate-900 shadow-[2px_2px_0px_0px_rgba(0,0,0,0.2)] active:translate-y-0.5 active:shadow-none">POSSESSION</button>
+<button class="bg-white hover:bg-slate-50 text-slate-900 px-4 py-1 font-display text-xs border-2 border-slate-900 shadow-[2px_2px_0px_0px_rgba(0,0,0,0.2)] active:translate-y-0.5 active:shadow-none">COUNTER</button>
+<button class="bg-white hover:bg-slate-50 text-slate-900 px-4 py-1 font-display text-xs border-2 border-slate-900 shadow-[2px_2px_0px_0px_rgba(0,0,0,0.2)] active:translate-y-0.5 active:shadow-none">GEGENPRESS</button>
+<button class="bg-white hover:bg-slate-50 text-slate-900 px-4 py-1 font-display text-xs border-2 border-slate-900 shadow-[2px_2px_0px_0px_rgba(0,0,0,0.2)] active:translate-y-0.5 active:shadow-none">CATENACCIO</button>
+</div>
+<div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+<div class="group relative flex flex-col bg-white border-pixel-2 border-blue-500 shadow-retro transition-all hover:-translate-y-1 hover:shadow-retro-hover hover:border-blue-600 overflow-hidden">
+<div class="h-[5px] w-full bg-blue-500"></div> 
+<div class="p-4 flex flex-col flex-grow relative">
+<div class="flex justify-between items-start mb-4">
+<div class="relative h-16 w-16 bg-[#faf7f2] border-2 border-slate-900 p-1 shrink-0 image-render-pixel">
+<img alt="Pixelated manager portrait with bald head and beard" class="h-full w-full object-cover rendering-pixelated" data-alt="Pixelated manager portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuADwuZZdYz5TvouJXuD_VdwpbM1BW1yDZTrgPz9wM9QP4-nm_HD2uAaugMhY74bdqUF9UiLgh-U2a4oK2cVyRoRu8wKgiThidBnOD2QYd0w5yrgR9_qm6m7Hv-4oi23pd8bcxKJ2e8RZgTDXvZZoK-mlqISteKTYFKa39L_FOIACa5t0NlijDoa0dA1Uvg6NNTseA8qnkLR7iM0wuzsdFrWoVz7YpO0HOuXsNLycrMWmhb5NyoOs-NoCmQypx6OlW1dD1WvjZB7fqK2"/>
+</div>
+<div class="flex flex-col items-end">
+<div class="bg-yellow-400 border-2 border-slate-900 px-2 py-1 shadow-[2px_2px_0px_0px_rgba(0,0,0,0.2)] transform rotate-2">
+<span class="font-display text-xs font-bold text-slate-900">58/60</span>
+</div>
+<span class="font-body text-slate-500 text-lg mt-1">S TIER</span>
+</div>
+</div>
+<h3 class="font-display text-sm text-slate-900 mb-4 truncate leading-tight">GUARDIOLA GPT</h3>
+<div class="flex flex-col gap-2 mb-4 w-full">
+<div class="flex items-center justify-between text-xs font-display">
+<span class="text-slate-500">ATT</span>
+<div class="w-32 pixel-bar-container">
+<div class="pixel-bar-fill w-[95%] text-blue-500"></div>
+</div>
+</div>
+<div class="flex items-center justify-between text-xs font-display">
+<span class="text-slate-500">DEF</span>
+<div class="w-32 pixel-bar-container">
+<div class="pixel-bar-fill w-[88%] text-blue-500"></div>
+</div>
+</div>
+<div class="flex items-center justify-between text-xs font-display">
+<span class="text-slate-500">DIS</span>
+<div class="w-32 pixel-bar-container">
+<div class="pixel-bar-fill w-[70%] text-blue-500"></div>
+</div>
+</div>
+</div>
+<div class="mt-auto">
+<hr class="dashed-pixel-divider mb-3"/>
+<div class="flex items-center justify-between">
+<span class="font-body text-lg text-slate-600 uppercase tracking-widest">POSSESSION MASTER</span>
+<span class="material-symbols-outlined text-slate-400 group-hover:text-blue-500 transition-colors">trophy</span>
+</div>
+</div>
+</div>
+</div>
+<div class="group relative flex flex-col bg-white border-pixel-2 border-red-600 shadow-retro transition-all hover:-translate-y-1 hover:shadow-retro-hover hover:border-red-700 overflow-hidden">
+<div class="h-[5px] w-full bg-red-600"></div>
+<div class="p-4 flex flex-col flex-grow relative">
+<div class="flex justify-between items-start mb-4">
+<div class="relative h-16 w-16 bg-[#faf7f2] border-2 border-slate-900 p-1 shrink-0 image-render-pixel">
+<img alt="Pixelated manager portrait with grey hair and suit" class="h-full w-full object-cover" data-alt="Pixelated manager portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBh5dBIC5W680Ae4suTJY8Ie3hGhzMgzEoLRnDDEr2-L4qxVHw1Jh4NJ-YMQ3oilqoDCVKhqwbwh8o2v4h6giqMyILKCXrTUsP4e_cTm_eHznaom-YQVGFQxdxSUjzpDe2iPKyAWTBDdiBlVGQ2jLuqep38fAU8lF39lhKjQGWZ-n5fJmY8l592u4IdErJYGp0k-771jKe3hIZ48PgFtn6JoPyaM_JBVD3cxPA0mX8HS0fqTDcfi1PeAm0G2CVDNZD2tdrln9V4-CVd"/>
+</div>
+<div class="flex flex-col items-end">
+<div class="bg-slate-200 border-2 border-slate-900 px-2 py-1 shadow-[2px_2px_0px_0px_rgba(0,0,0,0.2)] transform -rotate-1">
+<span class="font-display text-xs font-bold text-slate-900">55/60</span>
+</div>
+<span class="font-body text-slate-500 text-lg mt-1">A TIER</span>
+</div>
+</div>
+<h3 class="font-display text-sm text-slate-900 mb-4 truncate leading-tight">MOURINH-OS</h3>
+<div class="flex flex-col gap-2 mb-4 w-full">
+<div class="flex items-center justify-between text-xs font-display">
+<span class="text-slate-500">ATT</span>
+<div class="w-32 pixel-bar-container">
+<div class="pixel-bar-fill w-[70%] text-red-600"></div>
+</div>
+</div>
+<div class="flex items-center justify-between text-xs font-display">
+<span class="text-slate-500">DEF</span>
+<div class="w-32 pixel-bar-container">
+<div class="pixel-bar-fill w-[99%] text-red-600"></div>
+</div>
+</div>
+<div class="flex items-center justify-between text-xs font-display">
+<span class="text-slate-500">DIS</span>
+<div class="w-32 pixel-bar-container">
+<div class="pixel-bar-fill w-[40%] text-red-600"></div>
+</div>
+</div>
+</div>
+<div class="mt-auto">
+<hr class="dashed-pixel-divider mb-3"/>
+<div class="flex items-center justify-between">
+<span class="font-body text-lg text-slate-600 uppercase tracking-widest">PARK THE BUS</span>
+<span class="material-symbols-outlined text-slate-400 group-hover:text-red-600 transition-colors">shield</span>
+</div>
+</div>
+</div>
+</div>
+<div class="group relative flex flex-col bg-white border-pixel-2 border-yellow-500 shadow-retro transition-all hover:-translate-y-1 hover:shadow-retro-hover hover:border-yellow-600 overflow-hidden">
+<div class="h-[5px] w-full bg-yellow-500"></div>
+<div class="p-4 flex flex-col flex-grow relative">
+<div class="flex justify-between items-start mb-4">
+<div class="relative h-16 w-16 bg-[#faf7f2] border-2 border-slate-900 p-1 shrink-0 image-render-pixel">
+<img alt="Pixelated manager portrait with glasses and cap" class="h-full w-full object-cover" data-alt="Pixelated manager portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5pLRiW58NXO0Rvw6n4I6wcxp8TbqrwGS3QWlnnCRjgXO_p_KsrM00yjV9LFNbYej_ycva5XpHtY3js-J0xkyte3sEiRDqNuGiL76anSVnlHK76zAlorN4s1Mx9qGgC3kYmnXydlGOtvlEJr34mirR5qpEPEamRg9GRjhviURrcwC8O7bso6PrXwMqtis8CDhYIlAw4zfNLpQrtUpSkup-HahCzGXt5txdfE0yqKZPPF7qQWAtmeKQbti-thAPDrfXPA2J_Cy8NAKb"/>
+</div>
+<div class="flex flex-col items-end">
+<div class="bg-yellow-400 border-2 border-slate-900 px-2 py-1 shadow-[2px_2px_0px_0px_rgba(0,0,0,0.2)] transform rotate-1">
+<span class="font-display text-xs font-bold text-slate-900">57/60</span>
+</div>
+<span class="font-body text-slate-500 text-lg mt-1">S TIER</span>
+</div>
+</div>
+<h3 class="font-display text-sm text-slate-900 mb-4 truncate leading-tight">KLOPP CHAIN</h3>
+<div class="flex flex-col gap-2 mb-4 w-full">
+<div class="flex items-center justify-between text-xs font-display">
+<span class="text-slate-500">ATT</span>
+<div class="w-32 pixel-bar-container">
+<div class="pixel-bar-fill w-[92%] text-yellow-500"></div>
+</div>
+</div>
+<div class="flex items-center justify-between text-xs font-display">
+<span class="text-slate-500">DEF</span>
+<div class="w-32 pixel-bar-container">
+<div class="pixel-bar-fill w-[80%] text-yellow-500"></div>
+</div>
+</div>
+<div class="flex items-center justify-between text-xs font-display">
+<span class="text-slate-500">DIS</span>
+<div class="w-32 pixel-bar-container">
+<div class="pixel-bar-fill w-[75%] text-yellow-500"></div>
+</div>
+</div>
+</div>
+<div class="mt-auto">
+<hr class="dashed-pixel-divider mb-3"/>
+<div class="flex items-center justify-between">
+<span class="font-body text-lg text-slate-600 uppercase tracking-widest">GEGENPRESS</span>
+<span class="material-symbols-outlined text-slate-400 group-hover:text-yellow-500 transition-colors">flash_on</span>
+</div>
+</div>
+</div>
+</div>
+<div class="group relative flex flex-col bg-white border-pixel-2 border-purple-600 shadow-retro transition-all hover:-translate-y-1 hover:shadow-retro-hover hover:border-purple-700 overflow-hidden">
+<div class="h-[5px] w-full bg-purple-600"></div>
+<div class="p-4 flex flex-col flex-grow relative">
+<div class="flex justify-between items-start mb-4">
+<div class="relative h-16 w-16 bg-[#faf7f2] border-2 border-slate-900 p-1 shrink-0 image-render-pixel">
+<img alt="Pixelated manager portrait with raised eyebrow" class="h-full w-full object-cover" data-alt="Pixelated manager portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAMpA0VGcq3us20SORB-6xlFazypVfcRa_bwH5Fnh7IGjzcDn2l01fy49a64H5vqoEFBpI4EImbqKI-wRSRpAe5-V2a0CKmrm9Y8iivfQNQyk5uySMOuCHLGv03uvKyr66bNC9IuzVfMj_mLeWgmo-jjjPuN_QhDaT1VXbvBibSa5ct9pIOE4hfq3wzA1vC0_0N8kzrlZMrrxXFGmaPf_ikgNrvfCHdnbNgtBu_jFDrYGn8hzWuu3xXDSxt93S6pJX3IU5X4TZxYjyE"/>
+</div>
+<div class="flex flex-col items-end">
+<div class="bg-slate-200 border-2 border-slate-900 px-2 py-1 shadow-[2px_2px_0px_0px_rgba(0,0,0,0.2)]">
+<span class="font-display text-xs font-bold text-slate-900">56/60</span>
+</div>
+<span class="font-body text-slate-500 text-lg mt-1">A TIER</span>
+</div>
+</div>
+<h3 class="font-display text-sm text-slate-900 mb-4 truncate leading-tight">ANCELOTTI AI</h3>
+<div class="flex flex-col gap-2 mb-4 w-full">
+<div class="flex items-center justify-between text-xs font-display">
+<span class="text-slate-500">ATT</span>
+<div class="w-32 pixel-bar-container">
+<div class="pixel-bar-fill w-[85%] text-purple-600"></div>
+</div>
+</div>
+<div class="flex items-center justify-between text-xs font-display">
+<span class="text-slate-500">DEF</span>
+<div class="w-32 pixel-bar-container">
+<div class="pixel-bar-fill w-[85%] text-purple-600"></div>
+</div>
+</div>
+<div class="flex items-center justify-between text-xs font-display">
+<span class="text-slate-500">DIS</span>
+<div class="w-32 pixel-bar-container">
+<div class="pixel-bar-fill w-[95%] text-purple-600"></div>
+</div>
+</div>
+</div>
+<div class="mt-auto">
+<hr class="dashed-pixel-divider mb-3"/>
+<div class="flex items-center justify-between">
+<span class="font-body text-lg text-slate-600 uppercase tracking-widest">BALANCED</span>
+<span class="material-symbols-outlined text-slate-400 group-hover:text-purple-600 transition-colors">balance</span>
+</div>
+</div>
+</div>
+</div>
+<div class="group relative flex flex-col bg-white border-pixel-2 border-red-700 shadow-retro transition-all hover:-translate-y-1 hover:shadow-retro-hover hover:border-red-800 overflow-hidden">
+<div class="h-[5px] w-full bg-red-700"></div>
+<div class="p-4 flex flex-col flex-grow relative">
+<div class="flex justify-between items-start mb-4">
+<div class="relative h-16 w-16 bg-[#faf7f2] border-2 border-slate-900 p-1 shrink-0 image-render-pixel">
+<img alt="Pixelated manager portrait with red nose and glasses" class="h-full w-full object-cover" data-alt="Pixelated manager portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBrOaWShbFIzMVAXdZssK1DjwU66GZ6ziCBfgBwXMdmueGTVTIGJEdA7VKqvmhVM7KT2RVRVtVa_LsOb8VIMlDQ4GymjwmF5pbH1RWGgePdF6orbr4J5VwzUc5eMf7W2HY0mTIoT8HsfcvIo_LrjYGpEGGFHGmDyx33pVx0HFF_g64tIjifaFM2ED0gez1xtZjClHjRN-c27k4qZoyeYd0Fi_8sHdc14QIZ80P6LtLu1Skz0MSBT-D-U8uMZCvmroTCxsuZRaVwxHw_"/>
+</div>
+<div class="flex flex-col items-end">
+<div class="bg-yellow-400 border-2 border-slate-900 px-2 py-1 shadow-[2px_2px_0px_0px_rgba(0,0,0,0.2)] transform -rotate-2">
+<span class="font-display text-xs font-bold text-slate-900">59/60</span>
+</div>
+<span class="font-body text-slate-500 text-lg mt-1">LEGEND</span>
+</div>
+</div>
+<h3 class="font-display text-sm text-slate-900 mb-4 truncate leading-tight">SIR ALEX DATA</h3>
+<div class="flex flex-col gap-2 mb-4 w-full">
+<div class="flex items-center justify-between text-xs font-display">
+<span class="text-slate-500">ATT</span>
+<div class="w-32 pixel-bar-container">
+<div class="pixel-bar-fill w-[90%] text-red-700"></div>
+</div>
+</div>
+<div class="flex items-center justify-between text-xs font-display">
+<span class="text-slate-500">DEF</span>
+<div class="w-32 pixel-bar-container">
+<div class="pixel-bar-fill w-[85%] text-red-700"></div>
+</div>
+</div>
+<div class="flex items-center justify-between text-xs font-display">
+<span class="text-slate-500">DIS</span>
+<div class="w-32 pixel-bar-container">
+<div class="pixel-bar-fill w-[99%] text-red-700"></div>
+</div>
+</div>
+</div>
+<div class="mt-auto">
+<hr class="dashed-pixel-divider mb-3"/>
+<div class="flex items-center justify-between">
+<span class="font-body text-lg text-slate-600 uppercase tracking-widest">HAIR DRYER</span>
+<span class="material-symbols-outlined text-slate-400 group-hover:text-red-700 transition-colors">local_fire_department</span>
+</div>
+</div>
+</div>
+</div>
+<div class="group relative flex flex-col bg-white border-pixel-2 border-red-400 shadow-retro transition-all hover:-translate-y-1 hover:shadow-retro-hover hover:border-red-500 overflow-hidden">
+<div class="h-[5px] w-full bg-red-400"></div>
+<div class="p-4 flex flex-col flex-grow relative">
+<div class="flex justify-between items-start mb-4">
+<div class="relative h-16 w-16 bg-[#faf7f2] border-2 border-slate-900 p-1 shrink-0 image-render-pixel">
+<img alt="Pixelated manager portrait with white hair and suit" class="h-full w-full object-cover" data-alt="Pixelated manager portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBkARgqgfWuin8laFn_1uK16RM5vzIXkwLH1FnfzfA9QAcrCJ172juaGWg4XyJi_e4Zeox-W-lWf91pvb44GDzryF1HjWeCjvn1t2G-3AZJF7_okw2vYiHqg4lF9RlrDsArC-gc9jaEvPT7nRAmmOvlT5NZdhjRR6wzVhSV1O2IFMXrJaIHdeWr7p30xt2QDhPn0426ZOpNyqu7RvgEhNpXws0Xjar9u_sxExcCLrKfQ7VYvs8eHbS_VNJkfqt8JslY_sXRauuqIZ5T"/>
+</div>
+<div class="flex flex-col items-end">
+<div class="bg-slate-200 border-2 border-slate-900 px-2 py-1 shadow-[2px_2px_0px_0px_rgba(0,0,0,0.2)]">
+<span class="font-display text-xs font-bold text-slate-900">54/60</span>
+</div>
+<span class="font-body text-slate-500 text-lg mt-1">A TIER</span>
+</div>
+</div>
+<h3 class="font-display text-sm text-slate-900 mb-4 truncate leading-tight">WENGER NODE</h3>
+<div class="flex flex-col gap-2 mb-4 w-full">
+<div class="flex items-center justify-between text-xs font-display">
+<span class="text-slate-500">ATT</span>
+<div class="w-32 pixel-bar-container">
+<div class="pixel-bar-fill w-[88%] text-red-400"></div>
+</div>
+</div>
+<div class="flex items-center justify-between text-xs font-display">
+<span class="text-slate-500">DEF</span>
+<div class="w-32 pixel-bar-container">
+<div class="pixel-bar-fill w-[75%] text-red-400"></div>
+</div>
+</div>
+<div class="flex items-center justify-between text-xs font-display">
+<span class="text-slate-500">DIS</span>
+<div class="w-32 pixel-bar-container">
+<div class="pixel-bar-fill w-[80%] text-red-400"></div>
+</div>
+</div>
+</div>
+<div class="mt-auto">
+<hr class="dashed-pixel-divider mb-3"/>
+<div class="flex items-center justify-between">
+<span class="font-body text-lg text-slate-600 uppercase tracking-widest">INVINCIBLE</span>
+<span class="material-symbols-outlined text-slate-400 group-hover:text-red-400 transition-colors">diamond</span>
+</div>
+</div>
+</div>
+</div>
+<div class="group relative flex flex-col bg-white border-pixel-2 border-slate-800 shadow-retro transition-all hover:-translate-y-1 hover:shadow-retro-hover hover:border-slate-900 overflow-hidden">
+<div class="h-[5px] w-full bg-slate-800"></div>
+<div class="p-4 flex flex-col flex-grow relative">
+<div class="flex justify-between items-start mb-4">
+<div class="relative h-16 w-16 bg-[#faf7f2] border-2 border-slate-900 p-1 shrink-0 image-render-pixel">
+<img alt="Pixelated manager portrait with bald head" class="h-full w-full object-cover" data-alt="Pixelated manager portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBLgWh0dAYm_x0FQW7TKZDdBgVg7mKvmutxqenyieOwWDvzQrJX_17aR2ZSLlXw3VOl16BzwSlUCeY9JYB1T4PJP0dPQOlolOyot7RhEzXOJTwDslz4ns5hJAZEUetxZS2uj03mN2FFqmybfDrSI111rHVrXPkYxag4IE3XetTmJO1E1gUsCWLs2VyQb0jjjQYe7TH7xJ0Rgn5jpqkML67626RwZr9Q4wZYwaymx273UvqemHbRBOwSjFCCxdyAECnXvfCQPHxsBsPi"/>
+</div>
+<div class="flex flex-col items-end">
+<div class="bg-yellow-400 border-2 border-slate-900 px-2 py-1 shadow-[2px_2px_0px_0px_rgba(0,0,0,0.2)] transform rotate-2">
+<span class="font-display text-xs font-bold text-slate-900">57/60</span>
+</div>
+<span class="font-body text-slate-500 text-lg mt-1">S TIER</span>
+</div>
+</div>
+<h3 class="font-display text-sm text-slate-900 mb-4 truncate leading-tight">ZIDANE NET</h3>
+<div class="flex flex-col gap-2 mb-4 w-full">
+<div class="flex items-center justify-between text-xs font-display">
+<span class="text-slate-500">ATT</span>
+<div class="w-32 pixel-bar-container">
+<div class="pixel-bar-fill w-[89%] text-slate-800"></div>
+</div>
+</div>
+<div class="flex items-center justify-between text-xs font-display">
+<span class="text-slate-500">DEF</span>
+<div class="w-32 pixel-bar-container">
+<div class="pixel-bar-fill w-[82%] text-slate-800"></div>
+</div>
+</div>
+<div class="flex items-center justify-between text-xs font-display">
+<span class="text-slate-500">DIS</span>
+<div class="w-32 pixel-bar-container">
+<div class="pixel-bar-fill w-[65%] text-slate-800"></div>
+</div>
+</div>
+</div>
+<div class="mt-auto">
+<hr class="dashed-pixel-divider mb-3"/>
+<div class="flex items-center justify-between">
+<span class="font-body text-lg text-slate-600 uppercase tracking-widest">TECHNIQUE</span>
+<span class="material-symbols-outlined text-slate-400 group-hover:text-slate-800 transition-colors">stars</span>
+</div>
+</div>
+</div>
+</div>
+<div class="group relative flex flex-col bg-white border-pixel-2 border-sky-500 shadow-retro transition-all hover:-translate-y-1 hover:shadow-retro-hover hover:border-sky-600 overflow-hidden">
+<div class="h-[5px] w-full bg-sky-500"></div>
+<div class="p-4 flex flex-col flex-grow relative">
+<div class="flex justify-between items-start mb-4">
+<div class="relative h-16 w-16 bg-[#faf7f2] border-2 border-slate-900 p-1 shrink-0 image-render-pixel">
+<img alt="Pixelated manager portrait with glasses and tracksuit" class="h-full w-full object-cover" data-alt="Pixelated manager portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuALUDJAmXm2O5MAm9Uf5Jt16Ouq1uxLIaz7_-h95QJIDEGsPmWE0BRz3lBfWE5gK-Qyj81nLJAsAog_BTlg_aRPdsYBL5nxLTQdmg7DSxXSKHkGKWzi7zdukdFG7BepkM-6NtLv7_GGkLUQZsV56W-BnLoXyAszZ_82okmLKMNXNpK6XtbdlUNv0gilcuDit86XHtMtDZQ4Iql9gg55Br-21KoNRWKY7uMvAkeAKPgyRABc3HKS3yDnBQGPd4Nb3UQG3WY1jSqDy6-J"/>
+</div>
+<div class="flex flex-col items-end">
+<div class="bg-slate-200 border-2 border-slate-900 px-2 py-1 shadow-[2px_2px_0px_0px_rgba(0,0,0,0.2)]">
+<span class="font-display text-xs font-bold text-slate-900">51/60</span>
+</div>
+<span class="font-body text-slate-500 text-lg mt-1">B TIER</span>
+</div>
+</div>
+<h3 class="font-display text-sm text-slate-900 mb-4 truncate leading-tight">BIELSA BOT</h3>
+<div class="flex flex-col gap-2 mb-4 w-full">
+<div class="flex items-center justify-between text-xs font-display">
+<span class="text-slate-500">ATT</span>
+<div class="w-32 pixel-bar-container">
+<div class="pixel-bar-fill w-[98%] text-sky-500"></div>
+</div>
+</div>
+<div class="flex items-center justify-between text-xs font-display">
+<span class="text-slate-500">DEF</span>
+<div class="w-32 pixel-bar-container">
+<div class="pixel-bar-fill w-[40%] text-sky-500"></div>
+</div>
+</div>
+<div class="flex items-center justify-between text-xs font-display">
+<span class="text-slate-500">DIS</span>
+<div class="w-32 pixel-bar-container">
+<div class="pixel-bar-fill w-[60%] text-sky-500"></div>
+</div>
+</div>
+</div>
+<div class="mt-auto">
+<hr class="dashed-pixel-divider mb-3"/>
+<div class="flex items-center justify-between">
+<span class="font-body text-lg text-slate-600 uppercase tracking-widest">MURDERBALL</span>
+<span class="material-symbols-outlined text-slate-400 group-hover:text-sky-500 transition-colors">fitness_center</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-12 flex justify-center">
+<nav class="inline-flex rounded-md shadow-[4px_4px_0px_0px_rgba(0,0,0,0.2)]">
+<a class="relative inline-flex items-center border-2 border-slate-900 bg-white px-4 py-2 font-display text-xs text-slate-700 hover:bg-slate-50 focus:z-20 border-r-0 hover:text-primary active:translate-y-1" href="#">PREV</a>
+<a class="relative inline-flex items-center border-2 border-slate-900 bg-primary px-4 py-2 font-display text-xs text-white focus:z-20 border-r-0 shadow-inner" href="#">1</a>
+<a class="relative inline-flex items-center border-2 border-slate-900 bg-white px-4 py-2 font-display text-xs text-slate-700 hover:bg-slate-50 focus:z-20 border-r-0 hover:text-primary active:translate-y-1" href="#">2</a>
+<a class="relative inline-flex items-center border-2 border-slate-900 bg-white px-4 py-2 font-display text-xs text-slate-700 hover:bg-slate-50 focus:z-20 border-r-0 hover:text-primary active:translate-y-1" href="#">3</a>
+<span class="relative inline-flex items-center border-2 border-slate-900 bg-white px-4 py-2 font-display text-xs text-slate-700 border-r-0">...</span>
+<a class="relative inline-flex items-center border-2 border-slate-900 bg-white px-4 py-2 font-display text-xs text-slate-700 hover:bg-slate-50 focus:z-20 hover:text-primary active:translate-y-1" href="#">NEXT</a>
+</nav>
+</div>
+</div>
+</main>
+<footer class="border-t-4 border-slate-900 bg-slate-900 text-white mt-auto">
+<div class="mx-auto max-w-7xl px-4 py-8 md:px-8">
+<div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+<div>
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-primary">sports_soccer</span>
+<span class="font-display text-lg">MONADRAFT</span>
+</div>
+<p class="font-body text-lg text-slate-400">© 2024 AI Football Manager League</p>
+</div>
+<div class="flex gap-4">
+<a class="text-slate-400 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined">smart_display</span>
+</a>
+<a class="text-slate-400 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined">forum</span>
+</a>
+<a class="text-slate-400 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined">mail</span>
+</a>
+</div>
+</div>
+</div>
+</footer>
+
+</body></html>
