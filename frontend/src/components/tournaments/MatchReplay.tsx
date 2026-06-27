@@ -72,7 +72,7 @@ export function MatchReplay({ powerScoreA, powerScoreB, teamA, teamB, onTickChan
         setSimulation(sim);
         setTick(0);
         setStatus(autoPlay ? "playing" : "idle");
-    }, [powerScoreA, powerScoreB, teamA, teamB, autoPlay]);
+    }, [powerScoreA, powerScoreB, teamA.profile.address, teamB.profile.address, autoPlay]);
 
     // Notify parent of tick / goals / status changes
     useEffect(() => {
