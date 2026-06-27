@@ -1,5 +1,5 @@
 /**
- * Brand design tokens for MonaDraft.
+ * Brand design tokens for DraftMon.
  *
  * These match the CSS custom properties defined in globals.css @theme.
  * Use CSS var references (e.g. "var(--color-primary)") for inline styles in JSX.

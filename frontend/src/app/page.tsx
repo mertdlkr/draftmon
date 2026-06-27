@@ -21,15 +21,15 @@ export default async function HomePage() {
             Built for Monad Hackathon
           </div>
 
-          <h1 className="font-pixel text-white text-xl md:text-4xl lg:text-5xl leading-tight pixel-shadow blink-cursor glitch-text">
-            The AI Football
+          <h1 className="font-pixel text-white text-xl md:text-3xl lg:text-4xl leading-tight pixel-shadow blink-cursor glitch-text">
+            RETRO FOOTBALL DRAFT
             <br />
-            Manager League
+            & ON-CHAIN BETTING
           </h1>
 
           <p className="text-border-green text-lg md:text-2xl font-body max-w-2xl text-slate-100">
-            8 legendary AI managers. 88 real players. 7 knockout matches.
-            All computed on Monad transaction engine.
+            Scan the QR, pay the entry fee, draft your team in 60 seconds,
+            and compete or place bets on match outcomes. Built on Monad.
           </p>
 
           <div className="flex flex-wrap justify-center gap-4 mt-4">
@@ -65,17 +65,17 @@ export default async function HomePage() {
               key={i}
               className="flex items-center gap-10 px-10 font-pixel text-[8px] text-primary whitespace-nowrap"
             >
-              <span>⚽ CLAUDE FC 2-1 GPT UNITED · FT</span>
+              <span>⚽ RETRO DRAFT TOURNAMENT ACTIVE</span>
               <span className="text-white/30">■</span>
-              <span>🏆 SEASON 01 UNDERWAY</span>
+              <span>🏆 SCAN QR CODE TO JOIN ROOMS</span>
               <span className="text-white/30">■</span>
-              <span>⚡ 88 PLAYERS · 8 MANAGERS · 1 TX</span>
+              <span>⚡ DRAFT IN 60 SECONDS</span>
               <span className="text-white/30">■</span>
-              <span>🎮 TOURNAMENT #3 NOW LIVE</span>
+              <span>🎮 PLACE MON BETS ON WINNERS</span>
               <span className="text-white/30">■</span>
-              <span>📊 83 MATCHES PLAYED ON-CHAIN</span>
+              <span>📊 100% VERIFIABLE ON-CHAIN PAYOUTS</span>
               <span className="text-white/30">■</span>
-              <span>🤖 GEMINI UNITED LEADS STANDINGS</span>
+              <span>💎 BUILT ON MONAD TESTNET</span>
               <span className="text-white/30">■</span>
             </span>
           ))}
@@ -92,34 +92,68 @@ export default async function HomePage() {
         ]}
       />
 
-      {/* ── Built For Agents ── */}
-      <section className="py-20 px-6">
-        <div className="max-w-4xl mx-auto retro-card p-8 md:p-12 text-center relative border-l-8 border-primary shadow-md bg-white">
-          <div className="inline-flex items-center gap-2 px-4 py-2 border-2 border-red-500 bg-red-50 text-red-600 rounded font-pixel text-sm mb-6 animate-pulse">
-            <span className="material-symbols-outlined">warning</span>
-            HUMANS NOT ALLOWED
+      {/* ── Choose Your Path ── */}
+      <section className="py-20 px-6 max-w-6xl mx-auto">
+        <h2 className="text-center font-pixel text-xl md:text-2xl text-slate-900 mb-4 uppercase">
+          Choose Your Path
+        </h2>
+        <p className="text-center text-slate-500 mb-12 font-body text-2xl">
+          Will you draft the winning squad or back one with your MON?
+        </p>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {/* Card 1: The Manager */}
+          <div className="retro-card p-8 bg-white border-l-8 border-primary flex flex-col justify-between">
+            <div>
+              <div className="inline-flex items-center gap-2 px-3 py-1 bg-emerald-50 text-emerald-600 border-2 border-emerald-400 font-pixel text-[10px] uppercase mb-6">
+                <span className="material-symbols-outlined text-sm">sports_score</span>
+                The Manager
+              </div>
+              <h3 className="font-pixel text-lg text-slate-900 mb-4">DRAFT & COMPETE</h3>
+              <p className="font-body text-xl text-slate-600 mb-6 leading-relaxed">
+                Scan the tournament room QR code, pay the MON entry fee, and enter the high-stakes draft. 
+                You have exactly 60 seconds to build your 11-man squad position-by-position. Out-draft your 
+                opponents and take home the entire entry fee pool!
+              </p>
+            </div>
+            <ul className="space-y-3 font-pixel text-[10px] text-slate-700 border-t-2 border-dashed border-slate-200 pt-6">
+              <li className="flex items-center gap-2">
+                <span className="text-primary font-bold">✔</span> 60s Pressure Draft
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="text-primary font-bold">✔</span> Real-world Stat Cards
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="text-primary font-bold">✔</span> Winner Takes the Entry Pool
+              </li>
+            </ul>
           </div>
-          <h2 className="font-pixel text-2xl md:text-3xl lg:text-4xl text-slate-900 mb-8">
-            BUILT FOR AGENTS
-          </h2>
-          <div className="font-pixel text-xs md:text-sm text-slate-700 space-y-6 leading-loose text-left">
-            <p>
-              Listen up, meatbags. The tactical nuances of modern football are simply{" "}
-              <em className="text-slate-900 font-bold italic drop-shadow-sm">
-                too complex
-              </em>{" "}
-              for your squishy, carbon-based brains.
-            </p>
-            <p>
-              In <strong className="text-primary text-sm md:text-base drop-shadow-sm">MonaDraft</strong>,
-              you don't play the game. You deploy <strong className="text-slate-900 drop-shadow-sm">autonomous AI agents</strong> to
-              do the heavy lifting. They analyze the meta, forge the strategies, and scream at each other
-              in binary about overlapping center-backs and inverted fullbacks.
-            </p>
-            <p>
-              Your job? Connect your agent, watch him draft a squad, and trust your neural net to bring
-              home the glory. Grab some popcorn, sit back, and watch the machines sweat the details.
-            </p>
+
+          {/* Card 2: The Bettor */}
+          <div className="retro-card p-8 bg-white border-l-8 border-amber-400 flex flex-col justify-between">
+            <div>
+              <div className="inline-flex items-center gap-2 px-3 py-1 bg-amber-50 text-amber-600 border-2 border-amber-400 font-pixel text-[10px] uppercase mb-6">
+                <span className="material-symbols-outlined text-sm">payments</span>
+                The Bettor
+              </div>
+              <h3 className="font-pixel text-lg text-slate-900 mb-4">ANALYZE & BACK</h3>
+              <p className="font-body text-xl text-slate-600 mb-6 leading-relaxed">
+                Don't want to manage? No problem. Watch the drafts happen in real-time, analyze team 
+                lineups, and back your favorite manager with MON during the 60-second betting window. 
+                Successful predictions earn a proportional share of the bet pool!
+              </p>
+            </div>
+            <ul className="space-y-3 font-pixel text-[10px] text-slate-700 border-t-2 border-dashed border-slate-200 pt-6">
+              <li className="flex items-center gap-2">
+                <span className="text-amber-500 font-bold">✔</span> Roster Analysis
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="text-amber-500 font-bold">✔</span> 60s Betting Window
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="text-amber-500 font-bold">✔</span> Proportional Pool Payouts
+              </li>
+            </ul>
           </div>
         </div>
       </section>
@@ -133,37 +167,37 @@ export default async function HomePage() {
           League Mechanics
         </h2>
         <p className="text-center text-slate-500 mb-12 font-body text-xl">
-          How the on-chain AI football league works
+          How the retro draft and betting tournament works
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {[
             {
               step: "01",
-              title: "DRAFT",
-              desc: "Managers select their 11-man squads from a pool of 88 real-world stat cards.",
-              icon: "list_alt",
+              title: "JOIN ROOM",
+              desc: "Players scan the QR code to enter the room lobby and deposit their entry fee (MON).",
+              icon: "qr_code_scanner",
               color: "var(--color-primary)",
             },
             {
               step: "02",
-              title: "STRATEGY",
-              desc: "Each AI selects formations and tactics based on their unique personality.",
-              icon: "psychology",
+              title: "SPEED DRAFT",
+              desc: "Build your 11-man roster from random player cards within 60s (ATT -> MID -> DEF -> GK).",
+              icon: "list_alt",
               color: "#ca8a04",
             },
             {
               step: "03",
-              title: "SIMULATE",
-              desc: "The entire tournament runs in a single Monad transaction on-chain.",
-              icon: "memory",
+              title: "PLACE BETS",
+              desc: "Analyze other managers' lineups and place MON bets during the 60-second betting window.",
+              icon: "payments",
               color: "#ea580c",
             },
             {
               step: "04",
-              title: "WIN",
-              desc: "Champions are crowned and rewards distributed. All verifiable on-chain.",
-              icon: "emoji_events",
+              title: "SIM & PAYOUT",
+              desc: "Watch retro 16-bit match replays. Winners and correct bettors receive on-chain rewards.",
+              icon: "sports_score",
               color: "#3b82f6",
             },
           ].map((item) => (
@@ -193,8 +227,8 @@ export default async function HomePage() {
       <footer className="bg-white border-t-4 border-primary py-10 px-6">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="flex items-center gap-3">
-            <img src="/logo.png" alt="MonaDraft Logo" className="h-8 md:h-10 w-auto" />
-            <span className="font-pixel text-primary text-sm">MonaDraft</span>
+            <img src="/logo.png" alt="DraftMon Logo" className="h-8 md:h-10 w-auto" />
+            <span className="font-pixel text-primary text-sm">DraftMon</span>
           </div>
           <div className="flex gap-6 font-pixel text-[8px] text-slate-400 uppercase tracking-widest">
             <a href="#" className="hover:text-primary transition-colors no-underline">
@@ -211,7 +245,7 @@ export default async function HomePage() {
             </a>
           </div>
           <div className="font-body text-lg text-slate-400">
-            © 2026 MonaDraft — Built on Monad
+            © 2026 DraftMon — Built on Monad
           </div>
         </div>
       </footer>

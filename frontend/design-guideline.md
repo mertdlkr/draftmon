@@ -1,12 +1,12 @@
-# MonaDraft — Design Guideline
+# DraftMon — Design Guideline
 
-> **Purpose**: Any developer or AI agent reading this document should be able to build a new page or component that is visually and stylistically consistent with the rest of the MonaDraft app. Follow every rule here unless you have an explicit reason to deviate — document it if you do.
+> **Purpose**: Any developer or AI agent reading this document should be able to build a new page or component that is visually and stylistically consistent with the rest of the DraftMon app. Follow every rule here unless you have an explicit reason to deviate — document it if you do.
 
 ---
 
 ## 1. Aesthetic: Retro FIFA 97 / 16-bit Football Manager dApp
 
-MonaDraft's visual identity blends:
+DraftMon's visual identity blends:
 - **Retro arcade / 8-bit game UI** — pixel fonts, chunky borders, hard-offset shadows, step-based animations
 - **Monad blockchain green** — a vivid neon `#13ec5b` as the singular brand accent
 - **Light cream/off-white backgrounds** with subtle diagonal hatching (no pure white pages)

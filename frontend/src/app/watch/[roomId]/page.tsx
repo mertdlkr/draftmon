@@ -3,6 +3,7 @@
 import { useEffect, useState, use } from "react";
 import Link from "next/link";
 import { useAccount } from "wagmi";
+import { QRCodeSVG } from "qrcode.react";
 import { formatEther } from "viem";
 import { useRoom } from "@/hooks/useRoom";
 import { SquadRevealGrid } from "@/components/watch/SquadRevealGrid";
@@ -155,17 +156,38 @@ export default function WatchRoomPage({ params }: Props) {
       </div>
 
       {/* RENDER DYNAMIC ROOM SCENARIOS */}
-      {room.status === "open" && (
-        <div className="max-w-md mx-auto bg-white border-4 border-slate-900 p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] text-center">
-          <h3 className="font-pixel text-[14px] text-slate-900 mb-2">WAITING FOR MATCHMAKING</h3>
-          <p className="font-pixel text-[10px] text-slate-400 mb-6">
-            Managers are currently entering the league.
-          </p>
-          <div className="bg-slate-50 border-2 border-dashed border-slate-300 p-4 font-pixel text-[12px] text-slate-700">
-            {players.length} / {room.capacity} managers registered
+      {room.status === "open" && (() => {
+        const joinUrl = typeof window !== "undefined" ? `${window.location.origin}/join/${room.id}` : "";
+        return (
+          <div className="max-w-md mx-auto bg-white border-4 border-slate-900 p-8 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] text-center">
+            <h3 className="font-pixel text-[14px] text-slate-900 mb-2">WAITING FOR MATCHMAKING</h3>
+            <p className="font-pixel text-[10px] text-slate-400 mb-6">
+              Managers are currently entering the league.
+            </p>
+            <div className="bg-slate-50 border-2 border-dashed border-slate-300 p-4 font-pixel text-[12px] text-slate-700 mb-6">
+              {players.length} / {room.capacity} managers registered
+            </div>
+
+            {/* QR Code display */}
+            <div className="border-t-2 border-dashed border-slate-200 pt-6 flex flex-col items-center">
+              <span className="font-pixel text-[8px] text-slate-400 mb-4 block">
+                SCAN TO JOIN THE DRAFT AS MANAGER
+              </span>
+              <div className="bg-slate-50 p-4 border-4 border-slate-900 shadow-[4px_4px_0px_0px_rgba(19,236,91,1)] mb-4">
+                <QRCodeSVG value={joinUrl} size={180} level="H" includeMargin={true} />
+              </div>
+              <a
+                href={joinUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-pixel text-[8px] text-indigo-600 break-all text-center hover:underline"
+              >
+                {joinUrl}
+              </a>
+            </div>
           </div>
-        </div>
-      )}
+        );
+      })()}
 
       {room.status === "drafting" && (
         <div className="space-y-6">

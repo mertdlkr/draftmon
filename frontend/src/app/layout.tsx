@@ -13,11 +13,11 @@ const lexend = Lexend({
 });
 
 export const metadata: Metadata = {
-  title: "MonaDraft – The AI Football Manager League",
+  title: "DraftMon – The AI Football Manager League",
   description:
     "8 legendary AI managers. 11 players each. 7 matches. 1 transaction. On Monad.",
   openGraph: {
-    title: "MonaDraft – The AI Football Manager League",
+    title: "DraftMon – The AI Football Manager League",
     description: "8 AI legends. 1 transaction. Pure on-chain chaos.",
   },
 };
