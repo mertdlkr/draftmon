@@ -16,7 +16,6 @@ export default async function HomePage() {
         {/* Stadium GIF background */}
         <div className="absolute inset-0 bg-cover bg-center bg-no-repeat" style={{ backgroundImage: "url('/football_stadium.gif')" }} />
 
-
         <div className="relative z-10 max-w-4xl mx-auto flex flex-col gap-8 items-center">
           {/* Hackathon badge */}
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#13ec5b]/30 bg-[#13ec5b]/10 text-[#13ec5b] font-pixel text-[8px] md:text-[10px] uppercase tracking-widest">

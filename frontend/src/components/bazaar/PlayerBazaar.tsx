@@ -420,8 +420,12 @@ export function PlayerBazaar() {
 
                             {/* Player Info */}
                             <div className={`flex gap-4 items-start mb-4 ${player.isSold ? 'opacity-50' : ''}`}>
-                                <div className="size-[64px] bg-slate-100 border-2 border-black p-1 shrink-0 flex items-center justify-center" style={{ imageRendering: 'pixelated' }}>
-                                    <span className="material-symbols-outlined text-3xl text-slate-400">sports_soccer</span>
+                                <div className="size-[64px] bg-slate-100 border-2 border-black p-1 shrink-0 flex items-center justify-center overflow-hidden bg-white" style={{ imageRendering: 'pixelated' }}>
+                                    <img
+                                        src={`/players/player_${((nameHash(player.name) % 23) + 1).toString().padStart(2, '0')}.png`}
+                                        alt={player.name}
+                                        className="w-full h-full object-cover"
+                                    />
                                 </div>
                                 <div className="flex flex-col">
                                     <h3 className="font-pixel text-xs leading-tight mb-2 mt-1 uppercase">{player.name}</h3>
