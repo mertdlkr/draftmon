@@ -39,6 +39,21 @@ jobs:
         run: npm ci
 
       - name: Build Next.js output
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ vars.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ vars.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          SUPABASE_URL: ${{ vars.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ vars.SUPABASE_ANON_KEY }}
+          SUPABASE_PROJECT_REF: ${{ vars.SUPABASE_PROJECT_REF }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          NEXT_PUBLIC_CONTRACT_ADDRESS: ${{ vars.NEXT_PUBLIC_CONTRACT_ADDRESS }}
+          CONTRACT_ADDRESS: ${{ vars.CONTRACT_ADDRESS }}
+          NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID: ${{ vars.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID }}
+          NEXT_PUBLIC_ENTRY_FEE_WEI: ${{ vars.NEXT_PUBLIC_ENTRY_FEE_WEI }}
+          MONAD_RPC_URL: ${{ vars.MONAD_RPC_URL }}
+          MONAD_TESTNET_RPC_URL: ${{ vars.MONAD_TESTNET_RPC_URL }}
+          ADMIN_SECRET: ${{ secrets.ADMIN_SECRET }}
+          OWNER_PRIVATE_KEY: ${{ secrets.OWNER_PRIVATE_KEY }}
         run: npx vercel build
 
       - name: Deploy to Cloudflare Pages
