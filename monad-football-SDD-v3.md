@@ -1163,7 +1163,7 @@ Hiçbir WP'ye bağlı değil — sıfırdan yazılır.
 
 ---
 
-### WP1 — Smart Contract (Blockchain)
+### WP1 — Smart Contract (Blockchain) ✅ TAMAMLANDI — `0x03F6De0De91c808AeAb6fEEB772A8d49465b016d`
 **Sahip:** 1 kişi
 **Tahmini süre:** 3–4h
 **Bağımlılık:** WP0 (ABI stub)
