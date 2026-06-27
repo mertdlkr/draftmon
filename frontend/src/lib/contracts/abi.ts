@@ -1,23 +1,188 @@
-// TournamentPool ABI — stub until WP1 deploys the contract.
-// After deploy: replace with output of `forge build` → out/TournamentPool.sol/TournamentPool.json
 export const TOURNAMENT_POOL_ABI = [
-  // Owner — room management
-  'function createRoom(bytes32 roomId, uint256 entryFee) external',
-  'function closeRoom(bytes32 roomId) external',
-  'function declareWinner(bytes32 roomId, address winnerAddress) external',
-  'function distributeBetWinners(bytes32 roomId, address[] calldata winners, uint256[] calldata amounts) external',
-  // Player
-  'function enter(bytes32 roomId) external payable',
-  // Bettor
-  'function placeBet(bytes32 roomId, address target) external payable',
-  // Views
-  'function getRoom(bytes32 roomId) external view returns (uint256 entryFee, uint256 entryPool, uint256 betPool, uint8 status, address winner, address[] memory players)',
-  'function getPlayers(bytes32 roomId) external view returns (address[] memory)',
-  // Events
-  'event RoomCreated(bytes32 indexed roomId, uint256 entryFee)',
-  'event EntryPaid(bytes32 indexed roomId, address indexed player, uint256 amount)',
-  'event BetPlaced(bytes32 indexed roomId, address indexed bettor, address indexed target, uint256 amount)',
-  'event RoomClosed(bytes32 indexed roomId, uint256 entryPool, uint256 betPool)',
-  'event WinnerPaid(bytes32 indexed roomId, address indexed winner, uint256 amount)',
-  'event BetWinnerPaid(bytes32 indexed roomId, address indexed bettor, uint256 amount)',
+  {
+    "type": "constructor",
+    "inputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "betAmounts",
+    "inputs": [
+      { "name": "", "type": "bytes32", "internalType": "bytes32" },
+      { "name": "", "type": "address", "internalType": "address" }
+    ],
+    "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "closeRoom",
+    "inputs": [{ "name": "roomId", "type": "bytes32", "internalType": "bytes32" }],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "createRoom",
+    "inputs": [
+      { "name": "roomId", "type": "bytes32", "internalType": "bytes32" },
+      { "name": "entryFee", "type": "uint256", "internalType": "uint256" }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "declareWinner",
+    "inputs": [
+      { "name": "roomId", "type": "bytes32", "internalType": "bytes32" },
+      { "name": "winnerAddress", "type": "address", "internalType": "address" }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "distributeBetWinners",
+    "inputs": [
+      { "name": "roomId", "type": "bytes32", "internalType": "bytes32" },
+      { "name": "winners", "type": "address[]", "internalType": "address[]" },
+      { "name": "amounts", "type": "uint256[]", "internalType": "uint256[]" }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "enter",
+    "inputs": [{ "name": "roomId", "type": "bytes32", "internalType": "bytes32" }],
+    "outputs": [],
+    "stateMutability": "payable"
+  },
+  {
+    "type": "function",
+    "name": "getPlayers",
+    "inputs": [{ "name": "roomId", "type": "bytes32", "internalType": "bytes32" }],
+    "outputs": [{ "name": "", "type": "address[]", "internalType": "address[]" }],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "getRoom",
+    "inputs": [{ "name": "roomId", "type": "bytes32", "internalType": "bytes32" }],
+    "outputs": [
+      { "name": "entryFee", "type": "uint256", "internalType": "uint256" },
+      { "name": "entryPool", "type": "uint256", "internalType": "uint256" },
+      { "name": "betPool", "type": "uint256", "internalType": "uint256" },
+      { "name": "status", "type": "uint8", "internalType": "enum TournamentPool.RoomStatus" },
+      { "name": "winner", "type": "address", "internalType": "address" },
+      { "name": "players", "type": "address[]", "internalType": "address[]" }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "hasEntered",
+    "inputs": [
+      { "name": "", "type": "bytes32", "internalType": "bytes32" },
+      { "name": "", "type": "address", "internalType": "address" }
+    ],
+    "outputs": [{ "name": "", "type": "bool", "internalType": "bool" }],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "owner",
+    "inputs": [],
+    "outputs": [{ "name": "", "type": "address", "internalType": "address" }],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "placeBet",
+    "inputs": [
+      { "name": "roomId", "type": "bytes32", "internalType": "bytes32" },
+      { "name": "target", "type": "address", "internalType": "address" }
+    ],
+    "outputs": [],
+    "stateMutability": "payable"
+  },
+  {
+    "type": "event",
+    "name": "BetPlaced",
+    "inputs": [
+      { "name": "roomId", "type": "bytes32", "indexed": true, "internalType": "bytes32" },
+      { "name": "bettor", "type": "address", "indexed": true, "internalType": "address" },
+      { "name": "target", "type": "address", "indexed": true, "internalType": "address" },
+      { "name": "amount", "type": "uint256", "indexed": false, "internalType": "uint256" }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "BetWinnerPaid",
+    "inputs": [
+      { "name": "roomId", "type": "bytes32", "indexed": true, "internalType": "bytes32" },
+      { "name": "bettor", "type": "address", "indexed": true, "internalType": "address" },
+      { "name": "amount", "type": "uint256", "indexed": false, "internalType": "uint256" }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "EntryPaid",
+    "inputs": [
+      { "name": "roomId", "type": "bytes32", "indexed": true, "internalType": "bytes32" },
+      { "name": "player", "type": "address", "indexed": true, "internalType": "address" },
+      { "name": "amount", "type": "uint256", "indexed": false, "internalType": "uint256" }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "RoomClosed",
+    "inputs": [
+      { "name": "roomId", "type": "bytes32", "indexed": true, "internalType": "bytes32" },
+      { "name": "entryPool", "type": "uint256", "indexed": false, "internalType": "uint256" },
+      { "name": "betPool", "type": "uint256", "indexed": false, "internalType": "uint256" }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "RoomCreated",
+    "inputs": [
+      { "name": "roomId", "type": "bytes32", "indexed": true, "internalType": "bytes32" },
+      { "name": "entryFee", "type": "uint256", "indexed": false, "internalType": "uint256" }
+    ],
+    "anonymous": false
+  },
+  {
+    "type": "event",
+    "name": "WinnerPaid",
+    "inputs": [
+      { "name": "roomId", "type": "bytes32", "indexed": true, "internalType": "bytes32" },
+      { "name": "winner", "type": "address", "indexed": true, "internalType": "address" },
+      { "name": "amount", "type": "uint256", "indexed": false, "internalType": "uint256" }
+    ],
+    "anonymous": false
+  },
+  { "type": "error", "name": "AlreadyEntered", "inputs": [] },
+  { "type": "error", "name": "ArrayLengthMismatch", "inputs": [] },
+  { "type": "error", "name": "InvalidTarget", "inputs": [] },
+  { "type": "error", "name": "InvalidWinner", "inputs": [] },
+  { "type": "error", "name": "NoBetPool", "inputs": [] },
+  { "type": "error", "name": "NotOwner", "inputs": [] },
+  { "type": "error", "name": "RoomAlreadyExists", "inputs": [] },
+  { "type": "error", "name": "RoomNotClosed", "inputs": [] },
+  { "type": "error", "name": "RoomNotOpen", "inputs": [] },
+  { "type": "error", "name": "TransferFailed", "inputs": [] },
+  {
+    "type": "error",
+    "name": "WrongFee",
+    "inputs": [
+      { "name": "sent", "type": "uint256", "internalType": "uint256" },
+      { "name": "required", "type": "uint256", "internalType": "uint256" }
+    ]
+  }
 ] as const
