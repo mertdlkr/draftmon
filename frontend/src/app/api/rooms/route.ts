@@ -19,7 +19,7 @@ export async function GET() {
     const { data, error } = await db
       .from('rooms')
       .select('*')
-      .in('status', ['open', 'drafting', 'betting'])
+      .in('status', ['open', 'drafting', 'betting', 'simulating', 'finished'])
       .order('created_at', { ascending: false })
 
     if (error) throw error

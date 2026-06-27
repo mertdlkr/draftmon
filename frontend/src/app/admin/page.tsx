@@ -173,7 +173,7 @@ export default function AdminPanelPage() {
         <form onSubmit={handleSaveSecret} className="flex gap-4 items-end flex-wrap">
           <div className="flex-1 min-w-[200px]">
             <label className="font-pixel text-[10px] text-slate-700 block mb-1">
-              ADMIN SECRET
+              ADMIN PASSWORD
             </label>
             <input
               type="password"
@@ -186,7 +186,7 @@ export default function AdminPanelPage() {
             type="submit"
             className="font-pixel text-[10px] px-6 py-2.5 bg-slate-900 text-white border-2 border-slate-900 hover:bg-slate-800"
           >
-            SAVE SECRET
+            SAVE PASSWORD
           </button>
         </form>
       </div>
