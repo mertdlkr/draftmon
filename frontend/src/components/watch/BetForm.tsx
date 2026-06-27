@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { parseEther } from "viem";
+import { useAccount } from "wagmi";
 import type { RoomPlayer } from "@/lib/contracts/types";
 import { usePlaceBet } from "@/hooks/usePlaceBet";
 
@@ -13,12 +14,13 @@ interface Props {
 }
 
 export function BetForm({ players, roomId, contractRoomId, onSuccess }: Props) {
+  const { address } = useAccount();
   const [selectedTarget, setSelectedTarget] = useState<string>("");
   const [amount, setAmount] = useState<string>("0.01");
   const [isTxSubmitting, setIsTxSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
-  const { placeBet, isConfirming, isSuccess, error } = usePlaceBet();
+  const { placeBet, hash, isConfirming, isSuccess, error } = usePlaceBet();
 
   const handleBetSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,30 +44,32 @@ export function BetForm({ players, roomId, contractRoomId, onSuccess }: Props) {
     }
   };
 
-  // Watch for transaction success and send to API
-  const handleApiVerify = async (txHash: string) => {
-    try {
-      const res = await fetch("/api/bet", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          roomId,
-          contractRoomId,
-          bettorWallet: window.ethereum?.selectedAddress || "", // fallback or handle via wagmi Account
-          targetWallet: selectedTarget,
-          amountWei: parseEther(amount).toString(),
-          txHash,
-        }),
-      });
-      if (res.ok && onSuccess) {
-        onSuccess();
+  // Wire up: when tx confirmed, post to API
+  useEffect(() => {
+    if (!isSuccess || !hash || !address) return;
+    const verify = async () => {
+      try {
+        const res = await fetch("/api/bet", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            roomId,
+            contractRoomId,
+            bettorWallet: address,
+            targetWallet: selectedTarget,
+            amountWei: parseEther(amount).toString(),
+            txHash: hash,
+          }),
+        });
+        if (res.ok && onSuccess) onSuccess();
+      } catch (err) {
+        console.error("Failed to verify bet tx in DB", err);
+      } finally {
+        setIsTxSubmitting(false);
       }
-    } catch (err) {
-      console.error("Failed to verify bet tx in DB", err);
-    } finally {
-      setIsTxSubmitting(false);
-    }
-  };
+    };
+    verify();
+  }, [isSuccess, hash, address]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <form

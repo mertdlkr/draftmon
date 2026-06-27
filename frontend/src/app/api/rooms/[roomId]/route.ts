@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createSupabaseServerClient } from '@/lib/supabase/server'
+import { createSupabaseAdminClient } from '@/lib/supabase/admin'
 import type { ApiResponse, RoomDetail } from '@/lib/contracts/types'
 
 export async function GET(
@@ -8,7 +8,7 @@ export async function GET(
 ) {
   try {
     const { roomId } = await params
-    const db = await createSupabaseServerClient()
+    const db = createSupabaseAdminClient()
 
     const [roomRes, playersRes, matchesRes, betsRes] = await Promise.all([
       db.from('rooms').select('*').eq('id', roomId).single(),

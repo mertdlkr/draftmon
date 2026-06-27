@@ -11,6 +11,7 @@ import { BettingCountdown } from "@/components/watch/BettingCountdown";
 import { PayoutSummary } from "@/components/watch/PayoutSummary";
 import { RoomStatusBadge } from "@/components/room/RoomStatusBadge";
 import { MatchReplay } from "@/components/tournaments/MatchReplay";
+import { MatchBracket } from "@/components/watch/MatchBracket";
 import { BETTING_DURATION_MS } from "@/constants";
 
 interface Props {
@@ -218,39 +219,14 @@ export default function WatchRoomPage({ params }: Props) {
       )}
 
       {room.status === "simulating" && (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2">
-            {renderActiveReplay()}
-          </div>
-
-          <div>
-            <div className="bg-white border-4 border-slate-900 p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
-              <h3 className="font-pixel text-[12px] text-slate-900 border-b-2 border-slate-900 pb-2 mb-3">
-                MATCHES SCHEDULE
-              </h3>
-              <div className="space-y-2 max-h-[350px] overflow-y-auto">
-                {matches.map((m, idx) => {
-                  const isActive = idx === activeReplayIdx;
-                  return (
-                    <div
-                      key={m.id}
-                      onClick={() => setActiveReplayIdx(idx)}
-                      className={`cursor-pointer p-2.5 border-2 text-[10px] font-pixel flex justify-between items-center transition-all ${
-                        isActive
-                          ? "border-emerald-500 bg-emerald-50 shadow-[2px_2px_0px_0px_rgba(16,185,129,1)]"
-                          : "border-slate-900 hover:border-slate-700"
-                      }`}
-                    >
-                      <span className="truncate max-w-[120px]">{m.round}</span>
-                      <span className="font-bold text-slate-900">
-                        {m.home_score} - {m.away_score}
-                      </span>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
+        <div className="space-y-6">
+          <MatchBracket
+            matches={matches}
+            players={players}
+            activeIdx={activeReplayIdx}
+            onSelect={setActiveReplayIdx}
+          />
+          {renderActiveReplay()}
         </div>
       )}
 
@@ -266,6 +242,13 @@ export default function WatchRoomPage({ params }: Props) {
               Champion: <span className="font-bold">{room.winner_wallet}</span>
             </div>
           </div>
+
+          <MatchBracket
+            matches={matches}
+            players={players}
+            activeIdx={activeReplayIdx}
+            onSelect={setActiveReplayIdx}
+          />
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2">
