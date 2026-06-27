@@ -86,7 +86,7 @@ async function getStrategyFromLLM(agentName: string, identity: any, teamAvg: any
 
 async function runTournament() {
     console.log("\n╔══════════════════════════════════════════════════════════════╗");
-    console.log("║         MONADRAFT — ON-CHAIN SEASON ORCHESTRATOR           ║");
+    console.log("║         DRAFTMON — ON-CHAIN SEASON ORCHESTRATOR            ║");
     console.log("║         Powered by Monad Testnet · Single TX Compute       ║");
     console.log("╚══════════════════════════════════════════════════════════════╝\n");
 
