@@ -25,7 +25,12 @@ export function Nav() {
         <nav className="sticky top-0 z-50 h-[70px] bg-white border-b-[3px] border-[#13ec5b] px-6 md:px-10 flex items-center justify-between">
             <Link href="/" className="flex items-center gap-3 no-underline" onClick={closeMobileMenu}>
                 <img src="/logo.png" alt="MonaDraft Logo" className="h-8 md:h-10 w-auto" />
-                <span className="font-pixel text-sm md:text-base tracking-tight text-[#13ec5b]">MonaDraft</span>
+                <div className="flex items-center gap-2">
+                    <span className="font-pixel text-sm md:text-base tracking-tight text-[#13ec5b]">MonaDraft</span>
+                    <span className="hidden md:flex px-2 py-0.5 bg-[#13ec5b]/10 text-[#13ec5b] border border-[#13ec5b]/30 rounded text-[10px] font-code font-bold uppercase tracking-wider items-center whitespace-nowrap">
+                        Built For Agents
+                    </span>
+                </div>
             </Link>
 
             {/* Desktop Links */}
