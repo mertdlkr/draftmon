@@ -1232,7 +1232,7 @@ distributeBetWinners(bytes32 roomId, address[] winners, uint256[] amounts)
 
 ---
 
-### WP2 — Backend
+### WP2 — Backend ✅ TAMAMLANDI
 **Sahip:** 1 kişi
 **Tahmini süre:** 14–16h
 **Bağımlılık:** WP0 (tipler), WP1 (ABI + adres — tx verify için; stub'la başlanabilir)

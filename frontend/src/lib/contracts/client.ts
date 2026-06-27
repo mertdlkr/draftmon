@@ -1,6 +1,6 @@
 import { createPublicClient, createWalletClient, http } from 'viem'
 import { privateKeyToAccount } from 'viem/accounts'
-import { monadTestnet } from '@/lib/wagmi'
+import { monadTestnet } from '@/lib/chains'
 
 export const publicClient = createPublicClient({
   chain: monadTestnet,
