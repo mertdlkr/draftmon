@@ -1,0 +1,14 @@
+# Foundry
+cache/
+out/
+
+# Broadcast (deployment artifacts with private data)
+broadcast/
+
+# Dependencies
+node_modules/
+lib/
+
+# Environment
+.env
+.env.local
