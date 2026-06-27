@@ -8,7 +8,8 @@
 
 import { ethers } from "ethers";
 import { getContract } from "./client";
-import { STRATEGIES, getMatchRound, powerToGoals } from "./strategies";
+import { STRATEGIES, getMatchRound } from "./strategies";
+import { simulateMatch } from "@/lib/simulation";
 import type {
     AgentProfile,
     Tournament,
@@ -163,8 +164,9 @@ export async function fetchTournamentRoster(tId: number): Promise<TournamentAgen
 
 /**
  * Fetches all match results for a tournament and annotates each with its round label.
+ * Goal counts are derived from simulateMatch() — identical to what the replay shows.
  */
-export async function fetchMatchResults(tId: number): Promise<MatchResult[]> {
+export async function fetchMatchResults(tId: number, agents: TournamentAgent[]): Promise<MatchResult[]> {
     const contract = getContract();
     const raw: Array<{ teamA: string; teamB: string; winner: string; scoreA: bigint; scoreB: bigint }> =
         await contract.getMatches(tId);
@@ -172,7 +174,33 @@ export async function fetchMatchResults(tId: number): Promise<MatchResult[]> {
     return raw.map((m, i) => {
         const scoreA = Number(m.scoreA);
         const scoreB = Number(m.scoreB);
-        const { goalsA, goalsB } = powerToGoals(scoreA, scoreB, m.winner, m.teamA);
+
+        // Look up both agents so we can pass full team + strategy data to the simulation
+        const agentA = agents.find((a) => a.profile.address.toLowerCase() === m.teamA.toLowerCase());
+        const agentB = agents.find((a) => a.profile.address.toLowerCase() === m.teamB.toLowerCase());
+
+        let goalsA = 0;
+        let goalsB = 0;
+
+        if (agentA && agentB) {
+            const sim = simulateMatch({
+                teamA: {
+                    name: agentA.profile.name,
+                    players: agentA.entry.team,
+                    strategyId: agentA.entry.strategyId,
+                    agent: agentA.profile,
+                },
+                teamB: {
+                    name: agentB.profile.name,
+                    players: agentB.entry.team,
+                    strategyId: agentB.entry.strategyId,
+                    agent: agentB.profile,
+                },
+                power: { scoreA, scoreB },
+            });
+            goalsA = sim.goalsA;
+            goalsB = sim.goalsB;
+        }
 
         return {
             teamA: m.teamA,
@@ -192,13 +220,17 @@ export async function fetchMatchResults(tId: number): Promise<MatchResult[]> {
 /**
  * Returns a fully hydrated TournamentDetail: tournament metadata, agents with
  * teams/strategies/reasoning, and all annotated match results.
+ *
+ * Agents are fetched first so their team/strategy data can be passed to
+ * fetchMatchResults(), which derives goal counts via simulateMatch() — ensuring
+ * the bracket and scoreboard always show the same goals as the replay.
  */
 export async function fetchTournamentDetail(tId: number): Promise<TournamentDetail> {
-    const [tournament, agents, matches] = await Promise.all([
+    const [tournament, agents] = await Promise.all([
         fetchTournament(tId),
         fetchTournamentRoster(tId),
-        fetchMatchResults(tId),
     ]);
+    const matches = await fetchMatchResults(tId, agents);
 
     return { ...tournament, agents, matches };
 }

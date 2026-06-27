@@ -1,5 +1,6 @@
 "use client";
 
+import { Fragment } from "react";
 import type { Player } from "@/lib/contracts";
 import {
     POS_ORDER, POS_COLOR, POS_GROUP,
@@ -62,7 +63,7 @@ export function SquadTable({ players }: Props) {
                         if (!groupPlayers || groupPlayers.length === 0) return null;
                         const color = GROUP_COLOR[group];
                         return (
-                            <>
+                            <Fragment key={group}>
                                 {/* Group header row */}
                                 <tr key={`header-${group}`}>
                                     <td
@@ -114,7 +115,7 @@ export function SquadTable({ players }: Props) {
                                         <td className="py-1.5 px-2"><StatDots val={p.tackling} /></td>
                                     </tr>
                                 ))}
-                            </>
+                            </Fragment>
                         );
                     })}
                 </tbody>

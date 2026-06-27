@@ -4,11 +4,10 @@ import { fetchTournamentDetail, TournamentState } from "@/lib/contracts";
 import { retryAsync } from "@/lib/utils/retry";
 import { shortenAddress } from "@/lib/utils/format";
 import { MatchBracket } from "@/components/tournaments/MatchBracket";
+import { TournamentSpectator } from "@/components/tournaments/TournamentSpectator";
 import { AgentCard } from "@/components/agents/AgentCard";
 import { SquadTable } from "@/components/agents/SquadTable";
 import { ManagerAvatar } from "@/components/ui/ManagerAvatar";
-
-export const runtime = "edge";
 
 interface Props {
     params: Promise<{ id: string }>;
@@ -97,7 +96,10 @@ export default async function TournamentResultsPage({ params }: Props) {
             {/* Knockout Bracket */}
             {isCompleted && tournament.matches.length > 0 && (
                 <section className="flex flex-col gap-6 mb-10 w-full overflow-hidden">
-                    <h3 className="text-xl font-pixel text-slate-900 border-l-8 border-primary-dark pl-4">Knockout Stage</h3>
+                    <div className="flex items-center justify-between gap-4">
+                        <h3 className="text-xl font-pixel text-slate-900 border-l-8 border-primary-dark pl-4">Knockout Stage</h3>
+                        <TournamentSpectator matches={tournament.matches} agents={tournament.agents} />
+                    </div>
                     <div className="overflow-x-auto pb-6 w-full">
                         <MatchBracket matches={tournament.matches} agents={tournament.agents} />
                     </div>

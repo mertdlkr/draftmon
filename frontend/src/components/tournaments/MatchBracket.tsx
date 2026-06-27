@@ -6,58 +6,58 @@ interface Props {
 }
 
 // Fixed layout constants (px)
-const W = 1000;       // container width
-const H = 440;        // container height
+const W = 1140;       // container width
+const H = 460;        // container height
 const LABEL_H = 32;   // top label row height
 const BRACKET_H = H - LABEL_H;
 
 const COL = {
-    qfL:   { x: 8,   w: 158 },
-    sfL:   { x: 210, w: 158 },
-    final: { x: 400, w: 200 },
-    sfR:   { x: 642, w: 158 },
-    qfR:   { x: 834, w: 158 },
+    qfL: { x: 10, w: 180 },
+    sfL: { x: 240, w: 180 },
+    final: { x: 460, w: 220 },
+    sfR: { x: 720, w: 180 },
+    qfR: { x: 950, w: 180 },
 };
 
 // Card heights (estimated, keep in sync with card JSX)
-const CARD_H  = 84;
+const CARD_H = 84;
 const FINAL_H = 92;
 
 // Vertical centers within bracket area
 const C = {
-    qf1:   BRACKET_H * 0.25,   // 102.5 → ~103
-    qf2:   BRACKET_H * 0.75,   // 307.5 → ~308
-    sf:    BRACKET_H * 0.50,   // 205
+    qf1: BRACKET_H * 0.25,   // 102.5 → ~103
+    qf2: BRACKET_H * 0.75,   // 307.5 → ~308
+    sf: BRACKET_H * 0.50,   // 205
     final: BRACKET_H * 0.50,
 };
 
 // Card tops = center - halfHeight, offset by LABEL_H
 const TOP = {
-    qf1:   Math.round(LABEL_H + C.qf1   - CARD_H  / 2),
-    qf2:   Math.round(LABEL_H + C.qf2   - CARD_H  / 2),
-    sf:    Math.round(LABEL_H + C.sf    - CARD_H  / 2),
+    qf1: Math.round(LABEL_H + C.qf1 - CARD_H / 2),
+    qf2: Math.round(LABEL_H + C.qf2 - CARD_H / 2),
+    sf: Math.round(LABEL_H + C.sf - CARD_H / 2),
     final: Math.round(LABEL_H + C.final - FINAL_H / 2),
 };
 
 // SVG connector y (absolute to container)
 const SY = {
-    qf1:   Math.round(LABEL_H + C.qf1),
-    qf2:   Math.round(LABEL_H + C.qf2),
-    mid:   Math.round(LABEL_H + C.sf),
+    qf1: Math.round(LABEL_H + C.qf1),
+    qf2: Math.round(LABEL_H + C.qf2),
+    mid: Math.round(LABEL_H + C.sf),
 };
 
 // SVG connector x
 const SX = {
-    qfLr:  COL.qfL.x + COL.qfL.w,                       // QF-Left right edge
-    jL:    COL.sfL.x - 20,                                // left junction x
-    sfLl:  COL.sfL.x,                                     // SF-Left left edge
-    sfLr:  COL.sfL.x + COL.sfL.w,                        // SF-Left right edge
-    finL:  COL.final.x,                                   // Final left edge
-    finR:  COL.final.x + COL.final.w,                    // Final right edge
-    sfRl:  COL.sfR.x,                                     // SF-Right left edge
-    sfRr:  COL.sfR.x + COL.sfR.w,                        // SF-Right right edge
-    jR:    COL.qfR.x - 20,                                // right junction x
-    qfRl:  COL.qfR.x,                                     // QF-Right left edge
+    qfLr: COL.qfL.x + COL.qfL.w,                       // QF-Left right edge
+    jL: COL.sfL.x - 20,                                // left junction x
+    sfLl: COL.sfL.x,                                     // SF-Left left edge
+    sfLr: COL.sfL.x + COL.sfL.w,                        // SF-Left right edge
+    finL: COL.final.x,                                   // Final left edge
+    finR: COL.final.x + COL.final.w,                    // Final right edge
+    sfRl: COL.sfR.x,                                     // SF-Right left edge
+    sfRr: COL.sfR.x + COL.sfR.w,                        // SF-Right right edge
+    jR: COL.qfR.x - 20,                                // right junction x
+    qfRl: COL.qfR.x,                                     // QF-Right left edge
 };
 
 const CONNECTOR = "var(--color-primary-dark)";
@@ -73,8 +73,8 @@ function MatchCard({
     const borderStyle = isFinal
         ? { border: "3px solid #eab308", boxShadow: "0 0 12px rgba(234,179,8,0.2), 4px 4px 0px 0px rgba(0,0,0,0.15)" }
         : isSemi
-        ? { border: "2px solid var(--color-primary-dark)", boxShadow: "3px 3px 0px 0px rgba(22,162,73,0.3)" }
-        : { border: "2px solid var(--color-dark-green)", boxShadow: "3px 3px 0px 0px rgba(0,0,0,0.12)" };
+            ? { border: "2px solid var(--color-primary-dark)", boxShadow: "3px 3px 0px 0px rgba(22,162,73,0.3)" }
+            : { border: "2px solid var(--color-dark-green)", boxShadow: "3px 3px 0px 0px rgba(0,0,0,0.12)" };
 
     const headerBg = isFinal ? "#eab308" : isSemi ? "var(--color-dark-green)" : "#1e293b";
     const headerText = isFinal ? "#1e293b" : "var(--color-primary)";
@@ -90,7 +90,7 @@ function MatchCard({
             <div className={`flex items-center justify-between px-2 py-1.5 border-b border-slate-100 ${aWon ? "bg-green-50" : "opacity-40"}`}>
                 <div className="flex items-center gap-1 min-w-0">
                     {isFinal && aWon && <span className="text-yellow-500 text-[10px] shrink-0">★</span>}
-                    <span className="font-pixel text-[8px] truncate" style={{ maxWidth: isFinal ? 130 : 110 }} title={nameA}>
+                    <span className="font-pixel text-[8px] truncate" style={{ maxWidth: isFinal ? 150 : 130 }} title={nameA}>
                         {nameA}
                     </span>
                 </div>
@@ -102,7 +102,7 @@ function MatchCard({
             <div className={`flex items-center justify-between px-2 py-1.5 ${!aWon ? "bg-green-50" : "opacity-40"}`}>
                 <div className="flex items-center gap-1 min-w-0">
                     {isFinal && !aWon && <span className="text-yellow-500 text-[10px] shrink-0">★</span>}
-                    <span className="font-pixel text-[8px] truncate" style={{ maxWidth: isFinal ? 130 : 110 }} title={nameB}>
+                    <span className="font-pixel text-[8px] truncate" style={{ maxWidth: isFinal ? 150 : 130 }} title={nameB}>
                         {nameB}
                     </span>
                 </div>
@@ -148,8 +148,8 @@ export function MatchBracket({ matches, agents }: Props) {
         { m: qf1, col: COL.qfL, top: TOP.qf2, label: "QF 2" },
         { m: qf2, col: COL.qfR, top: TOP.qf1, label: "QF 3" },
         { m: qf3, col: COL.qfR, top: TOP.qf2, label: "QF 4" },
-        { m: sfLeft,  col: COL.sfL,   top: TOP.sf,    label: "SF 1", isSemi: true },
-        { m: sfRight, col: COL.sfR,   top: TOP.sf,    label: "SF 2", isSemi: true },
+        { m: sfLeft, col: COL.sfL, top: TOP.sf, label: "SF 1", isSemi: true },
+        { m: sfRight, col: COL.sfR, top: TOP.sf, label: "SF 2", isSemi: true },
         { m: finalMatch, col: COL.final, top: TOP.final, label: "GRAND FINAL", isFinal: true },
     ];
 
@@ -167,9 +167,9 @@ export function MatchBracket({ matches, agents }: Props) {
             {/* Column labels */}
             {[
                 { label: "QUARTER-FINALS", x: COL.qfL.x + COL.qfL.w / 2 },
-                { label: "SEMI-FINALS",    x: COL.sfL.x + COL.sfL.w / 2 },
-                { label: "FINAL",          x: COL.final.x + COL.final.w / 2 },
-                { label: "SEMI-FINALS",    x: COL.sfR.x + COL.sfR.w / 2 },
+                { label: "SEMI-FINALS", x: COL.sfL.x + COL.sfL.w / 2 },
+                { label: "FINAL", x: COL.final.x + COL.final.w / 2 },
+                { label: "SEMI-FINALS", x: COL.sfR.x + COL.sfR.w / 2 },
                 { label: "QUARTER-FINALS", x: COL.qfR.x + COL.qfR.w / 2 },
             ].map(({ label, x }) => (
                 <div
@@ -191,17 +191,17 @@ export function MatchBracket({ matches, agents }: Props) {
                     {/* Left bracket: QF1 + QF2 → vertical → SF */}
                     <line x1={SX.qfLr} y1={SY.qf1} x2={SX.jL} y2={SY.qf1} />
                     <line x1={SX.qfLr} y1={SY.qf2} x2={SX.jL} y2={SY.qf2} />
-                    <line x1={SX.jL}   y1={SY.qf1} x2={SX.jL} y2={SY.qf2} />
-                    <line x1={SX.jL}   y1={SY.mid} x2={SX.sfLl} y2={SY.mid} />
+                    <line x1={SX.jL} y1={SY.qf1} x2={SX.jL} y2={SY.qf2} />
+                    <line x1={SX.jL} y1={SY.mid} x2={SX.sfLl} y2={SY.mid} />
                     {/* SF Left → Final */}
                     <line x1={SX.sfLr} y1={SY.mid} x2={SX.finL} y2={SY.mid} />
                     {/* Final → SF Right */}
                     <line x1={SX.finR} y1={SY.mid} x2={SX.sfRl} y2={SY.mid} />
                     {/* Right bracket: SF → vertical → QF3 + QF4 */}
-                    <line x1={SX.sfRr} y1={SY.mid} x2={SX.jR}   y2={SY.mid} />
-                    <line x1={SX.jR}   y1={SY.qf1} x2={SX.jR}   y2={SY.qf2} />
-                    <line x1={SX.jR}   y1={SY.qf1} x2={SX.qfRl} y2={SY.qf1} />
-                    <line x1={SX.jR}   y1={SY.qf2} x2={SX.qfRl} y2={SY.qf2} />
+                    <line x1={SX.sfRr} y1={SY.mid} x2={SX.jR} y2={SY.mid} />
+                    <line x1={SX.jR} y1={SY.qf1} x2={SX.jR} y2={SY.qf2} />
+                    <line x1={SX.jR} y1={SY.qf1} x2={SX.qfRl} y2={SY.qf1} />
+                    <line x1={SX.jR} y1={SY.qf2} x2={SX.qfRl} y2={SY.qf2} />
                 </g>
                 {/* Junction dots */}
                 {[

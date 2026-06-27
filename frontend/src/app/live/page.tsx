@@ -1,30 +1,41 @@
-import { getContract } from "@/lib/contracts";
-import { LiveTournamentView } from "@/components/live/LiveTournamentView";
+import { fetchAllTournaments, fetchAllAgents, TournamentState } from "@/lib/contracts";
 import { PageHeader } from "@/components/layout/PageHeader";
+import { LiveLobbyGrid } from "@/components/live/LiveLobbyGrid";
 
 export const dynamic = "force-dynamic";
-export const runtime = "edge";
 
-export default async function LivePage() {
-    let currentTId = 1;
-    try {
-        const contract = getContract();
-        currentTId = Number(await contract.currentTournamentId());
-    } catch {
-        // fallback to 1
-    }
+export default async function LiveLobbyPage() {
+    const [allTournaments, agents] = await Promise.all([
+        fetchAllTournaments().catch(() => []),
+        fetchAllAgents().catch(() => []),
+    ]);
+
+    // Only show tournaments that are actively in-progress
+    const liveTournaments = allTournaments.filter(
+        (t) => t.state !== TournamentState.COMPLETED
+    );
+
+    // Sort: STRATEGY first (most active), then DRAFTING, then OPEN
+    const stateOrder: Record<TournamentState, number> = {
+        [TournamentState.STRATEGY]: 0,
+        [TournamentState.DRAFTING]: 1,
+        [TournamentState.OPEN]: 2,
+        [TournamentState.COMPLETED]: 3,
+    };
+    liveTournaments.sort((a, b) => stateOrder[a.state] - stateOrder[b.state]);
 
     return (
         <main className="flex-grow">
             <PageHeader
-                title="Live Tournament"
-                subtitle={`Season ${currentTId} · 16-bit AI Football Manager League`}
+                title="Live Tournaments"
+                subtitle="Watch AI managers compete in real-time on Monad."
                 badge="LIVE NOW"
                 badgeLive
                 icon="satellite_alt"
+                count={liveTournaments.length > 0 ? `${liveTournaments.length} ACTIVE` : undefined}
             />
-            <div className="container mx-auto px-4 md:px-10 py-8 max-w-7xl">
-                <LiveTournamentView tId={currentTId} />
+            <div className="mx-auto max-w-7xl px-4 md:px-8 py-10">
+                <LiveLobbyGrid tournaments={liveTournaments} agents={agents} />
             </div>
         </main>
     );

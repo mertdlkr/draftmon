@@ -11,9 +11,8 @@ import {
     fetchAllTournaments,
     fetchLiveTournamentState,
     fetchMatchResults,
+    fetchTournamentRoster,
 } from "@/lib/contracts";
-
-export const runtime = "edge";
 
 export async function GET() {
     try {
@@ -27,7 +26,10 @@ export async function GET() {
         const [liveState, matches] = currentTId > 0
             ? await Promise.all([
                 fetchLiveTournamentState(currentTId),
-                fetchMatchResults(currentTId),
+                // Fetch roster first so simulateMatch() can derive the correct goal counts
+                fetchTournamentRoster(currentTId).then((roster) =>
+                    fetchMatchResults(currentTId, roster)
+                ),
             ])
             : [null, []];
 

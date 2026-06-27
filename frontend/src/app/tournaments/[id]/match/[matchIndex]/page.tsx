@@ -1,11 +1,9 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { fetchTournamentDetail } from "@/lib/contracts";
-import { FootballPitch } from "@/components/tournaments/FootballPitch";
+import { MatchReplay } from "@/components/tournaments/MatchReplay";
 import { SquadTable } from "@/components/agents/SquadTable";
 import { ManagerAvatar } from "@/components/ui/ManagerAvatar";
-
-export const runtime = "edge";
 
 interface Props {
     params: Promise<{ id: string; matchIndex: string }>;
@@ -122,28 +120,21 @@ export default async function MatchDetailPage({ params }: Props) {
                 </div>
             </section>
 
-            {/* Formations */}
+            {/* Match Replay */}
             <section>
                 <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-xl font-pixel text-slate-900 border-l-8 border-primary-dark pl-4">Formations</h2>
+                    <h2 className="text-xl font-pixel text-slate-900 border-l-8 border-primary-dark pl-4">Match Replay</h2>
                     <div className="flex gap-4 text-sm font-code">
-                        <span className="flex items-center gap-2"><span className="size-3 rounded-full bg-red-500 border border-black" /> {teamAAgent.profile.name}</span>
-                        <span className="flex items-center gap-2"><span className="size-3 rounded-full bg-blue-500 border border-black" /> {teamBAgent.profile.name}</span>
+                        <span className="flex items-center gap-2"><span className="size-3 bg-blue-500 border border-black" /> {teamAAgent.profile.name}</span>
+                        <span className="flex items-center gap-2"><span className="size-3 bg-red-500 border border-black" /> {teamBAgent.profile.name}</span>
                     </div>
                 </div>
                 <div className="shadow-[4px_4px_0px_0px_rgba(0,0,0,0.1)]">
-                    <FootballPitch
-                        teamA={teamAAgent.entry.team}
-                        teamB={teamBAgent.entry.team}
-                        teamAName={teamAAgent.profile.name}
-                        teamBName={teamBAgent.profile.name}
-                        scoreA={match.goalsA}
-                        scoreB={match.goalsB}
+                    <MatchReplay
                         powerScoreA={match.scoreA}
                         powerScoreB={match.scoreB}
-                        strategyA={teamAAgent.entry.strategyName}
-                        strategyB={teamBAgent.entry.strategyName}
-                        winner={aWon ? "A" : "B"}
+                        teamA={teamAAgent}
+                        teamB={teamBAgent}
                     />
                 </div>
             </section>
