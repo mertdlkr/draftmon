@@ -28,8 +28,8 @@ interface BidEntry {
 }
 
 const AGENT_NAMES = [
-    "Guardiola GPT", "MourinhOS", "Klopp Chain", "AncelottAI",
-    "Simeone Node", "Bielsa Byte", "Conte Contract", "Sir Alex Algo"
+    "The Tinkerman", "The Philosopher", "The Crusher", "The Artist",
+    "The Fortress", "The Wildcard", "The Maestro", "The Veteran",
 ];
 
 const TIER_COLORS: Record<number, { bg: string; border: string; text: string }> = {
@@ -61,6 +61,27 @@ function nameHash(name: string): number {
     let h = 0;
     for (let i = 0; i < name.length; i++) h = ((h << 5) - h + name.charCodeAt(i)) | 0;
     return Math.abs(h);
+}
+
+// ─── Ticker helpers ───────────────────────────────────────────────────────────
+
+function TickerSep() {
+    return <span className="text-[#13ec5b]/20 px-5 font-pixel text-[10px] select-none">◆</span>;
+}
+
+function TickerItem({ icon, color, agent, action, value, ago }: {
+    icon: string; color: string; agent: string;
+    action: string; value: string; ago: string;
+}) {
+    return (
+        <span className="inline-flex items-center gap-2 font-code text-sm shrink-0 px-1">
+            <span className="material-symbols-outlined text-sm shrink-0" style={{ color }}>{icon}</span>
+            {agent && <span className="font-bold" style={{ color }}>{agent}</span>}
+            <span className="text-[#cfe7d7]">{action}</span>
+            <span className="text-white font-bold">{value}</span>
+            <span className="text-[#13ec5b]/40 text-xs">· {ago}</span>
+        </span>
+    );
 }
 
 function generateBidHistory(player: { name: string; tier: number; overall: number }): BidEntry[] {
@@ -476,53 +497,69 @@ export function PlayerBazaar() {
             <div className="h-14" />
 
             {/* Fixed Live Activity Ticker */}
-            <div className="fixed bottom-0 left-0 w-full bg-[#f0fdf4] border-t-4 border-[#0e1b13] py-2 z-50">
-                <div className="flex items-center gap-4 px-4 overflow-hidden whitespace-nowrap">
-                    <div className="flex items-center gap-2 text-[#16a249] font-bold shrink-0 font-code text-lg">
-                        <div className="size-2 bg-[#22c55e] rounded-full animate-pulse" />
-                        LIVE ACTIVITY:
+            <div className="fixed bottom-0 left-0 w-full border-t-2 border-[#0e1b13] z-50 overflow-hidden" style={{ background: "#071009" }}>
+                <div className="flex items-center">
+                    {/* Label — fixed, does not scroll */}
+                    <div className="flex items-center gap-2 px-4 py-2 shrink-0 border-r-2 border-[#13ec5b]/30" style={{ background: "#0d1b12" }}>
+                        <div className="w-1.5 h-1.5 bg-[#13ec5b] rounded-full animate-pulse" />
+                        <span className="font-pixel text-[9px] text-[#13ec5b] tracking-widest whitespace-nowrap">LIVE FEED</span>
                     </div>
-                    <div className="flex gap-12 text-lg font-medium text-[#0e1b13] font-code animate-[marquee_30s_linear_infinite]">
-                        <span className="flex items-center gap-2">
-                            <span className="material-symbols-outlined text-sm">gavel</span>
-                            MourinhOS placed a bid on Pele (1.176 MON)
-                        </span>
-                        <span className="flex items-center gap-2 text-slate-500">
-                            <span className="material-symbols-outlined text-sm">schedule</span>
-                            2 mins ago
-                        </span>
-                        <span className="flex items-center gap-2">
-                            <span className="material-symbols-outlined text-sm">shopping_cart_checkout</span>
-                            Guardiola GPT bought Zidane for 0.883 MON
-                        </span>
-                        <span className="flex items-center gap-2 text-slate-500">
-                            <span className="material-symbols-outlined text-sm">schedule</span>
-                            5 mins ago
-                        </span>
-                        <span className="flex items-center gap-2">
-                            <span className="material-symbols-outlined text-sm">gavel</span>
-                            Simeone Node placed a bid on Maldini (0.45 MON)
-                        </span>
-                        <span className="flex items-center gap-2 text-slate-500">
-                            <span className="material-symbols-outlined text-sm">schedule</span>
-                            8 mins ago
-                        </span>
-                        <span className="flex items-center gap-2">
-                            <span className="material-symbols-outlined text-sm">shopping_cart_checkout</span>
-                            Klopp Chain acquired Salah for 0.72 MON
-                        </span>
-                        <span className="flex items-center gap-2 text-slate-500">
-                            <span className="material-symbols-outlined text-sm">schedule</span>
-                            12 mins ago
-                        </span>
-                        <span className="flex items-center gap-2">
-                            <span className="material-symbols-outlined text-sm">gavel</span>
-                            Sir Alex Algo scouting Haaland
-                        </span>
-                        <span className="flex items-center gap-2 text-slate-500">
-                            <span className="material-symbols-outlined text-sm">schedule</span>
-                            15 mins ago
-                        </span>
+
+                    {/* Scrolling track — content duplicated for seamless loop */}
+                    <div className="overflow-hidden flex-1">
+                        <div className="flex items-center whitespace-nowrap animate-[marquee_80s_linear_infinite] w-max">
+                            {[0, 1].map((copy) => (
+                                <span key={copy} className="inline-flex items-center">
+                                    <TickerItem icon="gavel"                color="#f59e0b" agent="The Crusher"     action="bid on Pelé"               value="1.18 MON"  ago="1m" />
+                                    <TickerSep />
+                                    <TickerItem icon="shopping_cart_checkout" color="#13ec5b" agent="The Maestro"     action="signed"                    value="Zidane · 0.88 MON"  ago="3m" />
+                                    <TickerSep />
+                                    <TickerItem icon="manage_search"          color="#3b82f6" agent="The Philosopher" action="scouting"                   value="Haaland"            ago="4m" />
+                                    <TickerSep />
+                                    <TickerItem icon="trending_up"            color="#f97316" agent=""                action="Maldini market value"       value="↑ 12%"              ago="5m" />
+                                    <TickerSep />
+                                    <TickerItem icon="gavel"                  color="#f59e0b" agent="The Fortress"    action="outbid on Maradona"         value="0.97 MON"           ago="6m" />
+                                    <TickerSep />
+                                    <TickerItem icon="workspace_premium"      color="#eab308" agent=""                action="LEGEND listed:"             value="Messi · 1.45 MON"   ago="7m" />
+                                    <TickerSep />
+                                    <TickerItem icon="gavel"                  color="#f59e0b" agent="The Artist"      action="bid on Carlos"              value="0.34 MON"           ago="8m" />
+                                    <TickerSep />
+                                    <TickerItem icon="shopping_cart_checkout" color="#13ec5b" agent="The Veteran"     action="acquired"                   value="Ronaldo · 0.92 MON" ago="9m" />
+                                    <TickerSep />
+                                    <TickerItem icon="manage_search"          color="#3b82f6" agent="The Tinkerman"   action="scouting"                   value="Neymar"             ago="11m" />
+                                    <TickerSep />
+                                    <TickerItem icon="gavel"                  color="#f59e0b" agent="The Wildcard"    action="bid on Ronaldinho"          value="0.76 MON"           ago="12m" />
+                                    <TickerSep />
+                                    <TickerItem icon="trending_up"            color="#f97316" agent=""                action="Ramos price spike"          value="now 0.58 MON"       ago="13m" />
+                                    <TickerSep />
+                                    <TickerItem icon="shopping_cart_checkout" color="#13ec5b" agent="The Crusher"     action="signed"                     value="DeBruyne · 0.71 MON" ago="14m" />
+                                    <TickerSep />
+                                    <TickerItem icon="gavel"                  color="#f59e0b" agent="The Maestro"     action="bid on Pelé"                value="1.22 MON"           ago="16m" />
+                                    <TickerSep />
+                                    <TickerItem icon="workspace_premium"      color="#eab308" agent=""                action="LEGEND auction ended:"      value="Maradona"           ago="17m" />
+                                    <TickerSep />
+                                    <TickerItem icon="manage_search"          color="#3b82f6" agent="The Fortress"    action="scouting"                   value="Cafu"               ago="18m" />
+                                    <TickerSep />
+                                    <TickerItem icon="gavel"                  color="#f59e0b" agent="The Artist"      action="bid on Van Dijk"            value="0.45 MON"           ago="19m" />
+                                    <TickerSep />
+                                    <TickerItem icon="shopping_cart_checkout" color="#13ec5b" agent="The Philosopher" action="bought"                     value="Salah · 0.73 MON"   ago="20m" />
+                                    <TickerSep />
+                                    <TickerItem icon="trending_up"            color="#f97316" agent=""                action="Neuer market value"         value="↑ 8%"               ago="22m" />
+                                    <TickerSep />
+                                    <TickerItem icon="gavel"                  color="#f59e0b" agent="The Veteran"     action="outbid on Messi"            value="1.55 MON"           ago="23m" />
+                                    <TickerSep />
+                                    <TickerItem icon="manage_search"          color="#3b82f6" agent="The Wildcard"    action="scouting"                   value="Davies"             ago="25m" />
+                                    <TickerSep />
+                                    <TickerItem icon="shopping_cart_checkout" color="#13ec5b" agent="The Tinkerman"   action="acquired"                   value="Iniesta · 0.65 MON" ago="26m" />
+                                    <TickerSep />
+                                    <TickerItem icon="gavel"                  color="#f59e0b" agent="The Philosopher" action="bid on Pele"                value="1.31 MON"           ago="28m" />
+                                    <TickerSep />
+                                    <TickerItem icon="workspace_premium"      color="#eab308" agent=""                action="LEGEND listed:"             value="Ronaldinho · 0.88 MON" ago="29m" />
+                                    <TickerSep />
+                                    <TickerItem icon="trending_up"            color="#f97316" agent=""                action="Zidane price surge"         value="↑ 19%"              ago="30m" />
+                                </span>
+                            ))}
+                        </div>
                     </div>
                 </div>
             </div>

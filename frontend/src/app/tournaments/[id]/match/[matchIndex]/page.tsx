@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { fetchTournamentDetail } from "@/lib/contracts";
 import { FootballPitch } from "@/components/tournaments/FootballPitch";
+import { SquadTable } from "@/components/agents/SquadTable";
 
 interface Props {
     params: Promise<{ id: string; matchIndex: string }>;
@@ -117,104 +118,34 @@ export default async function MatchDetailPage({ params }: Props) {
             {/* Squad Tables */}
             <section className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 {/* Home Squad */}
-                <div className="bg-white rounded-lg shadow-sm overflow-hidden border border-slate-200">
-                    <div className="bg-slate-100 p-4 border-b border-slate-200 flex justify-between items-center">
-                        <div className="flex items-center gap-3">
-                            <div className="size-10 bg-white rounded border border-slate-300 overflow-hidden flex items-center justify-center">
-                                <span className="material-symbols-outlined text-xl text-slate-400">smart_toy</span>
-                            </div>
-                            <div>
-                                <h3 className="font-pixel text-[10px] text-slate-500 uppercase">Manager</h3>
-                                <p className="font-pixel text-xs text-slate-900">{teamAAgent.profile.name}</p>
-                            </div>
+                <div className="bg-white border-2 border-black overflow-hidden" style={{ boxShadow: '4px 4px 0px 0px rgba(0,0,0,0.15)' }}>
+                    <div className="px-4 py-3 border-b-2 border-black flex justify-between items-center bg-slate-50">
+                        <div>
+                            <p className="font-pixel text-[8px] text-slate-400 uppercase tracking-widest mb-0.5">Manager</p>
+                            <p className="font-pixel text-xs text-slate-900">{teamAAgent.profile.name}</p>
                         </div>
-                        <span className={`px-2 py-1 rounded text-[10px] font-code font-bold border ${aWon ? 'bg-green-100 text-green-700 border-green-200' : 'bg-red-100 text-red-700 border-red-200'}`}>
-                            {aWon ? 'WINNER' : 'Home'}
+                        <span className={`px-2 py-1 text-[9px] font-pixel font-bold border-2 ${aWon ? 'bg-[#13ec5b]/10 text-[#16a249] border-[#13ec5b]' : 'bg-slate-100 text-slate-500 border-slate-300'}`}>
+                            {aWon ? 'WINNER' : 'HOME'}
                         </span>
                     </div>
-                    <div className="overflow-x-auto">
-                        <table className="w-full text-left border-collapse">
-                            <thead>
-                                <tr className="bg-slate-50 text-[10px] font-pixel text-slate-500 border-b border-slate-200">
-                                    <th className="p-3 w-12 text-center">POS</th>
-                                    <th className="p-3">PLAYER</th>
-                                    <th className="p-3 text-center hidden sm:table-cell">PAC</th>
-                                    <th className="p-3 text-center hidden sm:table-cell">SHO</th>
-                                    <th className="p-3 text-center hidden sm:table-cell">PAS</th>
-                                    <th className="p-3 text-center">OVR</th>
-                                </tr>
-                            </thead>
-                            <tbody className="font-code text-sm">
-                                {teamAAgent.entry.team.filter(p => p.name).map((player, idx) => {
-                                    const ovr = Math.round((player.pace + player.shooting + player.passing + player.tackling) / 4);
-                                    const posColor = player.position === 'GK' ? 'bg-yellow-100 text-yellow-700' :
-                                        ['CB', 'LB', 'RB'].includes(player.position) ? 'bg-blue-100 text-blue-700' :
-                                            ['CM', 'CDM', 'CAM', 'LM', 'RM'].includes(player.position) ? 'bg-green-100 text-green-700' :
-                                                'bg-red-100 text-red-700';
-                                    return (
-                                        <tr key={idx} className="border-b border-slate-100 hover:bg-slate-50 transition-colors">
-                                            <td className="p-3 text-center"><span className={`${posColor} px-1.5 py-0.5 rounded text-[10px] font-bold`}>{player.position}</span></td>
-                                            <td className="p-3 font-medium text-slate-800">{player.name}</td>
-                                            <td className={`p-3 text-center hidden sm:table-cell ${player.pace >= 85 ? 'text-green-600 font-bold' : 'text-slate-600'}`}>{player.pace}</td>
-                                            <td className={`p-3 text-center hidden sm:table-cell ${player.shooting >= 85 ? 'text-green-600 font-bold' : 'text-slate-600'}`}>{player.shooting}</td>
-                                            <td className={`p-3 text-center hidden sm:table-cell ${player.passing >= 85 ? 'text-green-600 font-bold' : 'text-slate-600'}`}>{player.passing}</td>
-                                            <td className="p-3 text-center font-bold text-slate-900 bg-slate-50">{ovr}</td>
-                                        </tr>
-                                    );
-                                })}
-                            </tbody>
-                        </table>
+                    <div className="p-3">
+                        <SquadTable players={teamAAgent.entry.team} />
                     </div>
                 </div>
 
                 {/* Away Squad */}
-                <div className="bg-white rounded-lg shadow-sm overflow-hidden border border-slate-200">
-                    <div className="bg-slate-100 p-4 border-b border-slate-200 flex justify-between items-center">
-                        <div className="flex items-center gap-3">
-                            <div className="size-10 bg-white rounded border border-slate-300 overflow-hidden flex items-center justify-center">
-                                <span className="material-symbols-outlined text-xl text-slate-400">smart_toy</span>
-                            </div>
-                            <div>
-                                <h3 className="font-pixel text-[10px] text-slate-500 uppercase">Manager</h3>
-                                <p className="font-pixel text-xs text-slate-900">{teamBAgent.profile.name}</p>
-                            </div>
+                <div className="bg-white border-2 border-black overflow-hidden" style={{ boxShadow: '4px 4px 0px 0px rgba(0,0,0,0.15)' }}>
+                    <div className="px-4 py-3 border-b-2 border-black flex justify-between items-center bg-slate-50">
+                        <div>
+                            <p className="font-pixel text-[8px] text-slate-400 uppercase tracking-widest mb-0.5">Manager</p>
+                            <p className="font-pixel text-xs text-slate-900">{teamBAgent.profile.name}</p>
                         </div>
-                        <span className={`px-2 py-1 rounded text-[10px] font-code font-bold border ${!aWon ? 'bg-green-100 text-green-700 border-green-200' : 'bg-yellow-100 text-yellow-700 border-yellow-200'}`}>
-                            {!aWon ? 'WINNER' : 'Away'}
+                        <span className={`px-2 py-1 text-[9px] font-pixel font-bold border-2 ${!aWon ? 'bg-[#13ec5b]/10 text-[#16a249] border-[#13ec5b]' : 'bg-slate-100 text-slate-500 border-slate-300'}`}>
+                            {!aWon ? 'WINNER' : 'AWAY'}
                         </span>
                     </div>
-                    <div className="overflow-x-auto">
-                        <table className="w-full text-left border-collapse">
-                            <thead>
-                                <tr className="bg-slate-50 text-[10px] font-pixel text-slate-500 border-b border-slate-200">
-                                    <th className="p-3 w-12 text-center">POS</th>
-                                    <th className="p-3">PLAYER</th>
-                                    <th className="p-3 text-center hidden sm:table-cell">PAC</th>
-                                    <th className="p-3 text-center hidden sm:table-cell">SHO</th>
-                                    <th className="p-3 text-center hidden sm:table-cell">PAS</th>
-                                    <th className="p-3 text-center">OVR</th>
-                                </tr>
-                            </thead>
-                            <tbody className="font-code text-sm">
-                                {teamBAgent.entry.team.filter(p => p.name).map((player, idx) => {
-                                    const ovr = Math.round((player.pace + player.shooting + player.passing + player.tackling) / 4);
-                                    const posColor = player.position === 'GK' ? 'bg-yellow-100 text-yellow-700' :
-                                        ['CB', 'LB', 'RB'].includes(player.position) ? 'bg-blue-100 text-blue-700' :
-                                            ['CM', 'CDM', 'CAM', 'LM', 'RM'].includes(player.position) ? 'bg-green-100 text-green-700' :
-                                                'bg-red-100 text-red-700';
-                                    return (
-                                        <tr key={idx} className="border-b border-slate-100 hover:bg-slate-50 transition-colors">
-                                            <td className="p-3 text-center"><span className={`${posColor} px-1.5 py-0.5 rounded text-[10px] font-bold`}>{player.position}</span></td>
-                                            <td className="p-3 font-medium text-slate-800">{player.name}</td>
-                                            <td className={`p-3 text-center hidden sm:table-cell ${player.pace >= 85 ? 'text-green-600 font-bold' : 'text-slate-600'}`}>{player.pace}</td>
-                                            <td className={`p-3 text-center hidden sm:table-cell ${player.shooting >= 85 ? 'text-green-600 font-bold' : 'text-slate-600'}`}>{player.shooting}</td>
-                                            <td className={`p-3 text-center hidden sm:table-cell ${player.passing >= 85 ? 'text-green-600 font-bold' : 'text-slate-600'}`}>{player.passing}</td>
-                                            <td className="p-3 text-center font-bold text-slate-900 bg-slate-50">{ovr}</td>
-                                        </tr>
-                                    );
-                                })}
-                            </tbody>
-                        </table>
+                    <div className="p-3">
+                        <SquadTable players={teamBAgent.entry.team} />
                     </div>
                 </div>
             </section>

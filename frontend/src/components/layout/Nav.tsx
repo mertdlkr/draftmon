@@ -41,7 +41,7 @@ export function Nav() {
                         <Link
                             key={link.href}
                             href={link.href}
-                            className={`text-sm font-bold uppercase tracking-wide transition-colors no-underline ${isActive ? "text-[#13ec5b]" : "text-slate-700 hover:text-[#13ec5b]"}`}
+                            className={`nav-link text-sm font-bold uppercase tracking-wide transition-colors no-underline ${isActive ? "text-[#13ec5b] nav-active" : "text-slate-700 hover:text-[#13ec5b]"}`}
                         >
                             {link.label === "LIVE" ? (
                                 <span className="flex items-center gap-2">

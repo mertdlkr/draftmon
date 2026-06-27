@@ -24,13 +24,22 @@
 }
 
 html {
-  background: var(--color-bg-light);
+  background-color: var(--color-bg-light);
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"),
+    repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 10px,
+      rgba(0, 0, 0, 0.07) 10px,
+      rgba(0, 0, 0, 0.07) 12px
+    );
   color: #0f172a;
 }
 
 body {
   font-family: var(--font-display);
-  background: var(--color-bg-light);
+  background: transparent;
   color: #0f172a;
   line-height: 1.6;
 }
@@ -85,6 +94,43 @@ pre,
   background-color: white;
   border: 3px solid var(--color-retro-border);
   box-shadow: 4px 4px 0px 0px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.retro-card::before,
+.retro-card::after {
+  content: '';
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  z-index: 1;
+  transition: border-color 0.15s;
+}
+
+.retro-card::before {
+  top: 4px;
+  left: 4px;
+  border-top: 2px solid var(--color-retro-border);
+  border-left: 2px solid var(--color-retro-border);
+}
+
+.retro-card::after {
+  bottom: 4px;
+  right: 4px;
+  border-bottom: 2px solid var(--color-retro-border);
+  border-right: 2px solid var(--color-retro-border);
+}
+
+.retro-card:hover::before {
+  border-color: var(--color-primary);
+}
+
+.retro-card:hover::after {
+  border-color: var(--color-primary);
+}
+
+.retro-card:hover {
+  filter: url(#card-wave);
 }
 
 .pixel-card-shadow {
@@ -122,31 +168,6 @@ pre,
   background-size: 20px 20px;
 }
 
-/* ── Stat bar segments (pixel blocks for manager cards) ─────────────────── */
-.stat-bar-segment {
-  width: 12px;
-  height: 12px;
-  border: 1px solid #000;
-  margin-right: 2px;
-}
-
-.stat-bar-fill {
-  background-color: var(--color-primary);
-}
-
-/* ── Modern stat bars (for player cards) ───────────────────────────────── */
-.stat-bar {
-  height: 6px;
-  background: #e2e8f0;
-  border-radius: 9999px;
-  overflow: hidden;
-}
-
-.stat-fill {
-  height: 100%;
-  background: var(--color-primary);
-  transition: width 0.6s ease;
-}
 
 /* ── Tier card borders ─────────────────────────────────────────────────── */
 .legend-card {
@@ -368,13 +389,286 @@ pre,
 }
 
 @keyframes marquee {
-  0% {
-    transform: translateX(100%);
-  }
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
 
-  100% {
-    transform: translateX(-100%);
+/* ── Page entry transition ───────────────────────────────────────────────── */
+@keyframes pageIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+main {
+  animation: pageIn 0.2s ease-out;
+}
+
+/* ── Custom pixel cursor ─────────────────────────────────────────────────── */
+@media (hover: hover) {
+  * {
+    cursor: none !important;
   }
+}
+
+.pixel-cursor-main {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 2px;
+  height: 2px;
+  background: #13ec5b;
+  pointer-events: none;
+  z-index: 99999;
+  will-change: transform;
+  transition: opacity 0.15s;
+  filter: drop-shadow(0 0 4px rgba(19, 236, 91, 0.9)) drop-shadow(1px 1px 0 rgba(0, 0, 0, 0.6));
+  /* Crosshair arms — each unit is 2px */
+  box-shadow:
+    -6px 0 0 0 #13ec5b,
+    -4px 0 0 0 #13ec5b,
+    -2px 0 0 0 #13ec5b,
+     2px 0 0 0 #13ec5b,
+     4px 0 0 0 #13ec5b,
+     6px 0 0 0 #13ec5b,
+     0 -6px 0 0 #13ec5b,
+     0 -4px 0 0 #13ec5b,
+     0 -2px 0 0 #13ec5b,
+     0  2px 0 0 #13ec5b,
+     0  4px 0 0 #13ec5b,
+     0  6px 0 0 #13ec5b;
+}
+
+.pixel-cursor-main.is-pointer {
+  background: #fff;
+  /* Filled square block on pointer */
+  box-shadow:
+    -2px -2px 0 0 #13ec5b,
+     0   -2px 0 0 #13ec5b,
+     2px -2px 0 0 #13ec5b,
+    -2px  0   0 0 #13ec5b,
+     2px  0   0 0 #13ec5b,
+    -2px  2px 0 0 #13ec5b,
+     0    2px 0 0 #13ec5b,
+     2px  2px 0 0 #13ec5b;
+  filter: drop-shadow(0 0 6px rgba(19, 236, 91, 1)) drop-shadow(1px 1px 0 rgba(0, 0, 0, 0.6));
+}
+
+.pixel-cursor-trail {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(19, 236, 91, 0.4);
+  pointer-events: none;
+  z-index: 99998;
+  will-change: transform;
+  transition: width 0.12s steps(3), height 0.12s steps(3), border-color 0.15s, opacity 0.2s;
+}
+
+.pixel-cursor-trail.is-pointer {
+  width: 28px;
+  height: 28px;
+  border-color: rgba(19, 236, 91, 0.75);
+}
+
+/* ── CRT Vignette overlay ───────────────────────────────────────────────── */
+html::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(ellipse at center, transparent 55%, rgba(0, 0, 0, 0.22) 100%);
+  pointer-events: none;
+  z-index: 9998;
+}
+
+/* ── Blinking cursor ─────────────────────────────────────────────────────── */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.blink-cursor::after {
+  content: '_';
+  color: #13ec5b;
+  animation: blink 1s step-end infinite;
+  margin-left: 4px;
+}
+
+/* ── Green pixel glow for stat values ───────────────────────────────────── */
+.pixel-glow {
+  text-shadow:
+    0 0 6px rgba(19, 236, 91, 0.9),
+    0 0 18px rgba(19, 236, 91, 0.5);
+}
+
+/* ── Retro button press (2px pixel shift on click) ──────────────────────── */
+.retro-btn:active {
+  transform: translate(2px, 2px) !important;
+  box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.2) !important;
+}
+
+/* ── Nav link ▶ cursor ───────────────────────────────────────────────────── */
+.nav-link {
+  position: relative;
+}
+
+.nav-link::before {
+  content: '▶';
+  position: absolute;
+  left: -14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 7px;
+  color: #13ec5b;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.nav-link:hover::before,
+.nav-link.nav-active::before {
+  opacity: 1;
+}
+
+/* ── Scrolling ticker ────────────────────────────────────────────────────── */
+@keyframes ticker {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.ticker-track {
+  display: flex;
+  width: max-content;
+  animation: ticker 30s linear infinite;
+}
+
+/* ── Pixel section divider ───────────────────────────────────────────────── */
+.pixel-divider {
+  width: 100%;
+  height: 14px;
+  background-image: repeating-linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.1) 0px,
+    rgba(0, 0, 0, 0.1) 7px,
+    rgba(0, 0, 0, 0.04) 7px,
+    rgba(0, 0, 0, 0.04) 8px,
+    transparent 8px,
+    transparent 10px
+  );
+}
+
+/* ── PRESS START blink ───────────────────────────────────────────────────── */
+.text-blink {
+  animation: blink 1.1s step-end infinite;
+}
+
+/* ── LIVE corner ribbon ──────────────────────────────────────────────────── */
+.live-ribbon {
+  position: absolute;
+  top: 9px;
+  right: -20px;
+  background: #ef4444;
+  color: white;
+  font-family: var(--font-pixel);
+  font-size: 5px;
+  padding: 3px 26px;
+  transform: rotate(45deg);
+  letter-spacing: 0.08em;
+  pointer-events: none;
+  line-height: 1;
+  z-index: 10;
+}
+
+/* ── Glitch text animation ───────────────────────────────────────────────── */
+@keyframes glitch {
+  0%, 82%, 100% {
+    transform: translate(0);
+    text-shadow: 4px 4px 0px rgba(0, 0, 0, 0.5);
+  }
+  84% {
+    transform: translate(-4px, 0);
+    text-shadow: 4px 4px 0 rgba(0,0,0,0.5), -3px 0 #ff0040, 3px 0 #00ffcc;
+  }
+  86% {
+    transform: translate(4px, -1px);
+    text-shadow: 4px 4px 0px rgba(0, 0, 0, 0.5);
+  }
+  88% {
+    transform: translate(-3px, 1px);
+    text-shadow: 4px 4px 0 rgba(0,0,0,0.5), 3px 0 #ff0040, -3px 0 #00ffcc;
+  }
+  90% {
+    transform: translate(0);
+    text-shadow: 4px 4px 0px rgba(0, 0, 0, 0.5);
+  }
+}
+
+.glitch-text {
+  animation: glitch 5s infinite;
+}
+
+/* ── TV wave distortion + scan band ─────────────────────────────────────── */
+.hero-bg {
+  filter: url(#tv-wave);
+  animation: tvFlicker 7s infinite;
+}
+
+@keyframes tvFlicker {
+  0%, 93%, 100% { opacity: 1; }
+  94% { opacity: 0.82; }
+  95% { opacity: 1; }
+  97% { opacity: 0.9; }
+}
+
+@keyframes tvScan {
+  0%   { transform: translateY(120%); }
+  100% { transform: translateY(-120%); }
+}
+
+.hero-scan-band {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 35%;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    rgba(255, 255, 255, 0.025) 25%,
+    rgba(255, 255, 255, 0.08)  50%,
+    rgba(255, 255, 255, 0.025) 75%,
+    transparent 100%
+  );
+  pointer-events: none;
+  z-index: 6;
+  animation: tvScan 8s linear infinite;
+}
+
+/* ── Hero scanlines overlay ──────────────────────────────────────────────── */
+.hero-scanlines::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    rgba(0, 0, 0, 0.07) 3px,
+    rgba(0, 0, 0, 0.07) 4px
+  );
+  pointer-events: none;
+  z-index: 11;
+}
+
+/* ── Scroll reveal (pixel snap-in) ──────────────────────────────────────── */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.35s linear, transform 0.45s steps(5, end);
+}
+
+[data-reveal].revealed {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 /* Material Symbols helper */

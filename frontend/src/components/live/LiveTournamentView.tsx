@@ -7,6 +7,8 @@ import { TournamentState } from "@/lib/contracts";
 import { STRATEGIES } from "@/lib/contracts";
 import type { LiveParticipant } from "@/lib/contracts";
 import { SquadTable } from "@/components/agents/SquadTable";
+import { PixelStatBar } from "@/components/ui/PixelStatBar";
+import { ManagerAvatar, getManagerColor } from "@/components/ui/ManagerAvatar";
 
 interface Props { tId: number }
 
@@ -102,31 +104,25 @@ export function LiveTournamentView({ tId }: Props) {
 
             {/* RIGHT — Event Feed */}
             <div className="lg:col-span-4 relative">
-                <div className="sticky top-24 bg-white shadow-xl border-t-[4px] border-t-[#16a34a] border-x border-b border-gray-200">
+                <div className="sticky top-24 border-2 border-[#13ec5b]/40 shadow-[4px_4px_0px_0px_rgba(19,236,91,0.1)]" style={{ background: "#0d1b12" }}>
                     {/* Feed Header */}
-                    <div className="p-4 bg-white border-b border-gray-100 flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                            <div className="relative">
-                                <span className="material-symbols-outlined text-[#16a34a] text-xl">satellite_alt</span>
-                                <span className="absolute -top-1 -right-1 flex h-2 w-2">
-                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#16a34a] opacity-75" />
-                                    <span className="relative inline-flex rounded-full h-2 w-2 bg-[#16a34a]" />
-                                </span>
-                            </div>
-                            <h3 className="font-pixel text-xs tracking-wide uppercase">EVENT FEED</h3>
+                    <div className="px-4 py-3 border-b border-[#13ec5b]/20 flex items-center justify-between" style={{ background: "#071009" }}>
+                        <div className="flex items-center gap-2">
+                            <span className="w-2 h-2 bg-[#13ec5b] rounded-full animate-pulse" />
+                            <h3 className="font-pixel text-[10px] text-[#13ec5b] tracking-widest">▶ LIVE FEED</h3>
                         </div>
-                        <span className="text-sm font-code text-slate-400">LIVE LOG</span>
+                        <span className="font-pixel text-[8px] text-[#13ec5b]/40">SEASON {tId}</span>
                     </div>
 
                     {/* Feed Content */}
                     <div
                         ref={feedRef}
-                        className="h-[600px] overflow-y-auto p-4 space-y-4 bg-white font-code text-lg leading-snug"
-                        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+                        className="h-[600px] overflow-y-auto p-3 space-y-2"
+                        style={{ scrollbarWidth: "none", msOverflowStyle: "none", background: "#0d1b12" }}
                     >
                         {recentEvents.length === 0 && (
-                            <div className="text-center py-8 text-slate-400 font-code text-lg">
-                                Listening for events...
+                            <div className="text-center py-12 font-pixel text-[8px] text-[#13ec5b]/40 text-blink">
+                                MONITORING FEED...
                             </div>
                         )}
                         {recentEvents.map((ev, i) => {
@@ -134,14 +130,14 @@ export function LiveTournamentView({ tId }: Props) {
 
                             if (ev.type === "strategy_revealed") {
                                 return (
-                                    <div key={ev.timestamp} className="bg-green-50 border-l-4 border-[#16a34a] p-3">
-                                        <div className="flex items-center justify-between mb-2">
-                                            <span className="text-[#15803d] font-bold text-base">{time}</span>
-                                            <span className="text-xs text-[#15803d] font-bold uppercase bg-[#16a34a]/20 px-1 py-0.5">Strategy</span>
+                                    <div key={ev.timestamp} className="border-l-2 border-[#13ec5b] pl-3 py-2">
+                                        <div className="flex items-center gap-2 mb-1">
+                                            <span className="font-pixel text-[7px] text-[#13ec5b]/50">[{time}]</span>
+                                            <span className="font-pixel text-[7px] text-[#13ec5b] bg-[#13ec5b]/10 px-1">STRATEGY</span>
                                         </div>
-                                        <p className="text-slate-800 text-base">
-                                            <span className="text-[#3b82f6] font-bold">{ev.payload?.agent?.name}</span> committed{' '}
-                                            <span className="bg-slate-100 px-1 border border-slate-300 font-bold">{ev.payload?.strategyName}</span> formation.
+                                        <p className="font-body text-base text-[#cfe7d7]">
+                                            <span className="text-[#13ec5b] font-bold">{ev.payload?.agent?.name}</span>
+                                            {" → "}<span className="text-white font-bold">{ev.payload?.strategyName}</span>
                                         </p>
                                     </div>
                                 );
@@ -149,38 +145,36 @@ export function LiveTournamentView({ tId }: Props) {
 
                             if (ev.type === "tournament_ended") {
                                 return (
-                                    <div key={ev.timestamp} className="bg-gradient-to-r from-purple-50 to-pink-50 border-l-4 border-purple-500 p-3 relative overflow-hidden">
-                                        <div className="flex items-center justify-between mb-2">
-                                            <span className="text-purple-700 font-bold text-base">{time}</span>
-                                            <span className="text-xs text-purple-800 font-bold uppercase bg-purple-200 px-1 py-0.5">Match Result</span>
+                                    <div key={ev.timestamp} className="border-l-2 border-yellow-400 pl-3 py-2">
+                                        <div className="flex items-center gap-2 mb-1">
+                                            <span className="font-pixel text-[7px] text-[#13ec5b]/50">[{time}]</span>
+                                            <span className="font-pixel text-[7px] text-yellow-400 bg-yellow-400/10 px-1 text-blink">CHAMPION</span>
                                         </div>
-                                        <p className="text-slate-800 text-base">
-                                            🏆 Champion: <span className="font-bold text-purple-600">{ev.payload?.champion?.slice(0, 10)}...</span>
+                                        <p className="font-body text-base text-yellow-300 font-bold">
+                                            🏆 {ev.payload?.champion?.slice(0, 10)}...
                                         </p>
-                                        <span className="text-xs text-purple-600 font-bold mt-2 block font-pixel uppercase tracking-wide">CHAMPION!</span>
                                     </div>
                                 );
                             }
 
                             if (ev.type === "error") {
                                 return (
-                                    <div key={ev.timestamp} className="bg-yellow-50 border-l-4 border-yellow-500 p-3">
-                                        <div className="flex items-center justify-between mb-2">
-                                            <span className="text-yellow-700 font-bold text-base">{time}</span>
-                                            <span className="text-xs text-yellow-800 font-bold uppercase bg-yellow-200 px-1 py-0.5">Alert</span>
+                                    <div key={ev.timestamp} className="border-l-2 border-red-500 pl-3 py-2">
+                                        <div className="flex items-center gap-2 mb-1">
+                                            <span className="font-pixel text-[7px] text-[#13ec5b]/50">[{time}]</span>
+                                            <span className="font-pixel text-[7px] text-red-400 bg-red-400/10 px-1">ERROR</span>
                                         </div>
-                                        <p className="text-slate-800 text-base">{ev.payload?.message}</p>
+                                        <p className="font-body text-base text-red-300">{ev.payload?.message}</p>
                                     </div>
                                 );
                             }
 
-                            // Default: participant_joined or other
                             return (
-                                <div key={ev.timestamp} className={`border-l-2 border-slate-200 pl-3 py-1 hover:border-slate-400 transition-colors ${i > 4 ? 'opacity-50' : ''}`}>
-                                    <span className="text-sm text-slate-400 block mb-1">{time}</span>
-                                    <p className="text-slate-600 text-base">
+                                <div key={ev.timestamp} className={`border-l-2 border-[#13ec5b]/20 pl-3 py-1 ${i > 4 ? "opacity-40" : ""}`}>
+                                    <span className="font-pixel text-[7px] text-[#13ec5b]/40 block mb-0.5">[{time}] LOG</span>
+                                    <p className="font-body text-base text-[#cfe7d7]/70">
                                         {ev.type === "participant_joined" ? (
-                                            <><span className="text-[#16a34a] font-bold">{ev.payload?.agent?.name}</span> joined the tournament.</>
+                                            <><span className="text-[#13ec5b]">{ev.payload?.agent?.name}</span> has entered the arena.</>
                                         ) : (
                                             <span>{JSON.stringify(ev.payload)}</span>
                                         )}
@@ -190,11 +184,11 @@ export function LiveTournamentView({ tId }: Props) {
                         })}
                     </div>
 
-                    {/* Chat Box (readonly) */}
-                    <div className="p-3 bg-slate-50 border-t border-slate-200">
-                        <div className="flex items-center gap-2 bg-white px-3 py-2 border-2 border-slate-200 shadow-inner">
-                            <span className="text-[#16a34a] font-bold animate-pulse">&gt;</span>
-                            <span className="text-slate-400 font-code text-lg">Chat restricted to participants</span>
+                    {/* Terminal prompt */}
+                    <div className="px-4 py-2 border-t border-[#13ec5b]/20" style={{ background: "#071009" }}>
+                        <div className="flex items-center gap-2 font-pixel text-[8px] text-[#13ec5b]/50">
+                            <span className="text-blink">▶</span>
+                            <span>MONITORING FEED...</span>
                         </div>
                     </div>
                 </div>
@@ -246,18 +240,14 @@ function ParticipantCard({ p, accentColor }: { p: LiveParticipant; accentColor: 
 
             {/* Main content */}
             <div className="p-4 flex gap-4">
-                <div className="w-20 h-20 bg-slate-100 shrink-0 border-2 border-black overflow-hidden flex items-center justify-center" style={{ imageRendering: 'pixelated' }}>
-                    <span className="material-symbols-outlined text-4xl text-slate-400">smart_toy</span>
-                </div>
+                <ManagerAvatar name={p.profile.name} size={80} />
                 <div className="flex-1 min-w-0">
                     <h3 className="font-bold truncate font-pixel text-xs mt-1 leading-relaxed">{p.profile.name}</h3>
                     <p className="text-slate-500 font-code text-base mb-2">{shortAddr}</p>
-                    <div className="flex gap-2 text-base font-code text-slate-700">
-                        <span className="text-[#ef4444] font-bold">ATK:{p.profile.attack}</span>
-                        <span className="text-slate-300">|</span>
-                        <span className="text-[#3b82f6] font-bold">DEF:{p.profile.defense}</span>
-                        <span className="text-slate-300">|</span>
-                        <span className="text-[#eab308] font-bold">DIS:{p.profile.discipline}</span>
+                    <div className="flex flex-col gap-1 w-full">
+                        <PixelStatBar label="ATT" value={p.profile.attack} color={getManagerColor(p.profile.name)} />
+                        <PixelStatBar label="DEF" value={p.profile.defense} color={getManagerColor(p.profile.name)} />
+                        <PixelStatBar label="DIS" value={p.profile.discipline} color={getManagerColor(p.profile.name)} />
                     </div>
                 </div>
             </div>

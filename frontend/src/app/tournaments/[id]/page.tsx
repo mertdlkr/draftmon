@@ -3,6 +3,8 @@ import Link from "next/link";
 import { fetchTournamentDetail } from "@/lib/contracts";
 import { MatchBracket } from "@/components/tournaments/MatchBracket";
 import { AgentCard } from "@/components/agents/AgentCard";
+import { SquadTable } from "@/components/agents/SquadTable";
+import { ManagerAvatar } from "@/components/ui/ManagerAvatar";
 
 interface Props {
     params: Promise<{ id: string }>;
@@ -53,30 +55,40 @@ export default async function TournamentResultsPage({ params }: Props) {
             {/* Champion Banner */}
             {isCompleted && tournament.champion && tournament.champion !== "0x0000000000000000000000000000000000000000" && (() => {
                 const champion = agentByAddr(tournament.champion);
+                const championName = champion?.profile.name ?? `${tournament.champion.slice(0, 6)}…${tournament.champion.slice(-4)}`;
                 return (
                     <section className="w-full relative">
-                        <div className="bg-[#f0fdf4] border-4 border-[#16a249] rounded-lg p-6 flex flex-col md:flex-row items-center justify-center gap-8 shadow-sm">
-                            <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-[#16a249] text-white px-6 py-2 rounded font-pixel text-xs md:text-sm shadow-md whitespace-nowrap z-10">
+                        {/* Retro header badge */}
+                        <div className="flex justify-center mb-0">
+                            <div className="bg-[#16a249] text-white px-8 py-2 font-pixel text-xs tracking-widest border-2 border-[#0e1b13] shadow-[3px_3px_0px_0px_rgba(0,0,0,0.2)] z-10 relative">
                                 SEASON CHAMPION
                             </div>
-                            <div className="relative mt-4 md:mt-0">
-                                <div className="w-32 h-32 md:w-40 md:h-40 rounded-full border-4 border-[#16a249] bg-white overflow-hidden relative z-0 flex items-center justify-center">
-                                    <span className="material-symbols-outlined text-[#16a249] text-6xl">emoji_events</span>
-                                </div>
-                                <div className="absolute -bottom-2 -right-2 bg-yellow-400 border-2 border-black p-1.5 rounded-full z-10">
-                                    <span className="material-symbols-outlined text-black text-xl">star</span>
+                        </div>
+
+                        <div
+                            className="bg-[#f0fdf4] border-2 border-[#16a249] p-8 flex flex-col md:flex-row items-center justify-center gap-10"
+                            style={{ boxShadow: "6px 6px 0px 0px rgba(22,162,73,0.15)" }}
+                        >
+                            {/* Avatar with gold star badge */}
+                            <div className="relative shrink-0">
+                                <ManagerAvatar name={championName} size={128} />
+                                {/* Gold star badge */}
+                                <div className="absolute -bottom-3 -right-3 bg-yellow-400 border-2 border-black w-9 h-9 flex items-center justify-center font-pixel text-lg shadow-[2px_2px_0px_0px_rgba(0,0,0,0.3)]">
+                                    ★
                                 </div>
                             </div>
-                            <div className="text-center md:text-left flex flex-col gap-2">
-                                <h2 className="text-3xl md:text-4xl font-pixel text-slate-900">
-                                    {champion?.profile.name ?? `${tournament.champion.slice(0, 6)}…${tournament.champion.slice(-4)}`}
+
+                            {/* Info */}
+                            <div className="text-center md:text-left flex flex-col gap-3">
+                                <h2 className="text-3xl md:text-4xl font-pixel text-slate-900 leading-tight">
+                                    {championName}
                                 </h2>
                                 <div className="font-code text-xl md:text-2xl text-slate-600">
                                     Strategy: <span className="text-[#16a249] font-bold">{champion?.entry?.strategyName ?? "Unknown"}</span>
                                 </div>
-                                <div className="flex flex-wrap justify-center md:justify-start gap-4 mt-2">
-                                    <div className="bg-white border-2 border-green-200 px-3 py-1 rounded">
-                                        <span className="font-code text-lg text-slate-500">Prize</span>
+                                <div className="flex flex-wrap justify-center md:justify-start gap-3 mt-1">
+                                    <div className="bg-white border-2 border-[#16a249] px-4 py-1.5" style={{ boxShadow: "2px 2px 0px 0px rgba(22,162,73,0.2)" }}>
+                                        <span className="font-code text-base text-slate-500">Prize</span>
                                         <span className="font-pixel text-sm ml-2 text-[#16a249]">{tournament.prizePool} MON</span>
                                     </div>
                                 </div>
@@ -192,29 +204,8 @@ export default async function TournamentResultsPage({ params }: Props) {
                                     )}
 
                                     {entry.team.length > 0 && (
-                                        <div className="w-full overflow-x-auto mt-auto">
-                                            <table className="w-full text-left border-collapse">
-                                                <thead>
-                                                    <tr className="border-b-2 border-slate-200">
-                                                        <th className="py-2 font-pixel text-[10px] text-slate-400 uppercase">Pos</th>
-                                                        <th className="py-2 font-pixel text-[10px] text-slate-400 uppercase">Player</th>
-                                                        <th className="py-2 font-pixel text-[10px] text-slate-400 uppercase text-center">PAC</th>
-                                                        <th className="py-2 font-pixel text-[10px] text-slate-400 uppercase text-center">SHO</th>
-                                                        <th className="py-2 font-pixel text-[10px] text-slate-400 uppercase text-center">PAS</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody className="font-code text-sm">
-                                                    {entry.team.filter(p => p.name).map((player, idx) => (
-                                                        <tr key={idx} className="border-b border-slate-100">
-                                                            <td className="py-1 text-slate-500">{player.position}</td>
-                                                            <td className="py-1 font-bold text-slate-800">{player.name}</td>
-                                                            <td className={`py-1 text-center font-bold ${player.pace >= 85 ? 'text-green-600' : player.pace >= 70 ? 'text-yellow-600' : 'text-red-500'}`}>{player.pace}</td>
-                                                            <td className={`py-1 text-center font-bold ${player.shooting >= 85 ? 'text-green-600' : player.shooting >= 70 ? 'text-yellow-600' : 'text-red-500'}`}>{player.shooting}</td>
-                                                            <td className={`py-1 text-center font-bold ${player.passing >= 85 ? 'text-green-600' : player.passing >= 70 ? 'text-yellow-600' : 'text-red-500'}`}>{player.passing}</td>
-                                                        </tr>
-                                                    ))}
-                                                </tbody>
-                                            </table>
+                                        <div className="mt-auto">
+                                            <SquadTable players={entry.team} />
                                         </div>
                                     )}
                                 </div>

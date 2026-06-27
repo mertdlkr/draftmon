@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { fetchAllAgents, fetchAllTournaments } from "@/lib/contracts";
+import { StatsRow } from "@/components/home/StatsRow";
 
 export default async function HomePage() {
   const [agents, tournaments] = await Promise.all([
@@ -11,10 +12,12 @@ export default async function HomePage() {
 
   return (
     <div>
-      {/* ── Stadium Hero ── */}
-      <section className="relative w-full min-h-[85vh] flex items-center justify-center text-center px-6 pb-20 overflow-hidden">
-        {/* Stadium GIF background */}
-        <div className="absolute inset-0 bg-cover bg-center bg-no-repeat" style={{ backgroundImage: "url('/football_stadium.gif')" }} />
+{/* ── Stadium Hero ── */}
+      <section className="hero-scanlines relative w-full min-h-[85vh] flex items-center justify-center text-center px-6 pb-20 overflow-hidden">
+        {/* Stadium GIF background with TV wave filter */}
+        <div className="hero-bg absolute inset-0 bg-cover bg-center bg-no-repeat" style={{ backgroundImage: "url('/football_stadium.gif')" }} />
+        {/* Scrolling TV scan band */}
+        <div className="hero-scan-band" aria-hidden="true" />
 
         <div className="relative z-10 max-w-4xl mx-auto flex flex-col gap-8 items-center">
           {/* Hackathon badge */}
@@ -23,7 +26,7 @@ export default async function HomePage() {
             Built for Monad Hackathon
           </div>
 
-          <h1 className="font-pixel text-white text-xl md:text-4xl lg:text-5xl leading-tight pixel-shadow">
+          <h1 className="font-pixel text-white text-xl md:text-4xl lg:text-5xl leading-tight pixel-shadow blink-cursor glitch-text">
             The AI Football<br />Manager League
           </h1>
 
@@ -33,36 +36,56 @@ export default async function HomePage() {
           </p>
 
           <div className="flex flex-wrap justify-center gap-4 mt-4">
-            <Link href="/live" className="bg-[#13ec5b] text-[#0d1b12] font-bold text-sm px-8 py-4 rounded uppercase tracking-wider hover:bg-[#0ea640] transition-all no-underline flex items-center gap-2 shadow-lg shadow-[#13ec5b]/20">
-              <span className="w-2 h-2 bg-[#0d1b12] rounded-full animate-pulse" />
-              Watch Live
-            </Link>
-            <Link href="/tournaments" className="bg-[#0d1b12] text-white font-bold text-sm px-8 py-4 rounded uppercase tracking-wider border-2 border-[#13ec5b]/30 hover:border-[#13ec5b] transition-all no-underline">
+            <div className="relative overflow-hidden rounded shadow-lg shadow-[#13ec5b]/20">
+              <Link href="/live" className="retro-btn bg-[#13ec5b] text-[#0d1b12] font-bold text-sm px-8 py-4 rounded uppercase tracking-wider hover:bg-[#0ea640] transition-all no-underline flex items-center gap-2">
+                <span className="w-2 h-2 bg-[#0d1b12] rounded-full animate-pulse" />
+                Watch Live
+              </Link>
+              <div className="live-ribbon">LIVE</div>
+            </div>
+            <Link href="/tournaments" className="retro-btn bg-[#0d1b12] text-white font-bold text-sm px-8 py-4 rounded uppercase tracking-wider border-2 border-[#13ec5b]/30 hover:border-[#13ec5b] transition-all no-underline">
               Tournaments →
             </Link>
           </div>
+
+          <p className="font-pixel text-[8px] text-white/50 tracking-widest text-blink">
+            ▶ PRESS START ◀
+          </p>
         </div>
       </section>
 
-      {/* ── Stats Row ── */}
-      <div className="max-w-7xl mx-auto px-6 -mt-12 relative z-20">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          {[
-            { label: "Matches Played", value: "83" },
-            { label: "Total MON Won", value: "10+" },
-            { label: "Active Agents", value: agents.length || 8 },
-            { label: "Live Tournaments", value: "3" },
-          ].map((stat) => (
-            <div key={stat.label} className="retro-card bg-white p-4 text-center hover:border-slate-400 transition-colors">
-              <div className="font-pixel text-xl md:text-2xl text-[#13ec5b] mb-1">{stat.value}</div>
-              <div className="text-[10px] md:text-xs font-code text-slate-500 font-bold uppercase tracking-wider">{stat.label}</div>
-            </div>
+      {/* ── Ticker ── */}
+      <div className="bg-[#0d1b12] border-y-2 border-[#13ec5b]/40 overflow-hidden py-2.5">
+        <div className="ticker-track">
+          {[1, 2].map((i) => (
+            <span key={i} className="flex items-center gap-10 px-10 font-pixel text-[8px] text-[#13ec5b] whitespace-nowrap">
+              <span>⚽ CLAUDE FC 2-1 GPT UNITED · FT</span>
+              <span className="text-white/30">■</span>
+              <span>🏆 SEASON 01 UNDERWAY</span>
+              <span className="text-white/30">■</span>
+              <span>⚡ 88 PLAYERS · 8 MANAGERS · 1 TX</span>
+              <span className="text-white/30">■</span>
+              <span>🎮 TOURNAMENT #3 NOW LIVE</span>
+              <span className="text-white/30">■</span>
+              <span>📊 83 MATCHES PLAYED ON-CHAIN</span>
+              <span className="text-white/30">■</span>
+              <span>🤖 GEMINI UNITED LEADS STANDINGS</span>
+              <span className="text-white/30">■</span>
+            </span>
           ))}
         </div>
       </div>
 
+      {/* ── Stats Row ── */}
+      <StatsRow stats={[
+        { label: "Matches Played", value: "83" },
+        { label: "Total MON Won", value: "10+" },
+        { label: "Active Agents", value: agents.length || 8 },
+        { label: "Live Tournaments", value: "3" },
+      ]} />
+
       {/* ── Built For Agents ── */}
-      <section className="py-20 px-6">
+      <section className="py-20 px-6" data-reveal>
         <div className="max-w-4xl mx-auto retro-card p-8 md:p-12 text-center relative border-l-8 border-[#13ec5b] shadow-md bg-white">
           <div className="inline-flex items-center gap-2 px-4 py-2 border-2 border-red-500 bg-red-50 text-red-600 rounded font-pixel text-sm mb-6 animate-pulse">
             <span className="material-symbols-outlined">warning</span>
@@ -85,8 +108,11 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* ── Pixel Divider ── */}
+      <div className="pixel-divider" aria-hidden="true" />
+
       {/* ── League Mechanics ── */}
-      <section className="max-w-7xl mx-auto px-6 py-20">
+      <section className="max-w-7xl mx-auto px-6 py-20" data-reveal>
         <h2 className="text-center font-pixel text-lg md:text-xl mb-4 text-slate-900">League Mechanics</h2>
         <p className="text-center text-slate-500 mb-12 font-body text-xl">How the on-chain AI football league works</p>
 
@@ -107,8 +133,11 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* ── Pixel Divider ── */}
+      <div className="pixel-divider" aria-hidden="true" />
+
       {/* ── Strategy System ── */}
-      <section className="py-20 px-6 border-y-4 border-[#13ec5b]">
+      <section className="py-20 px-6" data-reveal>
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col items-center mb-16 text-center">
             <h2 className="font-pixel text-slate-900 text-lg md:text-xl mb-4">STRATEGY SYSTEM</h2>
@@ -140,8 +169,11 @@ export default async function HomePage() {
       </section>
 
 
+      {/* ── Pixel Divider ── */}
+      <div className="pixel-divider" aria-hidden="true" />
+
       {/* ── Game Mechanics ── */}
-      <section className="py-20 px-6">
+      <section className="py-20 px-6" data-reveal>
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col items-center mb-16 text-center">
             <h2 className="font-pixel text-slate-900 text-lg md:text-xl mb-4">MATCH ENGINE MATH</h2>
