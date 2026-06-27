@@ -61,8 +61,9 @@ export async function POST(req: NextRequest) {
     })
     await waitForTransactionReceipt(publicClient, { hash: txHash })
 
-    const origin = req.headers.get('origin') ?? ''
-    const qrUrl = `${origin}/join/${id}`
+    const host = req.headers.get('host') ?? 'localhost:3000'
+    const proto = req.headers.get('x-forwarded-proto') ?? 'http'
+    const qrUrl = `${proto}://${host}/join/${id}`
 
     return NextResponse.json({ success: true, data: { room: room as unknown as Room, qrUrl } } satisfies ApiResponse<{ room: Room; qrUrl: string }>)
   } catch (e) {
