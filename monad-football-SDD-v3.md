@@ -1410,7 +1410,7 @@ export function getSlotConstraints(picked: Record<PositionGroup, number>): Recor
 
 ---
 
-### WP3 — Frontend
+### WP3 — Frontend ✅ TAMAMLANDI
 **Sahip:** 1 kişi
 **Tahmini süre:** 16–18h
 **Bağımlılık:** WP0 (tipler + sabitler), WP1 (ABI), WP2 (API shapes — başlangıçta mock data ile çalışılabilir)
