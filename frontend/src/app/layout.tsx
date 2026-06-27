@@ -4,6 +4,7 @@ import "./globals.css";
 import { Nav } from "@/components/layout/Nav";
 import { ScrollReveal } from "@/components/home/ScrollReveal";
 import { PixelCursor } from "@/components/home/PixelCursor";
+import { Providers } from "./providers";
 
 const lexend = Lexend({
   variable: "--font-display",
@@ -56,10 +57,12 @@ export default function RootLayout({
             </filter>
           </defs>
         </svg>
-        <ScrollReveal />
-        <PixelCursor />
-        <Nav />
-        <main className="min-h-screen">{children}</main>
+        <Providers>
+          <ScrollReveal />
+          <PixelCursor />
+          <Nav />
+          <main className="min-h-screen">{children}</main>
+        </Providers>
       </body>
     </html>
   );

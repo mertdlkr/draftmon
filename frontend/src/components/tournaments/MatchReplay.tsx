@@ -1,12 +1,27 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
-import type { TournamentAgent } from "@/lib/contracts/types";
+import type { FootballPlayer } from "@/lib/contracts/types";
 import type { MatchSimulation } from "@/lib/simulation/types";
 import { simulateMatch } from "@/lib/simulation/engine";
 import { AnimatedPitch } from "./AnimatedPitch";
 import { EventTicker } from "./EventTicker";
 import { ReplayControls } from "./ReplayControls";
+
+export interface TournamentAgent {
+  entry: {
+    team: FootballPlayer[];
+    strategyId?: number;
+    strategyName?: string;
+  };
+  profile: {
+    address: string;
+    name: string;
+    attack: number;
+    defense: number;
+    discipline: number;
+  };
+}
 
 type Speed = 1 | 2 | 4 | 8;
 type ReplayStatus = "idle" | "loading" | "playing" | "paused" | "ended";

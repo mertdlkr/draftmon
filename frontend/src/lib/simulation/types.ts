@@ -1,6 +1,13 @@
-import type { Player, AgentProfile } from "@/lib/contracts/types";
+import type { FootballPlayer } from "@/lib/contracts/types";
 
-export type { Player, AgentProfile };
+export type Player = FootballPlayer;
+
+export interface AgentProfile {
+  name: string;
+  attack: number;
+  defense: number;
+  discipline: number;
+}
 
 export type MatchEventType =
     | "KICKOFF"

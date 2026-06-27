@@ -2,12 +2,12 @@
 
 import { useRef } from "react";
 import type { MatchTick, MatchEvent } from "@/lib/simulation/types";
-import type { Player } from "@/lib/contracts/types";
+import type { FootballPlayer } from "@/lib/contracts/types";
 
 interface Props {
     tick: MatchTick;
-    teamAPlayers: Player[];
-    teamBPlayers: Player[];
+    teamAPlayers: FootballPlayer[];
+    teamBPlayers: FootballPlayer[];
     teamAName: string;
     teamBName: string;
     goalsA: number;

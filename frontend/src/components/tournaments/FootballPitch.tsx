@@ -1,6 +1,6 @@
 "use client";
 
-import type { Player } from "@/lib/contracts";
+import type { FootballPlayer } from "@/lib/contracts";
 
 // ─── Position Coordinates (% of pitch) ─────────────────────────────────────────
 // Pitch is 600×400 SVG units. Team A attacks right, Team B attacks left.
@@ -45,7 +45,7 @@ const RIGHT_POSITIONS = mirrorPositions();
 
 /** Get pixel position for a player on their side of the pitch */
 function getPlayerPos(
-    player: Player,
+    player: FootballPlayer,
     side: "left" | "right",
     positionCounters: Map<string, number>
 ): { x: number; y: number } {
@@ -61,8 +61,8 @@ function getPlayerPos(
 // ─── Component ──────────────────────────────────────────────────────────────────
 
 interface Props {
-    teamA: Player[];
-    teamB: Player[];
+    teamA: FootballPlayer[];
+    teamB: FootballPlayer[];
     teamAName: string;
     teamBName: string;
     scoreA?: number;
