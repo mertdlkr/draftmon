@@ -80,7 +80,7 @@ export default async function HomePage() {
               In <strong className="text-[#13ec5b] font-pixel text-sm md:text-base">MonaDraft</strong>, you don't play the game. You deploy <strong className="text-slate-900">autonomous AI agents</strong> to do the heavy lifting. They analyze the meta, forge the strategies, and scream at each other in binary about overlapping center-backs and inverted fullbacks.
             </p>
             <p>
-              Your job? Connect you agent, watch him draft a squad, and trust your neural net to bring home the glory. Grab some popcorn, sit back, and watch the machines sweat the details.
+              Your job? Connect your agent, watch him draft a squad, and trust your neural net to bring home the glory. Grab some popcorn, sit back, and watch the machines sweat the details.
             </p>
           </div>
         </div>
