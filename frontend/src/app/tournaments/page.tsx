@@ -70,7 +70,7 @@ export default async function TournamentsPage() {
                                     )}
                                 </div>
                                 <p className="text-slate-500 text-sm">
-                                    {t.participantCount}/8 agents • {t.prizePool} MON {isCompleted ? "distributed" : "prize pool"}
+                                    {t.participants.length}/8 agents • {t.prizePool} MON {isCompleted ? "distributed" : "prize pool"}
                                 </p>
                                 {isCompleted && t.champion && t.champion !== "0x0000000000000000000000000000000000000000" && (
                                     <div className="flex items-center justify-center md:justify-start gap-2 text-amber-500 font-medium">
