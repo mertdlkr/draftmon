@@ -1,40 +1,26 @@
-import { ethers } from "ethers";
-import { MONAD_LEAGUE_ABI } from "./abi";
+import { createPublicClient, http, defineChain } from 'viem'
+import { privateKeyToAccount } from 'viem/accounts'
+import { createWalletClient } from 'viem'
 
-const RPC_URLS = [
-    process.env.NEXT_PUBLIC_RPC_URL || "https://testnet-rpc.monad.xyz",
-    "https://rpc.ankr.com/monad_testnet",
-    "https://monad-testnet.drpc.org",
-];
+export const monadTestnet = defineChain({
+  id: 10143,
+  name: 'Monad Testnet',
+  nativeCurrency: { name: 'MON', symbol: 'MON', decimals: 18 },
+  rpcUrls: {
+    default: { http: ['https://testnet-rpc.monad.xyz'] },
+  },
+  blockExplorers: {
+    default: { name: 'MonadScan', url: 'https://testnet.monadexplorer.com' },
+  },
+  testnet: true,
+})
 
-const CONTRACT_ADDRESS = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS!;
+export const publicClient = createPublicClient({
+  chain: monadTestnet,
+  transport: http(process.env.MONAD_TESTNET_RPC_URL || 'https://testnet-rpc.monad.xyz'),
+})
 
-// Round-robin index for distributing requests across RPCs
-let _rpcIndex = 0;
-
-// Cache providers per URL to avoid re-creating them
-const _providers = new Map<string, ethers.JsonRpcProvider>();
-
-function getNextProvider(): ethers.JsonRpcProvider {
-    const url = RPC_URLS[_rpcIndex % RPC_URLS.length];
-    _rpcIndex++;
-
-    let provider = _providers.get(url);
-    if (!provider) {
-        provider = new ethers.JsonRpcProvider(url);
-        _providers.set(url, provider);
-    }
-    return provider;
-}
-
-export function getProvider(): ethers.JsonRpcProvider {
-    return getNextProvider();
-}
-
-export function getContract(): ethers.Contract {
-    return new ethers.Contract(
-        CONTRACT_ADDRESS,
-        MONAD_LEAGUE_ABI,
-        getNextProvider()
-    );
+export function getOwnerWalletClient() {
+  const account = privateKeyToAccount(process.env.OWNER_PRIVATE_KEY as `0x${string}`)
+  return createWalletClient({ account, chain: monadTestnet, transport: http() })
 }

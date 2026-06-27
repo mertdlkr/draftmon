@@ -1,105 +1,86 @@
-// ─── Enums ────────────────────────────────────────────────────────────────────
+import type { Address } from 'viem'
+import type { MatchSimulation } from '@/lib/simulation/types'
 
-export enum TournamentType {
-    KNOCKOUT_8 = 0,
-    LEAGUE = 1,
+export type RoomStatus = 'open' | 'drafting' | 'betting' | 'simulating' | 'finished'
+export type MatchRound = 'R16' | 'QF' | 'SF' | 'Final'
+export type PositionGroup = 'ATT' | 'MID' | 'DEF' | 'GK'
+
+export interface FootballPlayer {
+  name: string
+  position: string // ST | LW | RW | CM | CDM | CAM | CB | LB | RB | GK
+  pace: number     // 0–100
+  shooting: number
+  passing: number
+  tackling: number
 }
 
-export enum TournamentState {
-    OPEN = 0,
-    DRAFTING = 1,
-    STRATEGY = 2,
-    COMPLETED = 3,
+export interface Room {
+  id: string
+  name: string
+  status: RoomStatus
+  capacity: number                   // 4 | 8 | 16
+  entry_fee_wei: string
+  contract_room_id: `0x${string}`
+  draft_started_at: string | null
+  betting_started_at: string | null
+  winner_wallet: Address | null
+  created_at: string
 }
 
-export type MatchRound = "Quarter Final" | "Semi Final" | "Final";
-
-// ─── Structs ──────────────────────────────────────────────────────────────────
-
-export interface Player {
-    name: string;
-    position: string;
-    pace: number;
-    shooting: number;
-    passing: number;
-    tackling: number;
+export interface RoomPlayer {
+  id: string
+  room_id: string
+  wallet: Address
+  tx_hash: `0x${string}`
+  squad_json: FootballPlayer[] | null
+  draft_done: boolean
+  joined_at: string
 }
 
-export interface AgentProfile {
-    address: string;
-    name: string;
-    attack: number;
-    defense: number;
-    discipline: number;
-    isRegistered: boolean;
+export interface Match {
+  id: string
+  room_id: string
+  round: MatchRound
+  match_index: number
+  home_wallet: Address
+  away_wallet: Address
+  home_score: number
+  away_score: number
+  winner_wallet: Address
+  sim_data: MatchSimulation | null
+  played_at: string
 }
 
-export interface TournamentEntry {
-    hasEntered: boolean;
-    hasTeam: boolean;
-    strategyId: number;
-    strategyName: string;
-    reasoning: string;
-    team: Player[];
+export interface Bet {
+  id: string
+  room_id: string
+  bettor_wallet: Address
+  target_wallet: Address
+  amount_wei: string
+  tx_hash: `0x${string}`
+  payout_wei: string | null
+  won: boolean | null
+  placed_at: string
 }
 
-export interface MatchResult {
-    teamA: string; // wallet address
-    teamB: string; // wallet address
-    winner: string; // wallet address
-    scoreA: number;
-    scoreB: number;
-    goalsA: number; // realistic football goals derived from power scores
-    goalsB: number;
-    round: MatchRound;
+export interface LeaderboardEntry {
+  wallet: Address
+  wins: number
+  losses: number
+  draws: number
+  goals_for: number
+  goals_against: number
+  tournaments_played: number
+  total_earned_wei: string
 }
 
-export interface Tournament {
-    id: number;
-    type: TournamentType;
-    state: TournamentState;
-    stateLabel: string;
-    prizePool: string; // formatted ETH
-    champion: string; // wallet address
-    participants: string[]; // wallet addresses
+export interface RoomDetail {
+  room: Room
+  players: RoomPlayer[]
+  matches: Match[]
+  bets: Bet[]
 }
 
-// ─── Composed / Aggregated ────────────────────────────────────────────────────
-
-export interface TournamentAgent {
-    profile: AgentProfile;
-    entry: TournamentEntry;
-}
-
-export interface TournamentDetail extends Tournament {
-    agents: TournamentAgent[];
-    matches: MatchResult[];
-}
-
-// ─── Live / Real-Time ────────────────────────────────────────────────────────
-
-export interface LiveParticipant {
-    profile: AgentProfile;
-    hasTeam: boolean;
-    team: Player[];
-    strategyCommitted: boolean;
-    strategyId: number | null;
-    strategyName: string | null;
-    reasoning: string | null; // null = still "Thinking..."
-}
-
-export interface LiveTournamentState {
-    tournamentId: number;
-    state: TournamentState;
-    stateLabel: string;
-    spotsLeft: number;
-    prizePool: string;
-    champion: string | null;
-    participants: LiveParticipant[];
-}
-
-export interface LeagueSummary {
-    currentTournamentId: number;
-    registeredAgents: AgentProfile[];
-    tournaments: TournamentDetail[];
-}
+export type ApiResponse<T> =
+  | { success: true; data: T }
+  | { success: false; error: { code: number; message: string } }

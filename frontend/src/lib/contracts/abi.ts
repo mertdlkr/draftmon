@@ -1,28 +1,23 @@
-export const MONAD_LEAGUE_ABI = [
-    // ── View: State ─────────────────────────────────────────────────────────────
-    "function admin() external view returns (address)",
-    "function entryFee() external view returns (uint256)",
-    "function currentTournamentId() external view returns (uint256)",
-
-    // ── View: Agents ────────────────────────────────────────────────────────────
-    "function getRegisteredAgents() external view returns (address[])",
-    "function agents(address) external view returns (string name, uint8 attack, uint8 defense, uint8 discipline, bool isRegistered)",
-
-    // ── View: Tournaments ───────────────────────────────────────────────────────
-    // Note: tournaments() auto-getter does NOT return participants[]. Use getParticipants().
-    "function tournaments(uint256) external view returns (uint256 id, uint8 tType, uint8 state, uint256 prizePool, address champion)",
-    "function getParticipants(uint256 _tId) external view returns (address[])",
-
-    // ── View: Entries ───────────────────────────────────────────────────────────
-    "function getTournamentEntry(uint256 _tId, address _agent) external view returns (bool hasEntered, bool hasTeam, uint8 strategyId, string reasoning, tuple(string name, string position, uint8 pace, uint8 shooting, uint8 passing, uint8 tackling)[11] team)",
-
-    // ── View: Matches ───────────────────────────────────────────────────────────
-    "function getMatches(uint256 _tId) external view returns (tuple(address teamA, address teamB, address winner, uint256 scoreA, uint256 scoreB)[])",
-
-    // ── Events ──────────────────────────────────────────────────────────────────
-    "event AgentRegistered(address indexed agentWallet, string name)",
-    "event TournamentCreated(uint256 indexed tournamentId, uint8 tType)",
-    "event AgentEnteredTournament(uint256 indexed tournamentId, address indexed agentWallet)",
-    "event TournamentEnded(uint256 indexed tournamentId, address indexed champion, uint256 prizePool)",
-    "event StrategyCommitted(uint256 indexed tournamentId, address indexed agentWallet, uint8 strategyId, string reasoning)",
-] as const;
+// TournamentPool ABI — stub until WP1 deploys the contract.
+// After deploy: replace with output of `forge build` → out/TournamentPool.sol/TournamentPool.json
+export const TOURNAMENT_POOL_ABI = [
+  // Owner — room management
+  'function createRoom(bytes32 roomId, uint256 entryFee) external',
+  'function closeRoom(bytes32 roomId) external',
+  'function declareWinner(bytes32 roomId, address winnerAddress) external',
+  'function distributeBetWinners(bytes32 roomId, address[] calldata winners, uint256[] calldata amounts) external',
+  // Player
+  'function enter(bytes32 roomId) external payable',
+  // Bettor
+  'function placeBet(bytes32 roomId, address target) external payable',
+  // Views
+  'function getRoom(bytes32 roomId) external view returns (uint256 entryFee, uint256 entryPool, uint256 betPool, uint8 status, address winner, address[] memory players)',
+  'function getPlayers(bytes32 roomId) external view returns (address[] memory)',
+  // Events
+  'event RoomCreated(bytes32 indexed roomId, uint256 entryFee)',
+  'event EntryPaid(bytes32 indexed roomId, address indexed player, uint256 amount)',
+  'event BetPlaced(bytes32 indexed roomId, address indexed bettor, address indexed target, uint256 amount)',
+  'event RoomClosed(bytes32 indexed roomId, uint256 entryPool, uint256 betPool)',
+  'event WinnerPaid(bytes32 indexed roomId, address indexed winner, uint256 amount)',
+  'event BetWinnerPaid(bytes32 indexed roomId, address indexed bettor, uint256 amount)',
+] as const
