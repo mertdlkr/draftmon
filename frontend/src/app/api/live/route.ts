@@ -18,6 +18,8 @@ import { NextRequest } from "next/server";
 import { fetchLiveTournamentState, TournamentState } from "@/lib/contracts";
 import type { LiveTournamentState } from "@/lib/contracts";
 
+export const runtime = "edge";
+
 const POLL_INTERVAL_MS = 5000;
 
 function serialize(eventName: string, data: unknown): string {

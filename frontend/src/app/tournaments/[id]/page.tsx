@@ -8,6 +8,8 @@ import { AgentCard } from "@/components/agents/AgentCard";
 import { SquadTable } from "@/components/agents/SquadTable";
 import { ManagerAvatar } from "@/components/ui/ManagerAvatar";
 
+export const runtime = "edge";
+
 interface Props {
     params: Promise<{ id: string }>;
 }

@@ -13,6 +13,8 @@ import {
     fetchMatchResults,
 } from "@/lib/contracts";
 
+export const runtime = "edge";
+
 export async function GET() {
     try {
         const [agents, tournaments] = await Promise.all([

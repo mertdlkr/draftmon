@@ -3,6 +3,7 @@ import { LiveTournamentView } from "@/components/live/LiveTournamentView";
 import { PageHeader } from "@/components/layout/PageHeader";
 
 export const dynamic = "force-dynamic";
+export const runtime = "edge";
 
 export default async function LivePage() {
     let currentTId = 1;
